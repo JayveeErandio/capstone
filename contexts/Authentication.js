@@ -1,22 +1,23 @@
 import { createContext, useState } from "react";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
   const login = async (ID, password) => {
-    const data = { success: true, last_name: "tadili" }; // ==== BACKEND BACKEND BACKEND
+    const data = (() => {
+      if (ID == "202310097" && password == "aso")
+        return { success: true, last_name: "erandio", first_name: "jayvee" };
+      else return { success: false };
+    })(); // ==== BACKEND BACKEND BACKEND
 
     if (data.success) return true;
     else return false;
   };
 
-  const page = () => {
-    return "login";
-  };
+  const [page, setPage] = useState("login");
 
   return (
-    <AuthContext.Provider value={{ login, page }}>
+    <AuthContext.Provider value={{ login, page, setPage }}>
       {children}
     </AuthContext.Provider>
   );

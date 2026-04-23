@@ -1,12 +1,18 @@
-import { useState, useContext } from "react";
-import { StateVariables } from "../../StateVariables";
+import { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../../contexts/Authentication";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 
 export default function LoginScreen() {
   const [ID, setID] = useState(0);
   const [password, setPassword] = useState("");
-  const { login } = useContext(StateVariables);
+  const { login, page, setPage } = useContext(AuthContext);
   const [valid, setValid] = useState(null);
+  useEffect(() => {
+    if (valid == false)
+      setTimeout(() => {
+        setValid(null);
+      }, 1200);
+  }, [valid]);
 
   return (
     <View>
@@ -79,7 +85,14 @@ export default function LoginScreen() {
           <Text className="self-start text-[#777]">
             Don't have an account?{" "}
           </Text>
-          <Text className="font-bold text-[#c6a] self-start">Sign up</Text>
+          <Text
+            onPress={() => {
+              setPage("signup");
+            }}
+            className="font-bold text-[#c6a] self-start"
+          >
+            Sign up
+          </Text>
         </View>
         <View className="flex-row border border-[#ccc] rounded-lg gap-3 p-4 items-center bg-[#fff0ff]">
           <Image
