@@ -1,5 +1,5 @@
 import "./global.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "./StateVariables";
 import LoginScreen from "./components/screens/LoginScreen";
@@ -13,7 +13,7 @@ export default function App() {
       <AuthProvider>
         {/* Yung SafeAreaView, parang viewport lang sya na sasakupan ng mga UI screen */}
         <SafeAreaView>
-          <AuthScreen />
+          <MainScreen />
         </SafeAreaView>
       </AuthProvider>
     </Provider>

@@ -3,6 +3,8 @@ import { createContext, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState({});
+
   const login = async (ID, password) => {
     const data = (() => {
       if (ID == "202310097" && password == "aso")
@@ -10,14 +12,16 @@ export const AuthProvider = ({ children }) => {
       else return { success: false };
     })(); // ==== BACKEND BACKEND BACKEND
 
-    if (data.success) return true;
-    else return false;
+    if (data.success) {
+      setUser(data);
+      return true;
+    } else return false;
   };
 
   const [page, setPage] = useState("login");
 
   return (
-    <AuthContext.Provider value={{ login, page, setPage }}>
+    <AuthContext.Provider value={{ user, setUser, login, page, setPage }}>
       {children}
     </AuthContext.Provider>
   );

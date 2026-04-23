@@ -1,17 +1,22 @@
 import { View, Text, Image } from "react-native";
 import Pages from "../Pages";
+import { useContext, useState } from "react";
+import HomeScreen from "./HomeScreen";
+import JournalScreen from "./JournalScreen";
+import { AuthContext } from "../../contexts/Authentication";
+import AuthScreen from "./AuthScreen";
 
 export default function MainScreen() {
-  return (
-    <View className="bg-[#eee] h-full">
+  const { user } = useContext(AuthContext);
+
+  return user.success ? (
+    <View className="h-screen">
       <Pages>
-        <Text>ASO</Text>
-        <Text>PUSA</Text>
-        <View>
-          <Text>BAKA</Text>
-        </View>
-        <Text>DAGA</Text>
+        <HomeScreen name="home" />
+        <JournalScreen name="journal" />
       </Pages>
     </View>
+  ) : (
+    <AuthScreen />
   );
 }
