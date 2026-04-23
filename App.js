@@ -13,7 +13,7 @@ export default function App() {
       <AuthProvider>
         {/* Yung SafeAreaView, parang viewport lang sya na sasakupan ng mga UI screen */}
         <SafeAreaView>
-          <MainScreen />
+          <AuthScreen />
         </SafeAreaView>
       </AuthProvider>
     </Provider>
