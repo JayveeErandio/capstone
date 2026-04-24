@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 
 import { AuthContext } from "../../contexts/Authentication";
 import { useContext } from "react";
@@ -15,6 +15,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import LoadingScreen from "./LoadingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,7 +52,7 @@ function Header({ order }) {
 
 function Door({ order, label, question, flex, children }) {
   const navigation = useNavigation();
-  const { entries, setEntries } = useContext(AuthContext);
+  const { entries, setEntries, setIsAnalyzing } = useContext(AuthContext);
   const doorItem = useRoute().name.toLowerCase();
 
   return (
@@ -81,6 +82,9 @@ function Door({ order, label, question, flex, children }) {
           onPress={() => {
             if (entries[doorItem] != null)
               if (order < 4) navigation.navigate("Door" + (order + 1));
+              else {
+                setIsAnalyzing(true);
+              }
           }}
           className={
             (entries["door" + order] ? "active:bg-[#b69]" : "opacity-50") +
@@ -222,7 +226,27 @@ function Door4() {
 }
 
 export default function EntryScreen() {
-  return (
+  const { restartEntries, isAnalyzing, setIsAnalyzing } =
+    useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  return isAnalyzing ? (
+    <LoadingScreen
+      message="Generating insights... You can go back home and return later once it’s ready."
+      buttons={[
+        { text: "Go Home", event: () => navigation.navigate("Main") },
+        {
+          text: "Just Restart",
+          event: () => {
+            restartEntries();
+            navigation.navigate("Main");
+            setIsAnalyzing(false);
+          },
+        },
+      ]}
+    />
+  ) : (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Door1" component={Door1} />
       <Stack.Screen name="Door2" component={Door2} />

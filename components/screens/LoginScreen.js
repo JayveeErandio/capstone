@@ -3,6 +3,7 @@ import { AuthContext } from "../../contexts/Authentication";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import LoadingScreen from "./LoadingScreen";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -10,6 +11,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const { login, page, setPage } = useContext(AuthContext);
   const [valid, setValid] = useState(null);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (valid == false)
       setTimeout(() => {
@@ -17,7 +19,9 @@ export default function LoginScreen() {
       }, 1200);
   }, [valid]);
 
-  return (
+  return loading ? (
+    <LoadingScreen message="Signing you in" />
+  ) : (
     <SafeAreaView>
       <View className="bg-[#f8f4f9] h-full">
         {/* ==== Headline Top ==== */}
@@ -62,7 +66,9 @@ export default function LoginScreen() {
           <Pressable
             onPress={async () => {
               if (ID && password) {
+                setLoading(true);
                 const data = await login(ID, password);
+                setLoading(false);
                 setValid(data);
               }
             }}

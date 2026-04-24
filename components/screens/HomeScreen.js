@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const { setUser } = useContext(AuthContext);
+  const { setUser, entries, setEntries, isAnalyzing } = useContext(AuthContext);
 
   return (
     <ScrollView className="p-8 flex-1">
@@ -18,7 +18,16 @@ export default function HomeScreen() {
             How are you feeling today?
           </Text>
         </View>
-        <Pressable onPress={() => setUser({})}>
+        <Pressable
+          onPress={() => {
+            setEntries(
+              Object.fromEntries(
+                Object.entries(entries).map(([key]) => [key, ""]),
+              ),
+            );
+            setUser({});
+          }}
+        >
           <Image
             source={require("../../assets/square.png")}
             className="w-16 h-16 rounded-full"
@@ -75,7 +84,7 @@ export default function HomeScreen() {
           className="bg-[#c57] rounded-full p-4 active:bg-[#b46]"
         >
           <Text className="text-white text-center font-bold text-lg">
-            Start Check-In {"\u27F6"}
+            {isAnalyzing ? "Analyzing..." : "Start Check-In \u27F6"}
           </Text>
         </Pressable>
       </View>
