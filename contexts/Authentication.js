@@ -20,8 +20,17 @@ export const AuthProvider = ({ children }) => {
 
   const [page, setPage] = useState("login");
 
+  const [entries, setEntries] = useState({
+    door1: null,
+    door2: null,
+    door3: null,
+    door4: null,
+  });
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, page, setPage }}>
+    <AuthContext.Provider
+      value={{ user, setUser, login, page, setPage, entries, setEntries }}
+    >
       {children}
     </AuthContext.Provider>
   );

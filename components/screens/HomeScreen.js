@@ -1,8 +1,11 @@
 import { useContext } from "react";
 import { View, ScrollView, Text, Image, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthContext } from "../../contexts/Authentication";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const { setUser } = useContext(AuthContext);
 
   return (
@@ -67,7 +70,10 @@ export default function HomeScreen() {
             <Text className="text-xs text-[#555]">Context</Text>
           </View>
         </View>
-        <Pressable className="bg-[#c57] rounded-full p-4 active:bg-[#b46]">
+        <Pressable
+          onPress={() => navigation.navigate("Entry")}
+          className="bg-[#c57] rounded-full p-4 active:bg-[#b46]"
+        >
           <Text className="text-white text-center font-bold text-lg">
             Start Check-In {"\u27F6"}
           </Text>
@@ -75,7 +81,7 @@ export default function HomeScreen() {
       </View>
 
       {/* User's Progress */}
-      <View className="bg-white mt-6 p-5 rounded-3xl gap-3 mb-14">
+      <View className="bg-white mt-6 p-5 rounded-3xl gap-3 mb-12">
         <Text className="text-[#c57] font-bold text-sm">YOUR PROGRESS</Text>
         <View className="gap-2">
           <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">

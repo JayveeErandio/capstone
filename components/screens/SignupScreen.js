@@ -1,8 +1,10 @@
 import { useContext, useState } from "react";
 import { View, Text, TextInput, Pressable, Image, Alert } from "react-native";
 import { AuthContext } from "../../contexts/Authentication";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SignupScreen() {
+  const navigation = useNavigation();
   const { setPage } = useContext(AuthContext);
   const [ID, setID] = useState("");
 
@@ -38,7 +40,7 @@ export default function SignupScreen() {
         <Pressable
           onPress={async () => {
             if (ID != "") {
-              setPage("login");
+              navigation.goBack();
               Alert.alert(
                 "Notifying GCU",
                 "Your password will be provided via your school emails when the GCU has already approved your request.",
@@ -56,7 +58,7 @@ export default function SignupScreen() {
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => setPage("login")}
+          onPress={() => navigation.goBack()}
           className="border border-[#ccc] rounded-xl p-4 active:bg-[#eee]"
         >
           <Text className="text-[#777] w-full text-center">Go Back</Text>

@@ -1,4 +1,6 @@
 import { View, Text, Image } from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 import Pages from "../Pages";
 import { useContext, useState } from "react";
 import HomeScreen from "./HomeScreen";
@@ -10,12 +12,14 @@ export default function MainScreen() {
   const { user } = useContext(AuthContext);
 
   return user.success ? (
-    <View className="h-screen">
-      <Pages>
-        <HomeScreen name="home" />
-        <JournalScreen name="journal" />
-      </Pages>
-    </View>
+    <SafeAreaView>
+      <View className="h-full">
+        <Pages>
+          <HomeScreen name="home" />
+          <JournalScreen name="journal" />
+        </Pages>
+      </View>
+    </SafeAreaView>
   ) : (
     <AuthScreen />
   );
