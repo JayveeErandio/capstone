@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AuthProvider, AuthContext } from "./contexts/Authentication";
+import { AuthProvider, AuthContext } from "./Variables";
 
 import SignupScreen from "./components/screens/SignupScreen";
 import HomeScreen from "./components/screens/HomeScreen";
@@ -25,7 +25,7 @@ function AppNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user.success ? (
+      {user?.success ? (
         <>
           <Stack.Screen name="Main" component={MainScreen} />
           <Stack.Screen name="Entry" component={EntryScreen} />

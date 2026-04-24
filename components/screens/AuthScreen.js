@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext, AuthProvider } from "../../contexts/Authentication";
+import { AuthContext, AuthProvider } from "../../Variables";
 import LoginScreen from "./LoginScreen";
 import SignupScreen from "./SignupScreen";
 

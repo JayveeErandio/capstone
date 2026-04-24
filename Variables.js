@@ -3,12 +3,12 @@ import { createContext, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState();
+  const [dailyStatus, setDailyStatus] = useState();
 
-  // ==== BACKEND BACKEND BACKEND
   const login = async (ID, password) => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+    // ==== BACKEND ====
+    // Required: Supabase
     await sleep(2000);
 
     const data = (() => {
@@ -24,7 +24,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const analyze = async (entry) => {};
+
+  const analyze = async (entry) => {
+    // ==== BACKEND ====
+    // Required: GoogleAI & Supabase
+
+    await sleep(3000);
+    const comment =
+      "You've been riding this this buzz for a few days. That's great!";
+    const suggestions = [
+      { title: "Celebrate with Others", details: "Share your good energy" },
+      { title: "Reach Out", details: "Connect with a friend" },
+      { title: "Community Events", details: "GCU social activities " },
+    ];
+    const followup = "Who gave you good energy today?";
+
+    setDailyStatus({
+      comment: comment,
+      suggestions: suggestions,
+      followup: followup,
+    });
+  };
 
   const [page, setPage] = useState("login");
 
@@ -37,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const restartEntries = () => {
     setEntries(
-      Object.fromEntries(Object.keys(entries).map((key) => [key, ""])),
+      Object.fromEntries(Object.keys(entries).map((key) => [key, null])),
     );
   };
 
@@ -55,9 +75,12 @@ export const AuthProvider = ({ children }) => {
         isAnalyzing,
         setIsAnalyzing,
         analyze,
+        dailyStatus,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { View, ScrollView, Text, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AuthContext } from "../../contexts/Authentication";
+import { AuthContext } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const { setUser, entries, setEntries, isAnalyzing } = useContext(AuthContext);
+  const { setUser, entries, setEntries, isAnalyzing, dailyStatus } =
+    useContext(AuthContext);
 
   return (
     <ScrollView className="p-8 flex-1">
@@ -84,7 +85,11 @@ export default function HomeScreen() {
           className="bg-[#c57] rounded-full p-4 active:bg-[#b46]"
         >
           <Text className="text-white text-center font-bold text-lg">
-            {isAnalyzing ? "Analyzing..." : "Start Check-In \u27F6"}
+            {isAnalyzing
+              ? "Analyzing..."
+              : dailyStatus == null
+                ? "Start Check-In \u27F6"
+                : "See Result"}
           </Text>
         </Pressable>
       </View>

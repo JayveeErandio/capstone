@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 
-import { AuthContext } from "../../contexts/Authentication";
+import { AuthContext } from "../../Variables";
 import { useContext } from "react";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -52,7 +52,8 @@ function Header({ order }) {
 
 function Door({ order, label, question, flex, children }) {
   const navigation = useNavigation();
-  const { entries, setEntries, setIsAnalyzing } = useContext(AuthContext);
+  const { entries, setEntries, isAnalyzing, setIsAnalyzing, analyze } =
+    useContext(AuthContext);
   const doorItem = useRoute().name.toLowerCase();
 
   return (
@@ -79,11 +80,14 @@ function Door({ order, label, question, flex, children }) {
       </ScrollView>
       <View className="py-3">
         <Pressable
-          onPress={() => {
+          onPress={async () => {
             if (entries[doorItem] != null)
               if (order < 4) navigation.navigate("Door" + (order + 1));
               else {
                 setIsAnalyzing(true);
+                await analyze();
+                setIsAnalyzing(false);
+                navigation.navigate("Result");
               }
           }}
           className={
@@ -225,34 +229,77 @@ function Door4() {
   );
 }
 
+function Result() {
+  const navigation = useNavigation();
+  return (
+    <SafeAreaView className="h-full bg-[#eee]">
+      <ScrollView className="p-7 py-12">
+        <View className="gap-3">
+          <Text className="text-center text-[#978] text-xl">
+            You're feeling
+          </Text>
+          <Text className="text-center text-[#c93] font-serif font-bold text-5xl">
+            Excited
+          </Text>
+          <Text className="text-center text-[#777]">
+            You've been riding this buzz for a few days. That's great!
+          </Text>
+          <View></View>
+          <Pressable
+            onPress={() => navigation.navigate("Main")}
+            className="bg-[#c7a] rounded-full p-4 active:bg-[#b69]"
+          >
+            <Text className="text-center text-white text-lg font-bold">
+              Done
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 export default function EntryScreen() {
-  const { restartEntries, isAnalyzing, setIsAnalyzing } =
+  const { restartEntries, isAnalyzing, setIsAnalyzing, dailyStatus } =
     useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
-  return isAnalyzing ? (
-    <LoadingScreen
-      message="Generating insights... You can go back home and return later once it’s ready."
-      buttons={[
-        { text: "Go Home", event: () => navigation.navigate("Main") },
-        {
-          text: "Just Restart",
-          event: () => {
-            restartEntries();
-            navigation.navigate("Main");
-            setIsAnalyzing(false);
-          },
-        },
-      ]}
-    />
-  ) : (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Door1" component={Door1} />
-      <Stack.Screen name="Door2" component={Door2} />
-      <Stack.Screen name="Door3" component={Door3} />
-      <Stack.Screen name="Door4" component={Door4} />
-    </Stack.Navigator>
+  return (
+    <View className="flex-1">
+      <Stack.Navigator
+        initialRouteName={dailyStatus != null ? "Result" : "Door1"}
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="Door1" component={Door1} />
+        <Stack.Screen name="Door2" component={Door2} />
+        <Stack.Screen name="Door3" component={Door3} />
+        <Stack.Screen name="Door4" component={Door4} />
+        <Stack.Screen name="Result" component={Result} />
+      </Stack.Navigator>
+
+      {isAnalyzing && (
+        <View className="absolute inset-0 z-50">
+          <LoadingScreen
+            message="Generating insights... You can go back home and return later once it’s ready."
+            buttons={[
+              {
+                text: "Go Home",
+                event: () => navigation.navigate("Main"),
+              },
+              {
+                text: "Just Restart",
+                event: () => {
+                  restartEntries();
+                  setIsAnalyzing(false);
+                  navigation.navigate("Main");
+                },
+              },
+            ]}
+          />
+        </View>
+      )}
+    </View>
   );
 }
 

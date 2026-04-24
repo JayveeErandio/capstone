@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { View, Text, TextInput, Pressable, Image, Alert } from "react-native";
-import { AuthContext } from "../../contexts/Authentication";
+import { AuthContext } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SignupScreen() {

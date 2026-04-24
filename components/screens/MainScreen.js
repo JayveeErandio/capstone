@@ -5,7 +5,7 @@ import Pages from "../Pages";
 import { useContext, useState } from "react";
 import HomeScreen from "./HomeScreen";
 import JournalScreen from "./JournalScreen";
-import { AuthContext } from "../../contexts/Authentication";
+import { AuthContext } from "../../Variables";
 import AuthScreen from "./AuthScreen";
 
 export default function MainScreen() {

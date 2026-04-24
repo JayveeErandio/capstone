@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, Pressable } from "react-native";
 
 export default function LoadingScreen({ message = "Please wait", buttons }) {
   return (
-    <SafeAreaView className="h-full items-center justify-center">
+    <SafeAreaView className="h-full items-center justify-center bg-[#eee]">
       <View className="gap-3 w-1/2">
         <ActivityIndicator size="large" style={{ transform: [{ scale: 2 }] }} />
         <Text className="text-[#555] text-center mt-5">{message}</Text>
