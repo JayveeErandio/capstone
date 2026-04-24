@@ -1,4 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useRoute } from "@react-navigation/native";
+import React from "react";
 
 import { AuthContext } from "../../contexts/Authentication";
 import { useContext } from "react";
@@ -22,9 +24,7 @@ function Header({ order }) {
     <View className="flex-row justify-between items-center">
       <View className="p-1">
         <Pressable
-          onPress={() => {
-            if (order == 1) navigation.goBack();
-          }}
+          onPress={() => navigation.goBack()}
           className="bg-white rounded-full p-2 px-5"
           style={styles.shadow}
         >
@@ -49,18 +49,21 @@ function Header({ order }) {
   );
 }
 
-function Door1() {
+function Door({ order, label, question, flex, children }) {
   const navigation = useNavigation();
   const { entries, setEntries } = useContext(AuthContext);
+  const doorItem = useRoute().name.toLowerCase();
 
   return (
     <SafeAreaView className="bg-[#eee] p-6 h-full">
       <ScrollView>
         <View className="flex gap-4">
-          <Header order={1} />
+          <Header order={order} />
           <View className="flex-row items-center gap-2">
             <View className="bg-[#ebc] p-2 px-5 rounded-full">
-              <Text className="text-sm text-[#a55] font-bold">DOOR 1</Text>
+              <Text className="text-sm text-[#a55] font-bold">
+                DOOR {order}
+              </Text>
             </View>
             <View className="flex-1 h-0.5 w-full bg-[#ebc]"></View>
             <Image
@@ -68,65 +71,24 @@ function Door1() {
               className="w-10 h-10"
             />
           </View>
-          <Text className="text-[#a55]">AROUSAL LEVEL</Text>
-          <Text className="text-2xl font-serif font-bold">
-            What's your energy like today?
-          </Text>
-          <View className="flex-row">
-            <Pressable
-              onPress={() => setEntries({ ...entries, door1: "high" })}
-              className="p-2 flex-1"
-            >
-              <View
-                className={
-                  (entries.door1 == "high" ? "border" : "") +
-                  " bg-white p-5 rounded-xl gap-2"
-                }
-                style={styles.shadow}
-              >
-                <Image
-                  source={require("../../assets/square.png")}
-                  className="w-14 h-14"
-                />
-                <Text className="text-xl font-bold font-serif">High</Text>
-                <Text className="text-[#999] text-sm">
-                  Buzzing, charged, full of fuel
-                </Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() => setEntries({ ...entries, door1: "low" })}
-              className="p-2 flex-1"
-            >
-              <View
-                className={
-                  (entries.door1 == "low" ? "border" : "") +
-                  " bg-white p-5 rounded-xl gap-2"
-                }
-                style={styles.shadow}
-              >
-                <Image
-                  source={require("../../assets/square.png")}
-                  className="w-14 h-14"
-                />
-                <Text className="text-xl font-bold font-serif">Low</Text>
-                <Text className="text-[#999] text-sm">
-                  Drained, sluggish, running on empty
-                </Text>
-              </View>
-            </Pressable>
-          </View>
+          <Text className="text-[#a55]">{label}</Text>
+          <Text className="text-2xl font-serif font-bold">{question}</Text>
+          <View className={"flex-" + flex}>{children}</View>
         </View>
       </ScrollView>
       <View className="py-3">
         <Pressable
+          onPress={() => {
+            if (entries[doorItem] != null)
+              if (order < 4) navigation.navigate("Door" + (order + 1));
+          }}
           className={
-            (entries.door1 ?? "opacity-50") +
-            " bottom-0 bg-[#c7a] rounded-full p-4 active:bg-[#b69]"
+            (entries["door" + order] ? "active:bg-[#b69]" : "opacity-50") +
+            " bottom-0 bg-[#c7a] rounded-full p-4"
           }
         >
           <Text className="text-center text-white text-lg font-bold">
-            Next {"\u27F6"}
+            {order < 4 ? "Next \u27F6" : "See my mood \u27F6"}
           </Text>
         </Pressable>
       </View>
@@ -134,10 +96,138 @@ function Door1() {
   );
 }
 
+function Option({ title, description, icon }) {
+  const { entries, setEntries } = useContext(AuthContext);
+  const doorItem = useRoute().name.toLowerCase();
+
+  return (
+    <Pressable
+      onPress={() => setEntries({ ...entries, [doorItem]: title })}
+      className="p-2 flex-1"
+    >
+      <View
+        className={
+          (entries[doorItem] == title ? "border" : "") +
+          " bg-white p-5 rounded-xl gap-2"
+        }
+        style={styles.shadow}
+      >
+        <Image
+          source={require("../../assets/square.png")}
+          className="w-14 h-14"
+        />
+        <Text className="text-xl font-bold font-serif">{title}</Text>
+        <Text className="text-[#999] text-sm">{description}</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+function Door1() {
+  return (
+    <Door
+      order={1}
+      label="AROUSAL LEVEL"
+      question="What's your energy like today?"
+      flex="row"
+    >
+      <Option
+        title="High"
+        description="Buzzing, charged, full of fuel"
+        icon="../../assets/square.png"
+      />
+      <Option
+        title="Low"
+        description="Drained, sluggish, running on empty"
+        icon="../../assets/square.png"
+      />
+    </Door>
+  );
+}
+
+function Door2() {
+  return (
+    <Door
+      order={2}
+      label="DURATION"
+      question="How long have you been this way?"
+      flex="col"
+    >
+      <Option
+        title="Just today"
+        description="Started today - feeling fresh"
+        icon="../../assets/square.png"
+      />
+      <Option
+        title="A few days"
+        description="Been like this 2-4 days"
+        icon="../../assets/square.png"
+      />
+      <Option
+        title="A week or more"
+        description="Lasting a week or longer"
+        icon="../../assets/square.png"
+      />
+    </Door>
+  );
+}
+
+function Door3() {
+  return (
+    <Door
+      order={3}
+      label="EMOTIONAL TONE"
+      question="Is your heart feeling light or heavy?"
+      flex="row"
+    >
+      <Option
+        title="Light"
+        description="Warm, open, at ease"
+        icon="../../assets/square.png"
+      />
+      <Option
+        title="Heavy"
+        description="Tight, cloudy, weighed down"
+        icon="../../assets/square.png"
+      />
+    </Door>
+  );
+}
+
+function Door4() {
+  return (
+    <Door
+      order={4}
+      label="LIFE CONTEXT"
+      question="What part of your life is this about?"
+      flex="col"
+    >
+      <Option
+        title="Academic"
+        description="School, studying, exams"
+        icon="../../assets/square.png"
+      />
+      <Option
+        title="Social"
+        description="Friends, family, people"
+        icon="../../assets/square.png"
+      />
+      <Option
+        title="Personal"
+        description="Just you, your inner world"
+        icon="../../assets/square.png"
+      />
+    </Door>
+  );
+}
+
 export default function EntryScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Door1" component={Door1} />
+      <Stack.Screen name="Door2" component={Door2} />
+      <Stack.Screen name="Door3" component={Door3} />
+      <Stack.Screen name="Door4" component={Door4} />
     </Stack.Navigator>
   );
 }
