@@ -15,8 +15,8 @@ export default function MainScreen() {
     <SafeAreaView>
       <View className="h-full">
         <Pages>
-          <HomeScreen name="home" />
-          <JournalScreen name="journal" />
+          <HomeScreen name="home" icon="🏠" />
+          <JournalScreen name="journal" icon="📓" />
         </Pages>
       </View>
     </SafeAreaView>

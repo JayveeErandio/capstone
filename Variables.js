@@ -36,16 +36,16 @@ export const AuthProvider = ({ children }) => {
       {
         title: "Celebrate with Others",
         details: "Share your good energy",
-        icon: "1F389",
+        icon: "🎉",
       },
-      { title: "Reach Out", details: "Connect with a friend", icon: "1F4AC" },
+      { title: "Reach Out", details: "Connect with a friend", icon: "💬" },
       {
         title: "Community Events",
         details: "GCU social activities ",
-        icon: "1F91D",
+        icon: "🤝",
       },
     ];
-    const followup = "Who gave you good energy today?";
+    const followup = "🤔 Who gave you good energy today?";
 
     setDailyStatus({
       comment: comment,

@@ -118,14 +118,11 @@ function Option({ title, description, icon }) {
       <View
         className={
           (entries[doorItem] == title ? "border" : "") +
-          " bg-white p-5 rounded-xl gap-2"
+          " bg-white p-5 rounded-xl gap-4"
         }
         style={styles.shadow}
       >
-        <Image
-          source={require("../../assets/square.png")}
-          className="w-14 h-14"
-        />
+        <Text className="text-4xl">{icon}</Text>
         <Text className="text-xl font-bold font-serif">{title}</Text>
         <Text className="text-[#999] text-sm">{description}</Text>
       </View>
@@ -144,12 +141,12 @@ function Door1() {
       <Option
         title="High"
         description="Buzzing, charged, full of fuel"
-        icon="../../assets/square.png"
+        icon="🔥"
       />
       <Option
         title="Low"
         description="Drained, sluggish, running on empty"
-        icon="../../assets/square.png"
+        icon="🌙"
       />
     </Door>
   );
@@ -166,17 +163,17 @@ function Door2() {
       <Option
         title="Just today"
         description="Started today - feeling fresh"
-        icon="../../assets/square.png"
+        icon="📅"
       />
       <Option
         title="A few days"
         description="Been like this 2-4 days"
-        icon="../../assets/square.png"
+        icon="📅"
       />
       <Option
         title="A week or more"
         description="Lasting a week or longer"
-        icon="../../assets/square.png"
+        icon="📅"
       />
     </Door>
   );
@@ -190,15 +187,11 @@ function Door3() {
       question="Is your heart feeling light or heavy?"
       flex="row"
     >
-      <Option
-        title="Light"
-        description="Warm, open, at ease"
-        icon="../../assets/square.png"
-      />
+      <Option title="Light" description="Warm, open, at ease" icon="🍀" />
       <Option
         title="Heavy"
         description="Tight, cloudy, weighed down"
-        icon="../../assets/square.png"
+        icon="🌧"
       />
     </Door>
   );
@@ -215,17 +208,13 @@ function Door4() {
       <Option
         title="Academic"
         description="School, studying, exams"
-        icon="../../assets/square.png"
+        icon="📚"
       />
-      <Option
-        title="Social"
-        description="Friends, family, people"
-        icon="../../assets/square.png"
-      />
+      <Option title="Social" description="Friends, family, people" icon="👥" />
       <Option
         title="Personal"
         description="Just you, your inner world"
-        icon="../../assets/square.png"
+        icon="🪞"
       />
     </Door>
   );
@@ -261,42 +250,32 @@ function Result() {
           <Text className="text-center text-[#c93] font-serif font-bold text-5xl">
             {mood}
           </Text>
-          <Text className="text-center text-[#777]">
-            You've been riding this buzz for a few days. That's great!
-          </Text>
+          <Text className="text-center text-[#777]">{dailyStatus.comment}</Text>
 
           {/* Options selected */}
           <View className="flex-row flex-wrap justify-center gap-2">
-            <View className="flex-row items-center gap-1 self-center p-1 px-3 border border-[#aaa] rounded-full">
+            <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
               <Text className="text-sm text-[#555]">
-                {entries.door1 == "High" ? "\u{1F525} High" : "\u{1F319} Low"}{" "}
-                Energy
+                {entries.door1 == "High" ? "🔥 High" : "🌙 Low"} Energy
               </Text>
             </View>
-            <View className="flex-row items-center gap-1 self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Image
-                source={require("../../assets/square.png")}
-                className="w-6 h-6"
-              />
-              <Text className="text-sm text-[#555]">{entries.door3}</Text>
-            </View>
-            <View className="flex-row items-center gap-1 self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Image
-                source={require("../../assets/square.png")}
-                className="w-6 h-6"
-              />
+            <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
               <Text className="text-sm text-[#555]">
-                {entries.door3 == "Light"
-                  ? "\u{1F340} Light"
-                  : "\u{2601} Heavy"}
+                {entries.door3 == "Light" ? "🍀 Light" : "🌧 Heavy"}
               </Text>
             </View>
-            <View className="flex-row items-center gap-1 self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Image
-                source={require("../../assets/square.png")}
-                className="w-6 h-6"
-              />
-              <Text className="text-sm text-[#555]">{entries.door4}</Text>
+            <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
+              <Text className="text-sm text-[#555]">📅 {entries.door2}</Text>
+            </View>
+            <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
+              <Text className="text-sm text-[#555]">
+                {entries.door4 == "Academic"
+                  ? "📚"
+                  : entries.door4 == "Social"
+                    ? "👥"
+                    : "🪞"}{" "}
+                {entries.door4}
+              </Text>
             </View>
           </View>
 
@@ -312,7 +291,7 @@ function Result() {
                   key={index}
                 >
                   <Text className="bg-[#eee] text-2xl p-2 rounded-xl">
-                    {String.fromCodePoint(parseInt(current.icon, 16))}
+                    {current.icon}
                   </Text>
                   <View>
                     <Text className="font-bold font-serif text-lg">
@@ -335,9 +314,7 @@ function Result() {
           {/* Journal Notes */}
           <View className="bg-white p-5 rounded-xl gap-3">
             <View className="flex-row items-center gap-3">
-              <Text className="bg-[#eee] text-2xl p-2 rounded-xl">
-                {"\u{1F4D8}"}
-              </Text>
+              <Text className="bg-[#eee] text-2xl p-2 rounded-xl">📒</Text>
               <View>
                 <Text className="text-lg font-bold font-serif">
                   Journal your thoughts
@@ -348,7 +325,7 @@ function Result() {
               </View>
             </View>
             <Text className="bg-[#ffd] border border-[#cca] p-2 rounded-full italic text-[#552]">
-              {"\u{1F914}"} {dailyStatus.followup}
+              {dailyStatus.followup}
             </Text>
             <TextInput
               multiline

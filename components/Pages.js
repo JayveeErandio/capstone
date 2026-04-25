@@ -25,11 +25,11 @@ export default function Pages({ children }) {
             key={index}
           >
             <View className="flex items-center">
-              <Image
-                source={require("../assets/square.png")}
-                className="w-11 h-11"
-              />
-              <Text className="text-xs text-[#888]">{current.props.name}</Text>
+              <Text className="text-xl">{current.props.icon}</Text>
+              <Text className="text-xs text-[#888]">
+                {current.props.name.charAt(0).toUpperCase() +
+                  current.props.name.slice(1)}
+              </Text>
             </View>
           </Pressable>
         ))}
