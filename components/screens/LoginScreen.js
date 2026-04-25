@@ -67,6 +67,8 @@ export default function LoginScreen() {
             onPress={async () => {
               if (ID && password) {
                 setLoading(true);
+                setID();
+                setPassword();
                 const data = await login(ID, password);
                 setLoading(false);
                 setValid(data);

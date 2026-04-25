@@ -25,13 +25,13 @@ export const AuthProvider = ({ children }) => {
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const analyze = async (entry) => {
+  const analyze = async () => {
     // ==== BACKEND ====
     // Required: GoogleAI & Supabase
 
     await sleep(3000);
     const comment =
-      "You've been riding this this buzz for a few days. That's great!";
+      "You've been riding this this buzz for a few days. That's great! " + args;
     const suggestions = [
       {
         title: "Celebrate with Others",
