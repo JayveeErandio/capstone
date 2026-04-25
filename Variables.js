@@ -33,9 +33,17 @@ export const AuthProvider = ({ children }) => {
     const comment =
       "You've been riding this this buzz for a few days. That's great!";
     const suggestions = [
-      { title: "Celebrate with Others", details: "Share your good energy" },
-      { title: "Reach Out", details: "Connect with a friend" },
-      { title: "Community Events", details: "GCU social activities " },
+      {
+        title: "Celebrate with Others",
+        details: "Share your good energy",
+        icon: "1F389",
+      },
+      { title: "Reach Out", details: "Connect with a friend", icon: "1F4AC" },
+      {
+        title: "Community Events",
+        details: "GCU social activities ",
+        icon: "1F91D",
+      },
     ];
     const followup = "Who gave you good energy today?";
 
