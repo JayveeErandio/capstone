@@ -3,7 +3,11 @@ import { createContext, useState } from "react";
 export const Variables = createContext();
 
 export const Provider = ({ children }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({
+    success: true,
+    last_name: "erandio",
+    first_name: "jayvee",
+  });
   const [dailyStatus, setDailyStatus] = useState();
 
   const login = async (ID, password) => {

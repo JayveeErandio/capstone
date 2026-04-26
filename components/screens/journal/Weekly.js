@@ -1,8 +1,10 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
+import { LineChart } from "react-native-chart-kit";
 
 export default function Weekly() {
   return (
-    <View className="px-6">
+    <View className="px-6 gap-6 py-3">
+      {/* Weekly Summary */}
       <View className="bg-white p-4 rounded-xl gap-3">
         <Text className="text-[#a57]">WEEKLY SUMMARY</Text>
 
@@ -64,6 +66,62 @@ export default function Weekly() {
             </Text>
           </View>
         </View>
+      </View>
+
+      {/* Mood Trends */}
+      <View className="bg-white p-4 rounded-xl gap-1">
+        <Text className="text-[#a57]">MOOD TREND</Text>
+        <Text className="text-[#999] text-sm">
+          {"Mon"} — {"Sun"} • this week
+        </Text>
+        <LineChart
+          style={{
+            paddingRight: 60,
+            marginRight: 20,
+            paddingBottom: 18,
+            marginTop: 10,
+          }}
+          data={{
+            labels: ["M", "T", "W", "T", "F", "S", "S"],
+            datasets: [
+              {
+                data: [3, 4, 1, 3, 2, 3, 4],
+              },
+            ],
+          }}
+          width={300}
+          height={100}
+          withHorizontalLabels={true}
+          chartConfig={{
+            backgroundColor: "#fff",
+            backgroundGradientFrom: "#fff",
+            backgroundGradientTo: "#fff",
+            decimalPlaces: 0,
+            color: () => "#c79",
+          }}
+          segments={3}
+          formatYLabel={(y) => {
+            switch (parseInt(y)) {
+              case 4:
+                return "⚡ Exc";
+              case 3:
+                return "🍀 Con";
+              case 2:
+                return "🌧 Dra";
+              case 1:
+                return "😤 Str";
+            }
+          }}
+          withVerticalLines={false}
+        />
+      </View>
+
+      {/* Weekly Insight */}
+      <View className="bg-white p-4 rounded-xl gap-2">
+        <Text className="text-[#a57]">WEEKLY INSIGHT</Text>
+        <Text className="text-[#333] font-bold font-serif italic">
+          {"I notice you're riding some natural waves this"}
+        </Text>
       </View>
     </View>
   );
