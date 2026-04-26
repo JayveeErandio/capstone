@@ -8,20 +8,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState, useEffect, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AuthProvider, AuthContext } from "./Variables";
+import { Provider, Variables } from "./Variables";
 
 import SignupScreen from "./components/screens/SignupScreen";
-import HomeScreen from "./components/screens/HomeScreen";
-import JournalScreen from "./components/screens/JournalScreen";
 import LoginScreen from "./components/screens/LoginScreen";
-import AuthScreen from "./components/screens/AuthScreen";
 import MainScreen from "./components/screens/MainScreen";
 import EntryScreen from "./components/screens/EntryScreen";
 
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(Variables);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -42,13 +39,13 @@ function AppNavigator() {
 
 export default function App() {
   return (
-    <AuthProvider>
+    <Provider>
       {/* Yung SafeAreaView, parang viewport lang sya na sasakupan ng mga UI screen */}
       <SafeAreaProvider>
         <NavigationContainer>
           <AppNavigator />
         </NavigationContainer>
       </SafeAreaProvider>
-    </AuthProvider>
+    </Provider>
   );
 }

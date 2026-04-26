@@ -20,11 +20,18 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.jayveeerandio.capstone"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2a38c216-9b51-45a3-844c-acb5bdcff699"
+      }
+    },
+    "owner": "jayveeerandio"
   }
 }

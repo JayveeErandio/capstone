@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { View, Text, TextInput, Pressable, Image, Alert } from "react-native";
-import { AuthContext } from "../../Variables";
+import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
-  const { setPage } = useContext(AuthContext);
+  const { setPage } = useContext(Variables);
   const [ID, setID] = useState("");
 
   return (

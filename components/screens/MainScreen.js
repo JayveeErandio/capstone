@@ -5,11 +5,11 @@ import Pages from "../Pages";
 import { useContext, useState } from "react";
 import HomeScreen from "./HomeScreen";
 import JournalScreen from "./JournalScreen";
-import { AuthContext } from "../../Variables";
+import { Variables } from "../../Variables";
 import AuthScreen from "./AuthScreen";
 
 export default function MainScreen() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(Variables);
 
   return user.success ? (
     <SafeAreaView>

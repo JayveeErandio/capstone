@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 
-import { AuthContext } from "../../Variables";
+import { Variables } from "../../Variables";
 import { useContext } from "react";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -55,7 +55,7 @@ function Header({ order }) {
 function Door({ order, label, question, flex, children }) {
   const navigation = useNavigation();
   const { entries, setEntries, isAnalyzing, setIsAnalyzing, analyze } =
-    useContext(AuthContext);
+    useContext(Variables);
   const doorItem = useRoute().name.toLowerCase();
 
   return (
@@ -107,7 +107,7 @@ function Door({ order, label, question, flex, children }) {
 }
 
 function Option({ title, description, icon }) {
-  const { entries, setEntries } = useContext(AuthContext);
+  const { entries, setEntries } = useContext(Variables);
   const doorItem = useRoute().name.toLowerCase();
 
   return (
@@ -222,7 +222,8 @@ function Door4() {
 
 function Result() {
   const navigation = useNavigation();
-  const { entries, dailyStatus } = useContext(AuthContext);
+  const { entries, dailyStatus, setDailyStatus, updateJournal } =
+    useContext(Variables);
 
   // Mood Identification by Decision Tree Algorithm
   const mood =
@@ -328,16 +329,23 @@ function Result() {
               {dailyStatus.followup}
             </Text>
             <TextInput
+              onChangeText={(value) =>
+                setDailyStatus({ ...dailyStatus, journal: value })
+              }
               multiline
-              className="bg-[#eee] rounded-xl p-4 h-32"
+              className="bg-[#eee] rounded-xl p-4 h-32 text-[#555]"
               textAlignVertical="top"
               placeholder="Write your thoughts here..."
+              value={dailyStatus.journal}
             ></TextInput>
           </View>
 
           {/* Done or Submit */}
           <Pressable
-            onPress={() => navigation.navigate("Main")}
+            onPress={() => {
+              updateJournal();
+              navigation.navigate("Main");
+            }}
             className="bg-[#c7a] rounded-full p-4 active:bg-[#b69] mb-20"
           >
             <Text className="text-center text-white text-lg font-bold">
@@ -352,7 +360,7 @@ function Result() {
 
 export default function EntryScreen() {
   const { restartEntries, isAnalyzing, setIsAnalyzing, dailyStatus } =
-    useContext(AuthContext);
+    useContext(Variables);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 

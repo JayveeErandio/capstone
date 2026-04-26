@@ -1,8 +1,8 @@
 import { createContext, useState } from "react";
 
-export const AuthContext = createContext();
+export const Variables = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const Provider = ({ children }) => {
   const [user, setUser] = useState();
   const [dailyStatus, setDailyStatus] = useState();
 
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
     await sleep(3000);
     const comment =
-      "You've been riding this this buzz for a few days. That's great! " + args;
+      "You've been riding this buzz for a few days. That's great!";
     const suggestions = [
       {
         title: "Celebrate with Others",
@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }) => {
       comment: comment,
       suggestions: suggestions,
       followup: followup,
+      journal: "",
     });
   };
 
@@ -69,8 +70,19 @@ export const AuthProvider = ({ children }) => {
     );
   };
 
+  const updateJournal = () => {
+    // ==== BACKEND ====
+    // Required: Supabase
+    const data = dailyStatus.journal;
+
+    async function updateData() {
+      //HERE
+    }
+    updateData();
+  };
+
   return (
-    <AuthContext.Provider
+    <Variables.Provider
       value={{
         user,
         setUser,
@@ -84,10 +96,12 @@ export const AuthProvider = ({ children }) => {
         setIsAnalyzing,
         analyze,
         dailyStatus,
+        setDailyStatus,
+        updateJournal,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </Variables.Provider>
   );
 };
 

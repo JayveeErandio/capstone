@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../../Variables";
+import { Variables } from "../../Variables";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -9,7 +9,7 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const [ID, setID] = useState(0);
   const [password, setPassword] = useState("");
-  const { login, page, setPage } = useContext(AuthContext);
+  const { login, page, setPage } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function LoginScreen() {
     <LoadingScreen message="Signing you in" />
   ) : (
     <SafeAreaView>
-      <View className="bg-[#f8f4f9] h-full">
+      <View className="bg-[#fff] h-full">
         {/* ==== Headline Top ==== */}
         <View className="bg-[#f5ebf4] flex items-center py-8">
           <Image
@@ -45,7 +45,7 @@ export default function LoginScreen() {
             onChangeText={setID}
             inputMode="numeric"
             placeholder="e.g. 202310097"
-            className="border rounded-lg px-3 border-[#ccc]"
+            className="border rounded-lg px-3 border-[#ccc] bg-[#fff] text-[#555]"
           />
           <Text className="font-bold text-[#333] mt-3">PASSWORD</Text>
           <TextInput
@@ -53,7 +53,7 @@ export default function LoginScreen() {
             secureTextEntry={true}
             autoCapitalize="none"
             placeholder="Enter your password"
-            className="border rounded-lg px-3 border-[#ccc]"
+            className="border rounded-lg px-3 border-[#ccc] bg-[#fff] text-[#555] "
           />
           <Text
             className={
