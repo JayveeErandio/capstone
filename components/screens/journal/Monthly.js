@@ -1,5 +1,6 @@
 import { View, Text, FlatList, Pressable } from "react-native";
 import { useState } from "react";
+import { LineChart } from "react-native-chart-kit";
 
 const getDaysInMonth = (year, month) => {
   return new Date(year, month + 1, 0).getDate();
@@ -48,16 +49,19 @@ export default function Monthly() {
 
   return (
     <View className="px-6 gap-6 py-3">
+      {/* Calendar */}
       <View className="bg-white p-4 rounded-xl gap-3">
-        <Text className="text-[#a57] font-bold">APRIL 2025</Text>
+        <View className="flex-row justify-between items-center">
+          <Text className="text-[#a57]">APRIL 2025</Text>
+          <Text className="text-[#888] text-xs">31 check-ins</Text>
+        </View>
+
         <View className="flex-row justify-between px-5">
-          <Text className="text-[#555] text-sm">S</Text>
-          <Text className="text-[#555] text-sm">M</Text>
-          <Text className="text-[#555] text-sm">T</Text>
-          <Text className="text-[#555] text-sm">W</Text>
-          <Text className="text-[#555] text-sm">T</Text>
-          <Text className="text-[#555] text-sm">F</Text>
-          <Text className="text-[#555] text-sm">S</Text>
+          {["S", "M", "T", "W", "T", "F", "S"].map((current, index) => (
+            <Text className="text-[#555] text-sm" key={index}>
+              {current}
+            </Text>
+          ))}
         </View>
         <FlatList
           data={buildCalendar()}
@@ -113,6 +117,63 @@ export default function Monthly() {
             {'"Exhausted by end of week. Need rest"'}
           </Text>
         </View>
+      </View>
+
+      {/* Mood Trend */}
+      <View className="bg-white p-4 rounded-xl gap-1">
+        <Text className="text-[#a57]">MOOD TREND</Text>
+        <Text className="text-[#888] text-xs">
+          {nowMonth} — daily mood across the month
+        </Text>
+        <LineChart
+          style={{
+            paddingRight: 25,
+            marginRight: 5,
+            paddingBottom: 18,
+            marginTop: 10,
+          }}
+          data={{
+            labels: [
+              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+              20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+            ],
+            datasets: [
+              {
+                data: [
+                  3, 4, 1, 3, 2, 3, 4, 1, 4, 4, 2, 3, 1, 1, 2, 2, 3, 3, 4, 4, 1,
+                  1, 2, 2, 3, 3, 4, 4, 1, 1, 2,
+                ],
+              },
+            ],
+          }}
+          width={300}
+          height={100}
+          withHorizontalLabels={true}
+          chartConfig={{
+            backgroundColor: "#fff",
+            backgroundGradientFrom: "#fff",
+            backgroundGradientTo: "#fff",
+            decimalPlaces: 0,
+            color: () => "#c79",
+            propsForLabels: {
+              fontSize: 6,
+            },
+          }}
+          segments={3}
+          formatYLabel={(y) => {
+            switch (parseInt(y)) {
+              case 4:
+                return "Exc";
+              case 3:
+                return "Con";
+              case 2:
+                return "Dra";
+              case 1:
+                return "Str";
+            }
+          }}
+          withVerticalLines={false}
+        />
       </View>
     </View>
   );
