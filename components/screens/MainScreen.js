@@ -5,6 +5,7 @@ import Pages from "../Pages";
 import { useContext, useState } from "react";
 import HomeScreen from "./HomeScreen";
 import JournalScreen from "./JournalScreen";
+import SpaceScreen from "./SpaceScreen";
 import { Variables } from "../../Variables";
 import AuthScreen from "./AuthScreen";
 
@@ -17,6 +18,7 @@ export default function MainScreen() {
         <Pages>
           <HomeScreen name="home" icon="🏠" />
           <JournalScreen name="journal" icon="📓" />
+          <SpaceScreen name="space" icon="🌸" />
         </Pages>
       </View>
     </SafeAreaView>
