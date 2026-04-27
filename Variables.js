@@ -1,5 +1,11 @@
 import { createContext, useState } from "react";
 
+import { createClient } from "@supabase/supabase-js";
+const supabase = createClient(
+  process.env.EXPO_PUBLIC_SUPABASE_URL,
+  process.env.EXPO_PUBLIC_SUPABASE_KEY,
+);
+
 export const Variables = createContext();
 
 export const Provider = ({ children }) => {
@@ -25,6 +31,17 @@ export const Provider = ({ children }) => {
       setUser(data);
       return true;
     } else return false;
+  };
+
+  const signup = async (ID) => {
+    const { data, error } = await supabase.from("notifications").insert([
+      {
+        account_id: 2,
+        text_content: `Student with a student-number ${ID} has requested account creation.`,
+        type: "register",
+        is_seen: false,
+      },
+    ]);
   };
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -91,6 +108,7 @@ export const Provider = ({ children }) => {
         user,
         setUser,
         login,
+        signup,
         page,
         setPage,
         entries,

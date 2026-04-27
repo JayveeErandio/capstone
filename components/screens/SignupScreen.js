@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
-  const { setPage } = useContext(Variables);
+  const { setPage, signup } = useContext(Variables);
   const [ID, setID] = useState("");
 
   return (
@@ -33,13 +33,14 @@ export default function SignupScreen() {
             onChangeText={setID}
             inputMode="numeric"
             placeholder="e.g. 202310097"
-            className="border rounded-lg px-3 border-[#ccc]"
+            className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
           />
         </View>
 
         <Pressable
-          onPress={async () => {
+          onPress={() => {
             if (ID != "") {
+              signup(ID);
               navigation.goBack();
               Alert.alert(
                 "Notifying GCU",

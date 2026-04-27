@@ -134,7 +134,7 @@ function Door1() {
   return (
     <Door
       order={1}
-      label="AROUSAL LEVEL"
+      label="AROUSAL LEVELASDSD"
       question="What's your energy like today?"
       flex="row"
     >
