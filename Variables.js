@@ -3,18 +3,15 @@ import { loginUser, signupUser } from "./services/auth";
 export const Variables = createContext();
 
 export const Provider = ({ children }) => {
-  const [user, setUser] = useState({
-    success: true,
-    last_name: "erandio",
-    first_name: "jayvee",
-  });
+  const [user, setUser] = useState();
+
   const [dailyStatus, setDailyStatus] = useState();
 
   const login = async (studentID, password) => {
     const result = await loginUser(studentID, password);
 
     if (result.success) {
-      setUser(result.user);
+      setUser(result);
       return true;
     }
 

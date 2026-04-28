@@ -7,15 +7,14 @@ export const loginUser = async (studentID, password) => {
     .eq("student_number", studentID)
     .eq("password", password)
     .single();
-  console.log(data, error);
 
   if (error || !data) {
     return { success: false };
   }
 
   return {
+    ...data,
     success: true,
-    user: data,
   };
 };
 
