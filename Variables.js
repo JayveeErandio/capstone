@@ -36,7 +36,7 @@ export const Provider = ({ children }) => {
   const signup = async (ID) => {
     const { data, error } = await supabase.from("notifications").insert([
       {
-        account_id: 2,
+        account_id: 1,
         text_content: `Student with a student-number ${ID} has requested account creation.`,
         type: "register",
         is_seen: false,
