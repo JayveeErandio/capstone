@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { loginUser } from "../services/auth";
+import { loginUser, signupUser } from "./services/auth";
 export const Variables = createContext();
 
 export const Provider = ({ children }) => {
@@ -12,8 +12,7 @@ export const Provider = ({ children }) => {
 
   const login = async (studentID, password) => {
     const result = await loginUser(studentID, password);
-      // ==== BACKEND ====
-      // Required: Supabase
+
     if (result.success) {
       setUser(result.user);
       return true;
@@ -23,14 +22,7 @@ export const Provider = ({ children }) => {
   };
 
   const signup = async (ID) => {
-    const { data, error } = await supabase.from("notifications").insert([
-      {
-        account_id: 1,
-        text_content: `Student with a student-number ${ID} has requested account creation.`,
-        type: "register",
-        is_seen: false,
-      },
-    ]);
+    signupUser(ID);
   };
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);

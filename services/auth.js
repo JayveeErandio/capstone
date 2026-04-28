@@ -1,5 +1,5 @@
 import { supabase } from "../lib/supabase";
-// checks students table in Supabase
+
 export const loginUser = async (studentID, password) => {
   const { data, error } = await supabase
     .from("students")
@@ -7,6 +7,7 @@ export const loginUser = async (studentID, password) => {
     .eq("student_number", studentID)
     .eq("password", password)
     .single();
+  console.log(data, error);
 
   if (error || !data) {
     return { success: false };
@@ -16,4 +17,15 @@ export const loginUser = async (studentID, password) => {
     success: true,
     user: data,
   };
+};
+
+export const signupUser = async (ID) => {
+  const { data, error } = await supabase.from("notifications").insert([
+    {
+      account_id: 1,
+      text_content: `Student with a student-number ${ID} has requested account creation.`,
+      type: "register",
+      is_seen: false,
+    },
+  ]);
 };
