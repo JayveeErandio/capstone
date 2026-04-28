@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-
+import { loginUser } from "../services/auth";
 export const Variables = createContext();
 
 export const Provider = ({ children }) => {
@@ -10,21 +10,16 @@ export const Provider = ({ children }) => {
   });
   const [dailyStatus, setDailyStatus] = useState();
 
-  const login = async (ID, password) => {
-    // ==== BACKEND ====
-    // Required: Supabase
-    await sleep(2000);
-
-    const data = (() => {
-      if (ID == "202310097" && password == "aso")
-        return { success: true, last_name: "erandio", first_name: "jayvee" };
-      else return { success: false };
-    })();
-
-    if (data.success) {
-      setUser(data);
+  const login = async (studentID, password) => {
+    const result = await loginUser(studentID, password);
+      // ==== BACKEND ====
+      // Required: Supabase
+    if (result.success) {
+      setUser(result.user);
       return true;
-    } else return false;
+    }
+
+    return false;
   };
 
   const signup = async (ID) => {
