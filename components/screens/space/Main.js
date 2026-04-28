@@ -1,10 +1,10 @@
 import { View, Text, ScrollView, Pressable } from "react-native";
 
-export default function Main({ index }) {
+export default function Main({ index, setPage }) {
   return (
-    <View className={"px-6 absolute w-full h-full flex-col opacity-" + index}>
+    <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
       {/* Header */}
-      <View className="flex-row justify-between items-center py-6">
+      <View className="flex-row justify-between items-center py-6 bg-[#eee]">
         <View>
           <Text className="text-2xl font-bold font-serif">MoodSpace 🌸</Text>
           <Text className="text-sm text-[#777]">
@@ -12,7 +12,10 @@ export default function Main({ index }) {
           </Text>
         </View>
         <View className="flex-row items-center gap-2">
-          <Pressable className="bg-[#c57] p-3 rounded-full">
+          <Pressable
+            onPress={() => setPage("Create")}
+            className="bg-[#c57] p-3 rounded-full active:bg-[#000]"
+          >
             <Text className="text-white text-sm">✍🏻 Post</Text>
           </Pressable>
           <Pressable className="bg-white items-center p-2 rounded-lg border border-[#777] gap-1">
@@ -23,9 +26,9 @@ export default function Main({ index }) {
       </View>
 
       {/* Newsfeed Posts */}
-      <View className="flex-1">
+      <View className="flex-1 bg-[#eee]">
         <ScrollView className="flex-1">
-          {[1, 2].map((current, index) => (
+          {[1, 2, 7].map((current, index) => (
             <View className="bg-white p-5 rounded-2xl gap-2 mb-5" key={index}>
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
@@ -48,7 +51,7 @@ export default function Main({ index }) {
                 else feeling this way this week?
               </Text>
               <View className="flex-row gap-2">
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa]">
+                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] active:bg-[#ddd]">
                   <Text className="text-[#555] font-bold">❤️ {14}</Text>
                 </Pressable>
                 <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] opacity-50">
