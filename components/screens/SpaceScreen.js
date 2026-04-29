@@ -14,7 +14,7 @@ export default function SpaceScreen() {
         index={page == "Create" ? 50 : 0}
         setPage={() => setPage("Main")}
       />
-      <Mine index={page == "Mine" ? 50 : 0} />
+      <Mine index={page == "Mine" ? 50 : 0} setPage={() => setPage("Main")} />
     </View>
   );
 }

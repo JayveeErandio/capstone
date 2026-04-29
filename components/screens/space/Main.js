@@ -18,7 +18,10 @@ export default function Main({ index, setPage }) {
           >
             <Text className="text-white text-sm">✍🏻 Post</Text>
           </Pressable>
-          <Pressable className="bg-white items-center p-2 rounded-lg border border-[#777] gap-1">
+          <Pressable
+            onPress={() => setPage("Mine")}
+            className="bg-white items-center p-2 rounded-lg border border-[#777] gap-1 active:bg-[#eee]"
+          >
             <Text className="text-sm">📝</Text>
             <Text className="text-xs text-[#555]">Mine</Text>
           </Pressable>
