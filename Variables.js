@@ -2,8 +2,22 @@ import { createContext, useState } from "react";
 import { loginUser, signupUser } from "./services/auth";
 export const Variables = createContext();
 
+const randomColor = () => {
+  let ons = 0;
+  let red, green, blue;
+
+  red = Math.random() < 0.5;
+  green = Math.random() < 0.5;
+  if (red && green) blue = false;
+  else if (!red && !green) blue = true;
+  else blue = Math.random() < 0.5;
+
+  return "#" + (red ? "a" : "3") + (green ? "a" : "3") + (blue ? "a" : "3");
+};
+
 export const Provider = ({ children }) => {
-  const [user, setUser] = useState({ success: true });
+  const [user, setUser] = useState();
+  const [profcol, setProfcol] = useState(randomColor());
 
   const [dailyStatus, setDailyStatus] = useState();
 
@@ -98,6 +112,8 @@ export const Provider = ({ children }) => {
         dailyStatus,
         setDailyStatus,
         updateJournal,
+        profcol,
+        setProfcol,
       }}
     >
       {children}
