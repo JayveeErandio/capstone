@@ -3,7 +3,7 @@ import { loginUser, signupUser } from "./services/auth";
 export const Variables = createContext();
 
 export const Provider = ({ children }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({ success: true });
 
   const [dailyStatus, setDailyStatus] = useState();
 

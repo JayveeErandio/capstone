@@ -16,11 +16,21 @@ export default function NotificationScreen() {
 
       {/* Main Notification */}
       <ScrollView>
+        <View className="flex-row gap-3 bg-[#fef] p-3 rounded-2xl mb-3 border border-[#cac] items-center">
+          <Text className="bg-[#ddf] text-center text-[#99c] text-3xl rounded-lg font-bold">
+            ℹ️
+          </Text>
+          <Text className="text-sm text-[#777] leading-4 flex-1">
+            By clicking the unread notification, you confirm that you already
+            read it.
+          </Text>
+        </View>
+
         {/* Unread */}
         <Text className="text-[#c59] font-bold text-sm mb-2">UNREAD</Text>
         {[1, 2].map((current, index) => (
           <Pressable
-            className="bg-[#ffe] p-4 rounded-2xl active:bg-[#eed] mb-5 border border-[#bb7]"
+            className="bg-[#ffe] p-4 rounded-2xl active:bg-[#eed] mb-3 border border-[#bb7]"
             key={index}
           >
             <View className="flex-row gap-3 ">
@@ -47,7 +57,7 @@ export default function NotificationScreen() {
         <Text className="text-[#c59] font-bold text-sm mb-2">EARLIER</Text>
         {[1, 2, 3, 4, 5].map((current, index) => (
           <View
-            className="flex-row  gap-3 bg-white p-4 rounded-2xl mb-5"
+            className="flex-row  gap-3 bg-white p-4 rounded-2xl mb-3"
             key={index}
           >
             <Text className="text-xl bg-red-500 self-start bg-[#ffc] border border-[#ece] p-2 rounded-xl">
