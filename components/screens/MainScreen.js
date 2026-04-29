@@ -8,6 +8,7 @@ import JournalScreen from "./JournalScreen";
 import SpaceScreen from "./SpaceScreen";
 import { Variables } from "../../Variables";
 import AuthScreen from "./AuthScreen";
+import NotificationScreen from "./NotificationScreen";
 
 export default function MainScreen() {
   const { user } = useContext(Variables);
@@ -19,6 +20,7 @@ export default function MainScreen() {
           <HomeScreen name="home" icon="🏠" />
           <JournalScreen name="journal" icon="📓" />
           <SpaceScreen name="space" icon="🌸" />
+          <NotificationScreen name="alerts" icon="🔔" />
         </Pages>
       </View>
     </SafeAreaView>

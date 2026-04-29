@@ -30,6 +30,16 @@ export default function Pages({ children }) {
                 {current.props.name.charAt(0).toUpperCase() +
                   current.props.name.slice(1)}
               </Text>
+
+              {/* For Notification Tab only */}
+              <Text
+                className={
+                  "absolute bg-[#e37] text-white text-sm p-1 rounded-full right-1 top-1 translate-x-1/2 -translate-y-1/2 w-7 text-center h-7 " +
+                  (current.props.name != "alerts" ? "hidden" : "")
+                }
+              >
+                {1}
+              </Text>
             </View>
           </Pressable>
         ))}
