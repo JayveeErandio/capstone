@@ -14,9 +14,76 @@ export default function HomeScreen() {
     isAnalyzing,
     dailyStatus,
     profcol,
+    firstDay,
+    statusDays,
+    best,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
+  function getWeekFrom(startIndex) {
+    const days = ["S", "M", "T", "W", "T", "F", "S"];
+    return [...days.slice(startIndex), ...days.slice(0, startIndex)];
+  }
+  const daysInitial = getWeekFrom(firstDay);
+
+  const dayNow = new Date().getDay();
+  const dateNow = new Date(Date.now()).toISOString().split("T")[0];
+
+  function getCircularWeekDistance(a, b) {
+    return (b - a + 7) % 7;
+  }
+  const diffDay = getCircularWeekDistance(firstDay, dayNow);
+
+  const dayDetails = [];
+  for (let i = 0; i < 7; i++) {
+    const temp = new Date(Date.now() - 86400000 * (diffDay - i))
+      .toISOString()
+      .split("T")[0];
+    const letter = new Date(
+      Date.now() - 86400000 * (diffDay - i),
+    ).toLocaleDateString("en-US", { weekday: "long" })[0];
+    let isHad = !!statusDays.find((current) => current.date == temp);
+
+    dayDetails.push([letter, isHad]);
+  }
+
+  let start = 1;
+  let golang = true;
+  let streak = 0;
+  while (golang) {
+    const temp = new Date(Date.now() - 86400000 * start)
+      .toISOString()
+      .split("T")[0];
+
+    if (statusDays.find((current) => current.date == temp)) streak++;
+    else break;
+    start++;
+  }
+
+  let moodLineups = { excited: 0, content: 0, drained: 0, stressed: 0 };
+  for (let status of statusDays) {
+    moodLineups[status.mood]++;
+  }
+  function getHighestKey(obj) {
+    return Object.keys(obj).reduce((maxKey, key) => {
+      return obj[key] > obj[maxKey] ? key : maxKey;
+    });
+  }
+  let mostMood = statusDays.length > 0 ? getHighestKey(moodLineups) : null;
+  const mostEmoji =
+    statusDays.length > 0
+      ? mostMood == "excited"
+        ? "⚡"
+        : mostMood == "content"
+          ? "🍀"
+          : mostMood == "drained"
+            ? "🌧"
+            : "😤"
+      : null;
+  mostMood =
+    statusDays.length > 0
+      ? mostMood?.charAt(0).toUpperCase() + mostMood?.slice(1)
+      : null;
 
   return (
     <View className="flex-1">
@@ -101,10 +168,10 @@ export default function HomeScreen() {
             <Text className="text-[#c57] font-bold text-sm">YOUR PROGRESS</Text>
             <View className="gap-2">
               <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">
-                <Text className="text-4xl">🔥</Text>
+                <Text className="text-4xl">{streak >= 3 ? "🔥" : "⏳"}</Text>
                 <View className="flex-1">
                   <Text className="text-[#d25e78] font-bold text-3xl font-serif">
-                    7 days
+                    {streak} day{streak > 1 ? "s" : ""}
                   </Text>
                   <Text className="text-sm text-[#555]">
                     Current check-in streak
@@ -112,23 +179,23 @@ export default function HomeScreen() {
                 </View>
                 <View className="gap-2">
                   <Text className="text-sm text-[#555] text-center">BEST</Text>
-                  <Text className="font-bold text-xl text-center">14</Text>
+                  <Text className="font-bold text-xl text-center">{best}</Text>
                 </View>
               </View>
               <View className="flex-row gap-2">
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">📅</Text>
-                  <Text className="font-bold">22</Text>
+                  <Text className="font-bold">{statusDays.length}</Text>
                   <Text className="text-xs text-[#777]">Total Check-Ins</Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
-                  <Text className="text-2xl">😊</Text>
-                  <Text className="font-bold">Content</Text>
+                  <Text className="text-2xl">{mostEmoji ?? "😐"}</Text>
+                  <Text className="font-bold">{mostMood ?? "No Data"}</Text>
                   <Text className="text-xs text-[#777]">Most felt mood</Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">⚡</Text>
-                  <Text className="font-bold">3</Text>
+                  <Text className="font-bold">{best}</Text>
                   <Text className="text-xs text-[#777]">Day best streak</Text>
                 </View>
               </View>
@@ -137,48 +204,21 @@ export default function HomeScreen() {
               <Text className="text-xs text-[#777]">This week</Text>
               {/* Days */}
               <View className="flex-row gap-1">
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
-                    <Text className="text-center">✓</Text>
+                {dayDetails.map((current, index) => (
+                  <View className="items-center gap-1 flex-1" key={index}>
+                    <View
+                      className={
+                        (current[1] ? "bg-[#ca5476]" : "bg-[#ddd]") +
+                        " w-10 h-10  rounded-lg justify-center"
+                      }
+                    >
+                      <Text className="text-center">
+                        {current[1] ? "✓" : ""}
+                      </Text>
+                    </View>
+                    <Text className="text-sm text-[#777]">{current[0]}</Text>
                   </View>
-                  <Text className="text-sm text-[#777]">{"M"}</Text>
-                </View>
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
-                    <Text className="text-center">✓</Text>
-                  </View>
-                  <Text className="text-sm text-[#777]">{"T"}</Text>
-                </View>
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
-                    <Text className="text-center">✓</Text>
-                  </View>
-                  <Text className="text-sm text-[#777]">{"W"}</Text>
-                </View>
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
-                    <Text className="text-center">✓</Text>
-                  </View>
-                  <Text className="text-sm text-[#777]">{"T"}</Text>
-                </View>
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ddd] rounded-lg justify-center">
-                    <Text className="text-center"></Text>
-                  </View>
-                  <Text className="text-sm text-[#777]">{"F"}</Text>
-                </View>
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ddd] rounded-lg justify-center">
-                    <Text className="text-center"></Text>
-                  </View>
-                  <Text className="text-sm text-[#777]">{"S"}</Text>
-                </View>
-                <View className="items-center gap-1">
-                  <View className="w-10 h-10 bg-[#ddd] rounded-lg justify-center">
-                    <Text className="text-center"></Text>
-                  </View>
-                  <Text className="text-sm text-[#777]">{"S"}</Text>
-                </View>
+                ))}
               </View>
             </View>
           </View>

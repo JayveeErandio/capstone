@@ -5,6 +5,7 @@ import {
   signupUser,
   getStoredUser,
 } from "./services/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const Variables = createContext();
 
 const randomColor = () => {
@@ -15,13 +16,25 @@ const randomColor = () => {
 
 export const Provider = ({ children }) => {
   const [user, setUser] = useState();
+  const [firstDay, setFirstDay] = useState(new Date().getDay());
+  const [statusDays, setStatusDays] = useState([]);
+  const [best, setBest] = useState(0);
+
+  // Storage Data Retrieval
   useEffect(() => {
-    async function loadUser() {
+    async function temp() {
+      let value;
       const storedUser = await getStoredUser();
       setUser(storedUser);
+
+      value = await AsyncStorage.getItem("dayBasis");
+      if (value) setFirstDay(value);
+
+      value = await AsyncStorage.getItem("statusDays");
+      if (value) setStatusDays(value);
     }
 
-    loadUser();
+    temp();
   }, []);
 
   const [profcol, setProfcol] = useState(randomColor());
@@ -126,6 +139,9 @@ export const Provider = ({ children }) => {
         updateJournal,
         profcol,
         setProfcol,
+        firstDay,
+        statusDays,
+        best,
       }}
     >
       {children}
