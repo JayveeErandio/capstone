@@ -49,9 +49,9 @@ export default function ProfileScreen() {
           </View>
           <View
             className={
-              "bg-[" +
+              "bg-" +
               profcol +
-              "] w-20 h-20 rounded-full justify-center mx-auto"
+              "-600 w-20 h-20 rounded-full justify-center mx-auto"
             }
           >
             <Text className="text-center text-white text-3xl">

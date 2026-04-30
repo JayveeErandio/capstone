@@ -21,7 +21,7 @@ export default function HomeScreen() {
   return (
     <View className="flex-1">
       <ScrollView>
-        <View className="p-8">
+        <View className="p-8 pb-24">
           {/* Headline */}
           <View className="flex-row gap-7 pb-5">
             <View className="flex-1 gap-2">
@@ -42,7 +42,7 @@ export default function HomeScreen() {
                 setUser({});
               }}
               className={
-                "bg-[" + profcol + "] w-14 h-14 rounded-full justify-center"
+                "bg-" + profcol + "-600 w-14 h-14 rounded-full justify-center"
               }
             >
               <Text className="text-center text-white text-2xl">
@@ -135,14 +135,61 @@ export default function HomeScreen() {
             </View>
             <View className="gap-1">
               <Text className="text-xs text-[#777]">This week</Text>
-              <View>
-                <View className="w-10 h-10 bg-[#ca5476] rounded-lg"></View>
+              {/* Days */}
+              <View className="flex-row gap-1">
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
+                    <Text className="text-center">✓</Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"M"}</Text>
+                </View>
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
+                    <Text className="text-center">✓</Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"T"}</Text>
+                </View>
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
+                    <Text className="text-center">✓</Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"W"}</Text>
+                </View>
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ca5476] rounded-lg justify-center">
+                    <Text className="text-center">✓</Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"T"}</Text>
+                </View>
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ddd] rounded-lg justify-center">
+                    <Text className="text-center"></Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"F"}</Text>
+                </View>
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ddd] rounded-lg justify-center">
+                    <Text className="text-center"></Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"S"}</Text>
+                </View>
+                <View className="items-center gap-1">
+                  <View className="w-10 h-10 bg-[#ddd] rounded-lg justify-center">
+                    <Text className="text-center"></Text>
+                  </View>
+                  <Text className="text-sm text-[#777]">{"S"}</Text>
+                </View>
               </View>
             </View>
           </View>
         </View>
       </ScrollView>
-      <Pressable className="absolute bottom-7 right-7 bg-[#c68] p-4 rounded-full active:bg-[#b57]">
+
+      {/* AI Chatbot Button */}
+      <Pressable
+        onPress={() => navigation.navigate("Chatbot")}
+        className="absolute bottom-7 right-7 bg-[#c68] p-4 rounded-full active:bg-[#b57]"
+      >
         <Text className="text-3xl">💬</Text>
       </Pressable>
     </View>

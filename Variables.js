@@ -3,16 +3,9 @@ import { loginUser, signupUser } from "./services/auth";
 export const Variables = createContext();
 
 const randomColor = () => {
-  let ons = 0;
-  let red, green, blue;
+  const colors = ["red", "yellow", "green", "cyan", "indigo", "pink"];
 
-  red = Math.random() < 0.5;
-  green = Math.random() < 0.5;
-  if (red && green) blue = false;
-  else if (!red && !green) blue = true;
-  else blue = Math.random() < 0.5;
-
-  return "#" + (red ? "a" : "3") + (green ? "a" : "3") + (blue ? "a" : "3");
+  return colors[Math.floor(Math.random() * 6)];
 };
 
 export const Provider = ({ children }) => {
