@@ -1,5 +1,10 @@
-import { createContext, useState } from "react";
-import { loginUser, signupUser } from "./services/auth";
+import { createContext, useState, useEffect } from "react";
+import {
+  loginUser,
+  logoutUser,
+  signupUser,
+  getStoredUser,
+} from "./services/auth";
 export const Variables = createContext();
 
 const randomColor = () => {
@@ -10,6 +15,15 @@ const randomColor = () => {
 
 export const Provider = ({ children }) => {
   const [user, setUser] = useState();
+  useEffect(() => {
+    async function loadUser() {
+      const storedUser = await getStoredUser();
+      setUser(storedUser);
+    }
+
+    loadUser();
+  }, []);
+
   const [profcol, setProfcol] = useState(randomColor());
 
   const [dailyStatus, setDailyStatus] = useState();
@@ -23,6 +37,10 @@ export const Provider = ({ children }) => {
     }
 
     return false;
+  };
+
+  const logout = async () => {
+    await logoutUser();
   };
 
   const signup = async (ID) => {
@@ -93,6 +111,7 @@ export const Provider = ({ children }) => {
         user,
         setUser,
         login,
+        logout,
         signup,
         page,
         setPage,

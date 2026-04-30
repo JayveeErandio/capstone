@@ -7,7 +7,7 @@ import { Variables } from "../../Variables";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const { user, setUser, profcol, setProfcol } = useContext(Variables);
+  const { user, setUser, logout, profcol, setProfcol } = useContext(Variables);
 
   const capitalize = (name) => name.charAt(0).toUpperCase() + name.slice(1);
   const firstName = capitalize(user["first_name"]);
@@ -39,7 +39,8 @@ export default function ProfileScreen() {
               <Text className="text-lg font-bold font-serif">My Profile</Text>
             </View>
             <Pressable
-              onPress={() => {
+              onPress={async () => {
+                logout();
                 setUser(null);
               }}
               className="bg-[#c59] p-2 px-5 rounded-xl"
