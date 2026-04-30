@@ -1,21 +1,22 @@
 import { supabase } from "../lib/supabase";
 
 export const loginUser = async (studentID, password) => {
-  const { data, error } = await supabase
-    .from("students")
-    .select("*")
-    .eq("student_number", studentID)
-    .eq("password", password)
-    .single();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: `${studentID}@moodlink.com`,
+    password: password,
+  });
 
-  if (error || !data) {
-    return { success: false };
+  if (data.session) {
+    const { data: student } = await supabase
+      .from("students")
+      .select("*")
+      .eq("student_number", studentID)
+      .single();
+
+    return { ...student, success: true };
   }
 
-  return {
-    ...data,
-    success: true,
-  };
+  return { success: false };
 };
 
 export const signupUser = async (ID) => {
