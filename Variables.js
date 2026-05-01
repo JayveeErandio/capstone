@@ -7,6 +7,7 @@ import {
 } from "./services/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const Variables = createContext();
+import { askMood } from "./services/chatbot";
 
 const randomColor = () => {
   const colors = ["red", "yellow", "green", "cyan", "indigo", "pink"];
@@ -64,32 +65,12 @@ export const Provider = ({ children }) => {
 
   const analyze = async () => {
     // ==== BACKEND ====
-    // Required: GoogleAI & Supabase
+    // Required: Supabase
 
-    await sleep(3000);
-    const comment =
-      "You've been riding this buzz for a few days. That's great!";
-    const suggestions = [
-      {
-        title: "Celebrate with Others",
-        details: "Share your good energy",
-        icon: "🎉",
-      },
-      { title: "Reach Out", details: "Connect with a friend", icon: "💬" },
-      {
-        title: "Community Events",
-        details: "GCU social activities ",
-        icon: "🤝",
-      },
-    ];
-    const followup = "🤔 Who gave you good energy today?";
+    const answer = await askMood(entries);
+    const result = JSON.parse(answer.slice(8).slice(0, -4));
 
-    setDailyStatus({
-      comment: comment,
-      suggestions: suggestions,
-      followup: followup,
-      journal: "",
-    });
+    setDailyStatus(result);
   };
 
   const [page, setPage] = useState("login");

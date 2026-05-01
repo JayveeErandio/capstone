@@ -134,7 +134,7 @@ function Door1() {
   return (
     <Door
       order={1}
-      label="AROUSAL LEVELASDSD"
+      label="AROUSAL LEVEL"
       question="What's your energy like today?"
       flex="row"
     >
@@ -294,7 +294,7 @@ function Result() {
                   <Text className="bg-[#eee] text-2xl p-2 rounded-xl">
                     {current.icon}
                   </Text>
-                  <View>
+                  <View className="flex-1">
                     <Text className="font-bold font-serif text-lg">
                       {current.title}
                     </Text>
