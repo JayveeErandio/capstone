@@ -17,6 +17,7 @@ export default function HomeScreen() {
     firstDay,
     statusDays,
     best,
+    streak,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
@@ -45,19 +46,6 @@ export default function HomeScreen() {
     let isHad = !!statusDays.find((current) => current.date == temp);
 
     dayDetails.push([letter, isHad]);
-  }
-
-  let start = 1;
-  let golang = true;
-  let streak = 0;
-  while (golang) {
-    const temp = new Date(Date.now() - 86400000 * start)
-      .toISOString()
-      .split("T")[0];
-
-    if (statusDays.find((current) => current.date == temp)) streak++;
-    else break;
-    start++;
   }
 
   let moodLineups = { excited: 0, content: 0, drained: 0, stressed: 0 };
