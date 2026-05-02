@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const Variables = createContext();
 import { askMood } from "./services/chatbot";
 import { supabase } from "./lib/supabase";
+import * as storage from "./services/storage";
 
 export const Provider = ({ children }) => {
   const [user, setUser] = useState();
@@ -26,18 +27,12 @@ export const Provider = ({ children }) => {
   // Storage Data Retrieval
   useEffect(() => {
     async function temp() {
+      storage.getAll();
       let value;
       const storedUser = await getStoredUser();
       setUser(storedUser);
 
       if (!storedUser) return;
-
-      const cleanStorage = async function () {
-        await AsyncStorage.removeItem("statusDays");
-        await AsyncStorage.removeItem("dailyStatus");
-        await AsyncStorage.removeItem("firstDay");
-      };
-      //cleanStorage();
 
       value = await AsyncStorage.getItem("dayBasis");
       if (value) setFirstDay(value);
