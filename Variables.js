@@ -12,11 +12,16 @@ import { supabase } from "./lib/supabase";
 import * as storage from "./services/storage";
 
 export const Provider = ({ children }) => {
+  // Mga variables na globally na gagamitin throughout ng app
   const [user, setUser] = useState();
   const [firstDay, setFirstDay] = useState(new Date().getDay());
   const [statusDays, setStatusDays] = useState([]);
   const [dailyStatus, setDailyStatus] = useState();
   const [best, setBest] = useState(0);
+  const [profcol, setProfcol] = useState(randomColor());
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [page, setPage] = useState("login");
+  const [streak, setStreak] = useState(0);
   const [entries, setEntries] = useState({
     door1: null,
     door2: null,
@@ -24,73 +29,32 @@ export const Provider = ({ children }) => {
     door4: null,
   });
 
-  // Storage Data Retrieval
+  // Mga variables na nakasave na or galing sa storage ng cellphone na ilalagay dun sa global variables
   useEffect(() => {
     async function temp() {
-      storage.getAll();
-      let value;
-      const storedUser = await getStoredUser();
-      setUser(storedUser);
+      //await storage.deleteAll();
+      if (!(await storage.getUser())) return;
 
-      if (!storedUser) return;
-
-      value = await AsyncStorage.getItem("dayBasis");
-      if (value) setFirstDay(value);
-
-      value = await AsyncStorage.getItem("statusDays");
-      if (value) setStatusDays(JSON.parse(value));
-
-      value = await AsyncStorage.getItem("dailyStatus");
-      if (value) setDailyStatus(JSON.parse(value));
-
-      value = await AsyncStorage.getItem("firstDay");
-      if (value) setFirstDay(JSON.parse(value));
-
-      value = await AsyncStorage.getItem("best");
-      if (value) setBest(JSON.parse(value));
+      const data = await storage.getAll();
+      setUser(data.user);
+      setStatusDays(data.statusDays);
     }
-
     temp();
   }, []);
-
-  let start = 0;
-  let golang = true;
-  let streak = 0;
-  while (golang) {
-    const temp = new Date(Date.now() - 86400000 * start)
-      .toISOString()
-      .split("T")[0];
-
-    if (statusDays.find((current) => current.date == temp)) streak++;
-    else break;
-    start++;
-  }
-
-  useEffect(() => {
-    const temp = async () => {
-      await AsyncStorage.setItem("statusDays", JSON.stringify(statusDays));
-
-      if (streak > best) {
-        setBest(streak);
-        await AsyncStorage.setItem("best", JSON.stringify(streak));
-      }
-    };
-    temp();
-  }, [statusDays]);
-
-  const [profcol, setProfcol] = useState(randomColor());
 
   const login = async (studentID, password) => {
     const result = await loginUser(studentID, password);
 
     if (result.success) {
       setUser(result);
+      storage.putUser(result);
       const { data, error } = await supabase
         .from("status_days")
         .select("date, id, journal, mood")
         .eq("account_id", result.id);
-
       setStatusDays(data);
+      storage.putStatusDays(data);
+
       return true;
     }
 
@@ -99,28 +63,26 @@ export const Provider = ({ children }) => {
 
   const logout = async () => {
     await logoutUser();
-    await AsyncStorage.clear();
+    await storage.deleteAll();
   };
 
   const signup = async (ID) => {
     signupUser(ID);
   };
 
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-
   const analyze = async () => {
     // ==== BACKEND ====
     // Required: Supabase
 
     //const answer = await askMood(entries);
+    //const result = JSON.parse(answer.slice(8).slice(0, -4));
     const result = {
       comment: "ASO",
       suggestions: [{ title: "titulo", details: "detalye", icon: "X" }],
       followup: "bakit po?",
-    }; //JSON.parse(answer.slice(8).slice(0, -4));
+    };
     setDailyStatus(result);
-
-    await AsyncStorage.setItem("dailyStatus", JSON.stringify(result));
+    await storage.putDailyStatus(result);
 
     const newdata = {
       mood:
@@ -134,28 +96,20 @@ export const Provider = ({ children }) => {
       date: new Date(Date.now()).toISOString().split("T")[0],
       account_id: user.id,
     };
-
     const { data, error } = await supabase
       .from("status_days")
       .insert([newdata])
       .select();
-
     delete data[0].account_id;
-
     setStatusDays([...statusDays, data[0]]);
+    storage.putStatusDays(statusDays);
 
-    await AsyncStorage.setItem("statusDays", JSON.stringify(statusDays));
-
-    const firstDayTemp = await AsyncStorage.getItem("firstDay");
-    console.log(firstDayTemp);
-    if (!firstDayTemp)
-      await AsyncStorage.setItem(
-        "firstDay",
-        JSON.stringify(new Date().getDay()),
-      );
+    if (!(await storage.getFirstDay())) {
+      console.log(2323);
+      await storage.putFirstDay(firstDay);
+      console.log(5656);
+    }
   };
-
-  const [page, setPage] = useState("login");
 
   const restartEntries = () => {
     setEntries(
