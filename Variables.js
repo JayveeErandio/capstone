@@ -29,13 +29,16 @@ export const Provider = ({ children }) => {
     door4: null,
   });
 
+  console.log("ihe");
   // Mga variables na nakasave na or galing sa storage ng cellphone na ilalagay dun sa global variables
   useEffect(() => {
     async function temp() {
       //console.log(await storage.getFirstDay());
       //await storage.deleteAll();
-
+      console.log("tae");
       if (!(await storage.getUser())) return;
+
+      setupData();
 
       const data = await storage.getAll();
       setUser(data.user);
@@ -55,16 +58,19 @@ export const Provider = ({ children }) => {
       await storage.putFirstDay(new Date(oldest.date).getDay());
 
       // For Streak
+      let count = 0;
+      console.log(statusDays);
       let curdate = new Date().toISOString().split("T")[0];
       if (statusDays.find((current) => current.date == curdate)) {
         let minusDay = 0;
         do {
-          setStreak(streak + 1);
+          count++;
           minusDay++;
           curdate = new Date(Date.now() - 86400000 * minusDay)
             .toISOString()
             .split("T")[0];
         } while (statusDays.find((current) => current.date == curdate));
+        setStreak(count);
       }
     }
   };
@@ -73,7 +79,6 @@ export const Provider = ({ children }) => {
     const result = await loginUser(studentID, password);
 
     if (result.success) {
-      setUser(result);
       const fetchDailyStatus = JSON.parse(result.daily_result);
       setDailyStatus(fetchDailyStatus);
       await storage.putDailyStatus(fetchDailyStatus);
@@ -85,8 +90,9 @@ export const Provider = ({ children }) => {
 
       setStatusDays(data);
       await storage.putStatusDays(data);
-      await setupData();
+      setupData();
 
+      setUser(result);
       return true;
     }
 
