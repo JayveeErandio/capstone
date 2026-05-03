@@ -44,7 +44,9 @@ export async function getFirstDay() {
 }
 
 export async function putFirstDay(data) {
-  console.log(89);
   await AsyncStorage.setItem("firstDay", JSON.stringify(data));
-  console.log(45);
+}
+
+export async function getStatusDays() {
+  return await AsyncStorage.getItem("statusDays");
 }

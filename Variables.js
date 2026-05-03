@@ -32,28 +32,60 @@ export const Provider = ({ children }) => {
   // Mga variables na nakasave na or galing sa storage ng cellphone na ilalagay dun sa global variables
   useEffect(() => {
     async function temp() {
+      //console.log(await storage.getFirstDay());
       //await storage.deleteAll();
+
       if (!(await storage.getUser())) return;
 
       const data = await storage.getAll();
       setUser(data.user);
       setStatusDays(data.statusDays);
+      setDailyStatus(data.dailyStatus);
     }
     temp();
   }, []);
+
+  const setupData = async () => {
+    if (statusDays.length > 0) {
+      // For First Day Basis
+      const oldest = statusDays.reduce((min, curr) => {
+        return new Date(curr.date) < new Date(min.date) ? curr : min;
+      });
+      setFirstDay(new Date(oldest.date).getDay());
+      await storage.putFirstDay(new Date(oldest.date).getDay());
+
+      // For Streak
+      let curdate = new Date().toISOString().split("T")[0];
+      if (statusDays.find((current) => current.date == curdate)) {
+        let minusDay = 0;
+        do {
+          setStreak(streak + 1);
+          minusDay++;
+          curdate = new Date(Date.now() - 86400000 * minusDay)
+            .toISOString()
+            .split("T")[0];
+        } while (statusDays.find((current) => current.date == curdate));
+      }
+    }
+  };
 
   const login = async (studentID, password) => {
     const result = await loginUser(studentID, password);
 
     if (result.success) {
       setUser(result);
+      const fetchDailyStatus = JSON.parse(result.daily_result);
+      setDailyStatus(fetchDailyStatus);
+      await storage.putDailyStatus(fetchDailyStatus);
       storage.putUser(result);
       const { data, error } = await supabase
         .from("status_days")
         .select("date, id, journal, mood")
         .eq("account_id", result.id);
+
       setStatusDays(data);
-      storage.putStatusDays(data);
+      await storage.putStatusDays(data);
+      await setupData();
 
       return true;
     }
@@ -64,6 +96,7 @@ export const Provider = ({ children }) => {
   const logout = async () => {
     await logoutUser();
     await storage.deleteAll();
+    setStreak(0);
   };
 
   const signup = async (ID) => {
@@ -83,6 +116,10 @@ export const Provider = ({ children }) => {
     };
     setDailyStatus(result);
     await storage.putDailyStatus(result);
+    await supabase
+      .from("students")
+      .update({ daily_result: result })
+      .eq("id", user.id);
 
     const newdata = {
       mood:
@@ -100,9 +137,10 @@ export const Provider = ({ children }) => {
       .from("status_days")
       .insert([newdata])
       .select();
+
     delete data[0].account_id;
     setStatusDays([...statusDays, data[0]]);
-    storage.putStatusDays(statusDays);
+    await storage.putStatusDays(statusDays);
 
     if (!(await storage.getFirstDay())) {
       console.log(2323);
