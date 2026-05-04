@@ -1,0 +1,115 @@
+import { supabase } from "../lib/supabase";
+
+export async function putPost(data) {
+  await supabase.from("pending_posts").insert([data]);
+}
+
+export async function login(studentID, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: `${studentID}@moodlink.com`,
+    password: password,
+  });
+
+  if (data.session) {
+    const { data: student } = await supabase
+      .from("students")
+      .select("*")
+      .eq("student_number", studentID)
+      .single();
+
+    const value = { ...student, success: true };
+    const temp = async () => {
+      await AsyncStorage.setItem("user", JSON.stringify(value));
+    };
+    temp();
+    return value;
+  }
+
+  return { success: false };
+}
+
+export async function logout() {
+  await supabase.auth.signOut();
+  const { data } = await supabase.auth.getSession();
+}
+
+export async function getStatusDays(id) {
+  const { data, error } = await supabase
+    .from("status_days")
+    .select("date, id, journal, mood")
+    .eq("account_id", id);
+  return data;
+}
+
+export async function getPendingPosts(id) {
+  const { data, error } = await supabase
+    .from("pending_posts")
+    .select("*")
+    .eq("student_id", id);
+  data.forEach((obj) => delete obj.student_id);
+  data.forEach((obj) => delete obj.ai_say);
+  return data;
+}
+
+export async function deletePendingPost(id) {
+  const { error } = await supabase.from("pending_posts").delete().eq("id", id);
+}
+
+export async function getPosts(id) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `
+        id, 
+        mood,
+        content,
+        datetime,
+        students (
+                anonymous_name
+        ),
+        reactions (
+                type,
+                student_id
+        )
+        `,
+    )
+    .order("id", { ascending: false })
+    .limit(7);
+
+  function groupReactions(posts, currentUserId) {
+    return posts.map((post) => {
+      const counts = {};
+      let myreact = null;
+
+      post.reactions?.forEach((r) => {
+        console.log(r, currentUserId);
+        if (!r?.type) return;
+
+        // count reactions
+        counts[r.type] = (counts[r.type] || 0) + 1;
+
+        // check if current user reacted
+        if (r.student_id === currentUserId) {
+          myreact = r.type;
+        }
+      });
+
+      return {
+        ...post,
+        reactions: counts,
+        myreact, // null if user didn't react
+      };
+    });
+  }
+
+  return groupReactions(data, id);
+}
+
+export async function getMyPosts(id) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("student_id", id);
+  data.forEach((obj) => delete obj.student_id);
+  return data;
+}

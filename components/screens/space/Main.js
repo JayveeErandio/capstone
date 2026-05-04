@@ -1,6 +1,48 @@
 import { View, Text, ScrollView, Pressable } from "react-native";
+import { useContext } from "react";
+import { Variables } from "../../../Variables";
 
 export default function Main({ index, setPage }) {
+  const { posts } = useContext(Variables);
+  console.log(posts[0]);
+
+  function formatTime(timestamp) {
+    const date = new Date(timestamp); // auto handles UTC → local
+    const now = new Date();
+
+    const diffMs = now - date;
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    // 🕒 Just now / seconds
+    if (seconds < 60) return "just now";
+
+    // ⏱ Minutes
+    if (minutes < 60) return `${minutes}m ago`;
+
+    // 🕐 Hours
+    if (hours < 24) return `${hours}h ago`;
+
+    // 📅 Yesterday
+    if (days === 1) return "yesterday";
+
+    // 📆 Days ago
+    if (days < 7) return `${days}d ago`;
+
+    // 🗓 Fallback to full date (e.g., Jan 18 | 6:38 PM)
+    return date
+      .toLocaleString("en-PH", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .replace(",", " |");
+  }
+
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
       {/* Header */}
@@ -31,17 +73,25 @@ export default function Main({ index, setPage }) {
       {/* Newsfeed Posts */}
       <View className="flex-1 bg-[#eee]">
         <ScrollView className="flex-1">
-          {[1, 2, 7].map((current, index) => (
+          {posts.map((current, index) => (
             <View className="bg-white p-5 rounded-2xl gap-2 mb-5" key={index}>
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
-                  <Text className="text-lg bg-[#fee] p-2 rounded-xl border">
-                    😤
+                  <Text className="text-lg bg-[#fef] p-2 rounded-xl border">
+                    {current.mood == "Excited"
+                      ? "⚡"
+                      : current.mood == "Content"
+                        ? "🍀"
+                        : current.mood == "Drained"
+                          ? "🌧"
+                          : "😤"}
                   </Text>
                   <View>
-                    <Text className="text-[#773] font-bold">mrkrabzzz</Text>
+                    <Text className="text-[#773] font-bold">
+                      {current.students.anonymous_name}
+                    </Text>
                     <Text className="text-sm text-[#777]">
-                      {"Stressed"} • 2m ago
+                      {current.mood} • {formatTime(current.datetime)}
                     </Text>
                   </View>
                 </View>
@@ -49,19 +99,61 @@ export default function Main({ index, setPage }) {
                   <Text className="text-sm text-[#bbb]">Report</Text>
                 </Pressable>
               </View>
-              <Text className="leading-normal">
-                Deadlines are piling up and I feel like I can't breathe. Anyone
-                else feeling this way this week?
-              </Text>
+              <Text className="leading-normal">{current.content}</Text>
               <View className="flex-row gap-2">
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] active:bg-[#ddd]">
-                  <Text className="text-[#555] font-bold">❤️ {14}</Text>
+                <Pressable
+                  className={
+                    (current.myreact == "love"
+                      ? "bg-blue-100 active:bg-blue-200"
+                      : "bg-gray-100 active:bg-gray-200") +
+                    "  p-2 rounded-full px-3 border border-[#aaa]"
+                  }
+                >
+                  <Text
+                    className={
+                      (current.myreact == "love"
+                        ? "text-blue-500"
+                        : "text-[#888]") + "  font-bold"
+                    }
+                  >
+                    ❤️ {current.reactions.love ?? 0}
+                  </Text>
                 </Pressable>
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] opacity-50">
-                  <Text className="text-[#555] font-bold">😂 {0}</Text>
+                <Pressable
+                  className={
+                    (current.myreact == "funny"
+                      ? "bg-blue-100 active:bg-blue-200"
+                      : "bg-gray-100 active:bg-gray-200") +
+                    "  p-2 rounded-full px-3 border border-[#aaa]"
+                  }
+                >
+                  <Text
+                    className={
+                      (current.myreact == "funny"
+                        ? "text-blue-500"
+                        : "text-[#888]") + "  font-bold"
+                    }
+                  >
+                    😂 {current.reactions.funny ?? 0}
+                  </Text>
                 </Pressable>
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] opacity-50">
-                  <Text className="text-[#555] font-bold">😥 {0}</Text>
+                <Pressable
+                  className={
+                    (current.myreact == "sad"
+                      ? "bg-blue-100 active:bg-blue-200"
+                      : "bg-gray-100 active:bg-gray-200") +
+                    "  p-2 rounded-full px-3 border border-[#aaa]"
+                  }
+                >
+                  <Text
+                    className={
+                      (current.myreact == "sad"
+                        ? "text-blue-500"
+                        : "text-[#888]") + "  font-bold"
+                    }
+                  >
+                    😥 {current.reactions.sad ?? 0}
+                  </Text>
                 </Pressable>
               </View>
             </View>

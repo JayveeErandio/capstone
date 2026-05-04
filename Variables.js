@@ -8,12 +8,12 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const Variables = createContext();
 import { askMood } from "./services/chatbot";
-import { supabase } from "./lib/supabase";
 import * as storage from "./services/storage";
+import * as supabase from "./services/supabase";
 
 export const Provider = ({ children }) => {
   // Mga variables na globally na gagamitin throughout ng app
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({});
   const [firstDay, setFirstDay] = useState(new Date().getDay());
   const [statusDays, setStatusDays] = useState([]);
   const [dailyStatus, setDailyStatus] = useState();
@@ -22,6 +22,9 @@ export const Provider = ({ children }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [page, setPage] = useState("login");
   const [streak, setStreak] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [myposts, setMyposts] = useState([]);
+  const [pendingPosts, setPendingPosts] = useState([]);
   const [entries, setEntries] = useState({
     door1: null,
     door2: null,
@@ -29,27 +32,29 @@ export const Provider = ({ children }) => {
     door4: null,
   });
 
-  console.log("ihe");
   // Mga variables na nakasave na or galing sa storage ng cellphone na ilalagay dun sa global variables
   useEffect(() => {
     async function temp() {
-      //console.log(await storage.getFirstDay());
+      //console.log(await storage.getFirstDay());\
       //await storage.deleteAll();
-      console.log("tae");
-      if (!(await storage.getUser())) return;
 
-      setupData();
-
-      const data = await storage.getAll();
-      setUser(data.user);
-      setStatusDays(data.statusDays);
-      setDailyStatus(data.dailyStatus);
+      if (await storage.getUser()) setupData();
     }
     temp();
   }, []);
 
   const setupData = async () => {
-    if (statusDays.length > 0) {
+    const data = await storage.getAll();
+    await setStatusDays(data.statusDays);
+    await setDailyStatus(data.dailyStatus);
+    await setPendingPosts(data.pendingPosts);
+    await setPosts(data.posts);
+    await setMyposts(data.myPosts);
+
+    // Variables that need computations
+    if (data.statusDays.length > 0) {
+      // To know whether the daily status pertains for today's check-in
+
       // For First Day Basis
       const oldest = statusDays.reduce((min, curr) => {
         return new Date(curr.date) < new Date(min.date) ? curr : min;
@@ -59,7 +64,6 @@ export const Provider = ({ children }) => {
 
       // For Streak
       let count = 0;
-      console.log(statusDays);
       let curdate = new Date().toISOString().split("T")[0];
       if (statusDays.find((current) => current.date == curdate)) {
         let minusDay = 0;
@@ -73,23 +77,21 @@ export const Provider = ({ children }) => {
         setStreak(count);
       }
     }
+
+    setUser(data.user);
   };
 
   const login = async (studentID, password) => {
-    const result = await loginUser(studentID, password);
+    const result = await supabase.login(studentID, password);
 
     if (result.success) {
-      const fetchDailyStatus = JSON.parse(result.daily_result);
-      setDailyStatus(fetchDailyStatus);
-      await storage.putDailyStatus(fetchDailyStatus);
-      storage.putUser(result);
-      const { data, error } = await supabase
-        .from("status_days")
-        .select("date, id, journal, mood")
-        .eq("account_id", result.id);
+      let temp;
+      await storage.putUser(result);
+      await storage.putStatusDays(await supabase.getStatusDays(result.id));
+      await storage.putPendingPost(await supabase.getPendingPosts(result.id));
+      await storage.putPosts(await supabase.getPosts(result.id));
+      await storage.putMyPosts(await supabase.getMyPosts(result.id));
 
-      setStatusDays(data);
-      await storage.putStatusDays(data);
       setupData();
 
       setUser(result);
@@ -99,10 +101,17 @@ export const Provider = ({ children }) => {
     return false;
   };
 
-  const logout = async () => {
-    await logoutUser();
-    await storage.deleteAll();
+  const deleteAll = function () {
+    setUser({});
+    setPendingPosts([]);
+    setStatusDays([]);
     setStreak(0);
+  };
+
+  const logout = async () => {
+    await supabase.logout();
+    await storage.deleteAll();
+    deleteAll();
   };
 
   const signup = async (ID) => {
@@ -110,16 +119,13 @@ export const Provider = ({ children }) => {
   };
 
   const analyze = async () => {
-    // ==== BACKEND ====
-    // Required: Supabase
-
-    //const answer = await askMood(entries);
-    //const result = JSON.parse(answer.slice(8).slice(0, -4));
-    const result = {
-      comment: "ASO",
-      suggestions: [{ title: "titulo", details: "detalye", icon: "X" }],
-      followup: "bakit po?",
-    };
+    const answer = await askMood(entries);
+    const result = JSON.parse(answer.slice(8).slice(0, -4));
+    //const result = {
+    //  comment: "ASO",
+    //   suggestions: [{ title: "titulo", details: "detalye", icon: "X" }],
+    //  followup: "bakit po?",
+    //};
     setDailyStatus(result);
     await storage.putDailyStatus(result);
     await supabase
@@ -152,6 +158,20 @@ export const Provider = ({ children }) => {
       console.log(2323);
       await storage.putFirstDay(firstDay);
       console.log(5656);
+    }
+  };
+
+  const spacepost = async (mood, text) => {
+    await supabase.putPost({ student_id: user.id, mood: mood, content: text });
+    await storage.putPost({ mood: mood, content: text });
+    setPendingPosts([...pendingPosts, { mood: mood, content: text }]);
+  };
+
+  const deletePost = async (data) => {
+    if (!data.datetime) {
+      await supabase.deletePendingPost(data.id);
+      const newData = pendingPosts.filter((current) => current.id != data.id);
+      setPendingPosts(newData);
     }
   };
 
@@ -197,6 +217,12 @@ export const Provider = ({ children }) => {
         statusDays,
         best,
         streak,
+        spacepost,
+        posts,
+        myposts,
+        pendingPosts,
+        setPendingPosts,
+        deletePost,
       }}
     >
       {children}

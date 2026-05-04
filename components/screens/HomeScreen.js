@@ -96,9 +96,7 @@ export default function HomeScreen() {
                 );
                 setUser({});
               }}
-              className={
-                "bg-" + profcol + "-600 w-14 h-14 rounded-full justify-center"
-              }
+              className={"bg-red-600 w-14 h-14 rounded-full justify-center"}
             >
               <Text className="text-center text-white text-2xl">
                 {prof_initialname}

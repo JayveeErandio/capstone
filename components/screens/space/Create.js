@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { View, Text, Pressable, ScrollView, TextInput } from "react-native";
+import { Variables } from "../../../Variables";
+import { useContext } from "react";
 
 export default function Create({ index, setPage }) {
+  const { spacepost } = useContext(Variables);
   const [collapse, setCollapse] = useState(true);
   const [mood, setMood] = useState();
   const [text, setText] = useState();
@@ -114,6 +117,10 @@ export default function Create({ index, setPage }) {
 
           {/* Post Submit Button */}
           <Pressable
+            onPress={async () => {
+              spacepost(mood, text);
+              setPage();
+            }}
             className={
               (mood && text ? "active:bg-[#b47]" : "opacity-50") +
               " bg-[#c58] p-4 rounded-full "

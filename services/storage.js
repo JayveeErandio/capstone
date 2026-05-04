@@ -50,3 +50,23 @@ export async function putFirstDay(data) {
 export async function getStatusDays() {
   return await AsyncStorage.getItem("statusDays");
 }
+
+export async function putPost(data) {
+  let current = JSON.parse(await AsyncStorage.getItem("posts"));
+  if (!current) current = [];
+
+  current.push(data);
+  await AsyncStorage.setItem("posts", JSON.stringify(current));
+}
+
+export async function putPendingPost(data) {
+  await AsyncStorage.setItem("pendingPosts", JSON.stringify(data));
+}
+
+export async function putPosts(data) {
+  await AsyncStorage.setItem("posts", JSON.stringify(data));
+}
+
+export async function putMyPosts(data) {
+  await AsyncStorage.setItem("myPosts", JSON.stringify(data));
+}
