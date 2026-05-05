@@ -3,8 +3,7 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ index, setPage }) {
-  const { posts } = useContext(Variables);
-  console.log(posts[0]);
+  const { posts, setPosts, updateReact } = useContext(Variables);
 
   function formatTime(timestamp) {
     const date = new Date(timestamp); // auto handles UTC → local
@@ -100,13 +99,21 @@ export default function Main({ index, setPage }) {
                 </Pressable>
               </View>
               <Text className="leading-normal">{current.content}</Text>
+
+              {/* Reaction Buttons */}
               <View className="flex-row gap-2">
                 <Pressable
+                  onPress={() => {
+                    updateReact(
+                      current.id,
+                      current.myreact == "love" ? null : "love",
+                    );
+                  }}
                   className={
                     (current.myreact == "love"
-                      ? "bg-blue-100 active:bg-blue-200"
-                      : "bg-gray-100 active:bg-gray-200") +
-                    "  p-2 rounded-full px-3 border border-[#aaa]"
+                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
+                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                    "  p-2 rounded-full px-3 border "
                   }
                 >
                   <Text
@@ -116,14 +123,22 @@ export default function Main({ index, setPage }) {
                         : "text-[#888]") + "  font-bold"
                     }
                   >
-                    ❤️ {current.reactions.love ?? 0}
+                    ❤️{" "}
+                    {(current.reactions.love ?? 0) +
+                      (current.myreact == "love" ? 1 : 0)}
                   </Text>
                 </Pressable>
                 <Pressable
+                  onPress={() => {
+                    updateReact(
+                      current.id,
+                      current.myreact == "funny" ? null : "funny",
+                    );
+                  }}
                   className={
                     (current.myreact == "funny"
-                      ? "bg-blue-100 active:bg-blue-200"
-                      : "bg-gray-100 active:bg-gray-200") +
+                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
+                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
                     "  p-2 rounded-full px-3 border border-[#aaa]"
                   }
                 >
@@ -134,14 +149,22 @@ export default function Main({ index, setPage }) {
                         : "text-[#888]") + "  font-bold"
                     }
                   >
-                    😂 {current.reactions.funny ?? 0}
+                    😂{" "}
+                    {(current.reactions.funny ?? 0) +
+                      (current.myreact == "funny" ? 1 : 0)}
                   </Text>
                 </Pressable>
                 <Pressable
+                  onPress={() => {
+                    updateReact(
+                      current.id,
+                      current.myreact == "sad" ? null : "sad",
+                    );
+                  }}
                   className={
                     (current.myreact == "sad"
-                      ? "bg-blue-100 active:bg-blue-200"
-                      : "bg-gray-100 active:bg-gray-200") +
+                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
+                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
                     "  p-2 rounded-full px-3 border border-[#aaa]"
                   }
                 >
@@ -152,7 +175,9 @@ export default function Main({ index, setPage }) {
                         : "text-[#888]") + "  font-bold"
                     }
                   >
-                    😥 {current.reactions.sad ?? 0}
+                    😥{" "}
+                    {(current.reactions.sad ?? 0) +
+                      (current.myreact == "sad" ? 1 : 0)}
                   </Text>
                 </Pressable>
               </View>

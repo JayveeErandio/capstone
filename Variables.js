@@ -1,10 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import {
-  loginUser,
-  logoutUser,
-  signupUser,
-  getStoredUser,
-} from "./services/auth";
+import { signupUser } from "./services/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const Variables = createContext();
 import { askMood } from "./services/chatbot";
@@ -32,7 +27,7 @@ export const Provider = ({ children }) => {
     door4: null,
   });
 
-  // Mga variables na nakasave na or galing sa storage ng cellphone na ilalagay dun sa global variables
+  // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
     async function temp() {
       //console.log(await storage.getFirstDay());\
@@ -161,14 +156,38 @@ export const Provider = ({ children }) => {
     }
   };
 
-  const spacepost = async (mood, text) => {
-    await supabase.putPost({ student_id: user.id, mood: mood, content: text });
-    await storage.putPost({ mood: mood, content: text });
-    setPendingPosts([...pendingPosts, { mood: mood, content: text }]);
+  const updateReact = async (post_id, mood) => {
+    const current = posts.map((post) =>
+      post.id === post_id
+        ? {
+            ...post,
+            myreact: post.myreact == mood ? null : mood,
+          }
+        : post,
+    );
+    setPosts(current);
+    storage.putPosts(current);
+
+    await supabase.updateReact(post_id, user.id, mood);
   };
 
-  const deletePost = async (data) => {
-    if (!data.datetime) {
+  const putPost = async (mood, text) => {
+    setPendingPosts([...pendingPosts, { mood: mood, content: text }]);
+    await supabase.putPost({ student_id: user.id, mood: mood, content: text });
+    await storage.putPendingPost([
+      ...pendingPosts,
+      { mood: mood, content: text },
+    ]);
+  };
+
+  const deletePost = async (data, isPosted) => {
+    if (isPosted) {
+      await supabase.deletePost(data.id);
+      let newData = posts.filter((current) => current.id != data.id);
+      setPosts(newData);
+      newData = myposts.filter((current) => current.id != data.id);
+      setMyposts(newData);
+    } else {
       await supabase.deletePendingPost(data.id);
       const newData = pendingPosts.filter((current) => current.id != data.id);
       setPendingPosts(newData);
@@ -217,12 +236,14 @@ export const Provider = ({ children }) => {
         statusDays,
         best,
         streak,
-        spacepost,
         posts,
+        setPosts,
         myposts,
         pendingPosts,
         setPendingPosts,
         deletePost,
+        updateReact,
+        putPost,
       }}
     >
       {children}

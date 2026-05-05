@@ -4,7 +4,7 @@ import { Variables } from "../../../Variables";
 import { useContext } from "react";
 
 export default function Create({ index, setPage }) {
-  const { spacepost } = useContext(Variables);
+  const { putPost } = useContext(Variables);
   const [collapse, setCollapse] = useState(true);
   const [mood, setMood] = useState();
   const [text, setText] = useState();
@@ -118,8 +118,11 @@ export default function Create({ index, setPage }) {
           {/* Post Submit Button */}
           <Pressable
             onPress={async () => {
-              spacepost(mood, text);
+              console.log(111);
+              putPost(mood, text);
+              console.log(222);
               setPage();
+              console.log(333);
             }}
             className={
               (mood && text ? "active:bg-[#b47]" : "opacity-50") +

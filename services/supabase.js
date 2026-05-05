@@ -51,8 +51,17 @@ export async function getPendingPosts(id) {
   return data;
 }
 
-export async function deletePendingPost(id) {
-  const { error } = await supabase.from("pending_posts").delete().eq("id", id);
+export async function deletePendingPost(post_id) {
+  const { error } = await supabase
+    .from("pending_posts")
+    .delete()
+    .eq("id", post_id);
+  console.log("Nadelete na sa supabase hehe");
+}
+
+export async function deletePost(post_id) {
+  const { error } = await supabase.from("posts").delete().eq("id", post_id);
+  console.log("Nadelete na sa supabase hehe");
 }
 
 export async function getPosts(id) {
@@ -82,22 +91,22 @@ export async function getPosts(id) {
       let myreact = null;
 
       post.reactions?.forEach((r) => {
-        console.log(r, currentUserId);
         if (!r?.type) return;
 
-        // count reactions
-        counts[r.type] = (counts[r.type] || 0) + 1;
-
-        // check if current user reacted
+        // detect your reaction
         if (r.student_id === currentUserId) {
           myreact = r.type;
+          return; // 👈 skip counting your own reaction
         }
+
+        // count others' reactions only
+        counts[r.type] = (counts[r.type] || 0) + 1;
       });
 
       return {
         ...post,
         reactions: counts,
-        myreact, // null if user didn't react
+        myreact,
       };
     });
   }
@@ -112,4 +121,32 @@ export async function getMyPosts(id) {
     .eq("student_id", id);
   data.forEach((obj) => delete obj.student_id);
   return data;
+}
+
+export async function updateReact(post_id, student_id, reaction) {
+  if (reaction == null) {
+    await supabase
+      .from("reactions")
+      .delete()
+      .eq("post_id", post_id)
+      .eq("student_id", student_id);
+  } else {
+    const { data, error } = await supabase
+      .from("reactions")
+      .select("*")
+      .eq("post_id", post_id)
+      .eq("student_id", student_id);
+
+    if (data.length > 0) {
+      await supabase
+        .from("reactions")
+        .update({ type: reaction })
+        .eq("post_id", post_id)
+        .eq("student_id", student_id);
+    } else {
+      await supabase
+        .from("reactions")
+        .insert([{ post_id: post_id, student_id: student_id, type: reaction }]);
+    }
+  }
 }

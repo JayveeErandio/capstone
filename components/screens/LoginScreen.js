@@ -45,7 +45,7 @@ export default function LoginScreen() {
             onChangeText={setID}
             inputMode="numeric"
             placeholder="e.g. 202310097"
-            className="border rounded-lg px-3 border-[#ccc] bg-[#fff] text-[#555]"
+            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555]"
           />
           <Text className="font-bold text-[#333] mt-3">PASSWORD</Text>
           <TextInput
@@ -53,7 +53,7 @@ export default function LoginScreen() {
             secureTextEntry={true}
             autoCapitalize="none"
             placeholder="Enter your password"
-            className="border rounded-lg px-3 border-[#ccc] bg-[#fff] text-[#555] "
+            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] "
           />
           <Text
             className={

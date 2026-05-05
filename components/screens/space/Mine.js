@@ -6,6 +6,43 @@ export default function Mine({ index, setPage }) {
   const { myposts, pendingPosts, deletePost } = useContext(Variables);
   const final = [...pendingPosts, ...myposts];
 
+  function formatTime(timestamp) {
+    const date = new Date(timestamp); // auto handles UTC → local
+    const now = new Date();
+
+    const diffMs = now - date;
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    // 🕒 Just now / seconds
+    if (seconds < 60) return "just now";
+
+    // ⏱ Minutes
+    if (minutes < 60) return `${minutes}m ago`;
+
+    // 🕐 Hours
+    if (hours < 24) return `${hours}h ago`;
+
+    // 📅 Yesterday
+    if (days === 1) return "yesterday";
+
+    // 📆 Days ago
+    if (days < 7) return `${days}d ago`;
+
+    // 🗓 Fallback to full date (e.g., Jan 18 | 6:38 PM)
+    return date
+      .toLocaleString("en-PH", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .replace(",", " |");
+  }
+
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
       {/* Header */}
@@ -30,7 +67,7 @@ export default function Mine({ index, setPage }) {
             >
               <Text
                 className={
-                  (current.datetime == 1 ? "hidden" : "") +
+                  (current.datetime ? "hidden" : "") +
                   " bg-[#fec] self-start p-1 px-2 border text-xs font-bold text-[#b97] rounded-full border-[#a97]"
                 }
               >
@@ -39,14 +76,22 @@ export default function Mine({ index, setPage }) {
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
                   <Text className="text-lg bg-[#fee] p-2 rounded-xl border">
-                    😤
+                    {current.mood == "Excited"
+                      ? "⚡"
+                      : current.mood == "Content"
+                        ? "🍀"
+                        : current.mood == "Drained"
+                          ? "🌧"
+                          : "😤"}
                   </Text>
                   <View>
                     <Text className="text-[#773] font-bold">
                       {current.mood}
                     </Text>
                     <Text className="text-sm text-[#777]">
-                      {"Posted"} 2m ago
+                      {!!current.datetime
+                        ? "Posted " + formatTime(current.datetime)
+                        : "Not yet posted"}
                     </Text>
                   </View>
                 </View>
@@ -56,7 +101,9 @@ export default function Mine({ index, setPage }) {
                       await new Promise((resolve) => {
                         Alert.alert(
                           "Delete Post",
-                          "Do you want to discontinue the pending post?",
+                          !!current.datetime
+                            ? "Do you want to delete the post?"
+                            : "Do you want to discontinue your pending post?",
                           [
                             {
                               text: "Yes",
@@ -72,7 +119,7 @@ export default function Mine({ index, setPage }) {
                         );
                       })
                     ) {
-                      deletePost(current);
+                      deletePost(current, !!current.datetime);
                     }
                   }}
                   className="self-start pb-4 pl-8"
