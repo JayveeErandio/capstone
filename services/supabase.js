@@ -117,10 +117,50 @@ export async function getPosts(id) {
 export async function getMyPosts(id) {
   const { data, error } = await supabase
     .from("posts")
-    .select("*")
-    .eq("student_id", id);
+    .select(
+      `
+        id, 
+        mood,
+        content,
+        datetime,
+        student_id,
+        reactions (
+                type,
+                student_id
+        )
+        `,
+    )
+    .eq("student_id", id)
+    .order("id", { ascending: false });
   data.forEach((obj) => delete obj.student_id);
-  return data;
+
+  function groupReactions(posts, currentUserId) {
+    return posts.map((post) => {
+      const counts = {};
+      let myreact = null;
+
+      post.reactions?.forEach((r) => {
+        if (!r?.type) return;
+
+        // detect your reaction
+        if (r.student_id === currentUserId) {
+          myreact = r.type;
+          return; // 👈 skip counting your own reaction
+        }
+
+        // count others' reactions only
+        counts[r.type] = (counts[r.type] || 0) + 1;
+      });
+
+      return {
+        ...post,
+        reactions: counts,
+        myreact,
+      };
+    });
+  }
+
+  return groupReactions(data, id);
 }
 
 export async function updateReact(post_id, student_id, reaction) {

@@ -57,7 +57,6 @@ export async function putPendingPost(data) {
 
 export async function putPosts(data) {
   await AsyncStorage.setItem("posts", JSON.stringify(data));
-  console.log("Done to Storage");
 }
 
 export async function putMyPosts(data) {

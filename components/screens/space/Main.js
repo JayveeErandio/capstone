@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView, Pressable, Alert } from "react-native";
 import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
@@ -94,12 +94,37 @@ export default function Main({ index, setPage }) {
                     </Text>
                   </View>
                 </View>
-                <Pressable className="self-start pb-4 pl-8">
+                <Pressable
+                  onPress={async () => {
+                    if (
+                      await new Promise((resolve) => {
+                        Alert.alert(
+                          "Do you want to report this post?",
+                          "Make sure it's reasonable or else GCU might give warning consideration to your action",
+                          [
+                            {
+                              text: "Yes",
+                              onPress: () => resolve(true), // User cancelled
+                              style: "cancel",
+                            },
+                            {
+                              text: "No",
+                              onPress: () => resolve(false), // User confirmed
+                            },
+                          ],
+                          { cancelable: false },
+                        );
+                      })
+                    ) {
+                      //HERE YOUR PROGRAM GUYS
+                    }
+                  }}
+                  className="self-start pb-4 pl-8"
+                >
                   <Text className="text-sm text-[#bbb]">Report</Text>
                 </Pressable>
               </View>
               <Text className="leading-normal">{current.content}</Text>
-
               {/* Reaction Buttons */}
               <View className="flex-row gap-2">
                 <Pressable

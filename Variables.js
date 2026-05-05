@@ -157,7 +157,7 @@ export const Provider = ({ children }) => {
   };
 
   const updateReact = async (post_id, mood) => {
-    const current = posts.map((post) =>
+    let current = posts.map((post) =>
       post.id === post_id
         ? {
             ...post,
@@ -167,6 +167,19 @@ export const Provider = ({ children }) => {
     );
     setPosts(current);
     storage.putPosts(current);
+
+    current = myposts.map((post) =>
+      post.id === post_id
+        ? {
+            ...post,
+            myreact: post.myreact == mood ? null : mood,
+          }
+        : post,
+    );
+    setMyposts(current);
+    storage.putMyPosts(current);
+
+    await supabase.updateReact(post_id, user.id, mood);
 
     await supabase.updateReact(post_id, user.id, mood);
   };

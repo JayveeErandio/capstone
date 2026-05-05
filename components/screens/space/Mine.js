@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Mine({ index, setPage }) {
-  const { myposts, pendingPosts, deletePost } = useContext(Variables);
+  const { myposts, pendingPosts, deletePost, updateReact } =
+    useContext(Variables);
   const final = [...pendingPosts, ...myposts];
 
   function formatTime(timestamp) {
@@ -128,19 +129,90 @@ export default function Mine({ index, setPage }) {
                 </Pressable>
               </View>
               <Text className="leading-normal">{current.content}</Text>
+
+              {/* Reactions Button */}
               <View
                 className={
                   (!current.datetime ? "hidden" : "") + " flex-row gap-2"
                 }
               >
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] active:bg-[#ddd]">
-                  <Text className="text-[#555] font-bold">❤️ {14}</Text>
+                <Pressable
+                  onPress={() => {
+                    updateReact(
+                      current.id,
+                      current.myreact == "love" ? null : "love",
+                    );
+                  }}
+                  className={
+                    (current.myreact == "love"
+                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
+                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                    "  p-2 rounded-full px-3 border "
+                  }
+                >
+                  <Text
+                    className={
+                      (current.myreact == "love"
+                        ? "text-blue-500"
+                        : "text-[#888]") + "  font-bold"
+                    }
+                  >
+                    ❤️{" "}
+                    {(current.reactions?.love ?? 0) +
+                      (current.myreact == "love" ? 1 : 0)}
+                  </Text>
                 </Pressable>
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] opacity-50">
-                  <Text className="text-[#555] font-bold">😂 {0}</Text>
+                <Pressable
+                  onPress={() => {
+                    updateReact(
+                      current.id,
+                      current.myreact == "funny" ? null : "funny",
+                    );
+                  }}
+                  className={
+                    (current.myreact == "funny"
+                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
+                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                    "  p-2 rounded-full px-3 border border-[#aaa]"
+                  }
+                >
+                  <Text
+                    className={
+                      (current.myreact == "funny"
+                        ? "text-blue-500"
+                        : "text-[#888]") + "  font-bold"
+                    }
+                  >
+                    😂{" "}
+                    {(current.reactions?.funny ?? 0) +
+                      (current.myreact == "funny" ? 1 : 0)}
+                  </Text>
                 </Pressable>
-                <Pressable className="bg-[#eee] p-2 rounded-full px-3 border border-[#aaa] opacity-50">
-                  <Text className="text-[#555] font-bold">😥 {0}</Text>
+                <Pressable
+                  onPress={() => {
+                    updateReact(
+                      current.id,
+                      current.myreact == "sad" ? null : "sad",
+                    );
+                  }}
+                  className={
+                    (current.myreact == "sad"
+                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
+                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                    "  p-2 rounded-full px-3 border border-[#aaa]"
+                  }
+                >
+                  <Text
+                    className={
+                      (current.myreact == "sad"
+                        ? "text-blue-500"
+                        : "text-[#888]") + "  font-bold"
+                    }
+                  >
+                    😥{" "}
+                    {(current.reactions?.sad ?? 0) +
+                      (current.myreact == "sad" ? 1 : 0)}
+                  </Text>
                 </Pressable>
               </View>
             </View>
