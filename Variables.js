@@ -32,17 +32,12 @@ export const Provider = ({ children }) => {
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
     async function temp() {
-      //console.log(await storage.getFirstDay());\
-      //await storage.deleteAll();
-      //supabase.tae();
-      //console.log(await supabase.getNotifications(user.id), 123);
-
       if (await storage.getUser()) setupData();
     }
     temp();
   }, []);
 
-  const setupData = async () => {
+  const setupData = async (result) => {
     const data = await storage.getAll();
     await setStatusDays(data.statusDays);
     await setDailyStatus(data.dailyStatus);
@@ -50,7 +45,12 @@ export const Provider = ({ children }) => {
     await setPosts(data.posts);
     await setMyposts(data.myPosts);
     await setNotifications(data.notifications);
-    await supabase.realtimeNotification(setNotifications);
+
+    const performNotif = async (newData) => {
+      setNotifications((prev) => [newData, ...prev]);
+      await storage.putNotifications([newData, ...notifications]);
+    };
+    await supabase.realtimeNotification(performNotif, result.id);
 
     // Variables that need computations
     if (data.statusDays.length > 0) {
@@ -96,7 +96,7 @@ export const Provider = ({ children }) => {
         await supabase.getNotifications(result.id),
       );
 
-      setupData();
+      setupData(result);
 
       setUser(result);
       return true;
@@ -116,6 +116,7 @@ export const Provider = ({ children }) => {
     await supabase.logout();
     await storage.deleteAll();
     deleteAll();
+    await supabase.removeRealtimeNotification();
   };
 
   const signup = async (ID) => {
@@ -194,9 +195,11 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    //const result = JSON.parse((await chatbot.verifyPost(text)).slice(8).slice(0, -4)); // AI-SHUTDOWN
-    const result = { isAllowed: true, reason: "" }; // AI-REPLACE
-
+    //const result = JSON.parse(
+    //  (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
+    //); // AI-SHUTDOWN
+    const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
+    console.log(result);
     if (result.isAllowed) {
       await supabase.putNotification({
         title: "Post Approved",
@@ -225,6 +228,16 @@ export const Provider = ({ children }) => {
       setPosts([data[0], ...posts]);
       setMyposts([data[0], ...myposts]);
     } else {
+      await supabase.putNotification({
+        title: "Suspicious Post",
+        content:
+          'Your post, "' +
+          text.slice(0, 50) +
+          '", has been marked as suspicious. For the meantime, your post will remain on pending status while GCU reviews it before approval.',
+        student_id: user.id,
+        type: "gcu_review",
+      });
+
       const { data, error } = await supabase.putPendingPost({
         student_id: user.id,
         mood: mood,

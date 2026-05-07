@@ -15,6 +15,8 @@ export default function NotificationScreen() {
         return "😂";
       case "post_approved":
         return "🚀";
+      case "gcu_review":
+        return "🔎";
     }
   };
 

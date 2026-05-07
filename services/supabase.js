@@ -265,27 +265,27 @@ export async function putNotification(args) {
   ]);
 }
 
-export async function realtimeNotification(setter) {
-  const channel = supabase
-    .channel("notifications-channel")
+let channel;
+export async function realtimeNotification(setter, user_id) {
+  channel = supabase
+    .channel("notifications-" + user_id)
     .on(
       "postgres_changes",
       {
         event: "INSERT",
         schema: "public",
         table: "notifications",
+        filter: `student_id=eq.${user_id}`,
       },
       (payload) => {
         const data = payload.new;
         delete data.student_id;
-
-        setter((prev) => [data, ...prev]);
-        console.log("donee");
+        setter(data);
       },
     )
     .subscribe();
+}
 
-  return () => {
-    supabase.removeChannel(channel);
-  };
+export async function removeRealtimeNotification() {
+  supabase.removeChannel(channel);
 }
