@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Pressable, Text, View, ScrollView, TextInput } from "react-native";
+import { Variables } from "../../../Variables";
 
 export default function Create({ show, setPage }) {
+  const { availableSchedules, setCurrentBook } = useContext(Variables);
   const [context, setContext] = useState();
   const [text, setText] = useState("");
   const maxText = 120;
   const [day, setDay] = useState();
   const [time, setTime] = useState();
+  function formatTime12Hour(time24) {
+    let [hours, minutes] = time24.split(":");
+
+    hours = parseInt(hours);
+
+    const suffix = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12 || 12;
+
+    return `${String(hours).padStart(2, "0")}:${minutes} ${suffix}`;
+  }
+  function toUTCDateTime(date, time) {
+    return new Date(`${date}T${time}:00`).toISOString().replace("Z", "+00:00");
+  }
 
   return (
     <View
@@ -71,16 +87,15 @@ export default function Create({ show, setPage }) {
           {/* Set Date */}
           <Text className="text-md text-[#333]">2 · PICK A DATE</Text>
           <View className="flex-row flex-wrap gap-3">
-            {[
-              { date: 29, day: "WED" },
-              { date: 30, day: "THU" },
-              { date: 2, day: "SAT" },
-            ].map((current, index) => (
+            {availableSchedules.map((current, index) => (
               <Pressable
-                onPress={() => setDay(current)}
+                onPress={() => {
+                  setDay(current.date);
+                  setTime(null);
+                }}
                 key={index}
                 className={
-                  (JSON.stringify(day) == JSON.stringify(current)
+                  (JSON.stringify(day) == JSON.stringify(current.date)
                     ? "border"
                     : "") + " bg-white self-start items-center p-4 rounded-xl"
                 }
@@ -88,34 +103,54 @@ export default function Create({ show, setPage }) {
                 <Text className="text-xs font-bold text-[#aaa]">
                   {current.day}
                 </Text>
-                <Text className="font-bold">{current.date}</Text>
+                <Text className="font-bold">{current.date.slice(-2)}</Text>
               </Pressable>
             ))}
           </View>
 
           {/* Set Time */}
-          <Text className="text-md text-[#333]">3 · PICK A TIME</Text>
-          <View className="flex-row flex-wrap gap-3">
-            {["9:00 AM", "10:00 AM", "12:00 PM"].map((current, index) => (
-              <Pressable
-                onPress={() => setTime(current)}
-                key={index}
-                className={
-                  (time == current ? "border" : "") +
-                  " bg-white self-start items-center p-4 rounded-xl"
-                }
-              >
-                <Text className="text-sm font-bold text-[#777]">
-                  🕐 {current}
-                </Text>
-              </Pressable>
-            ))}
+          <Text
+            className={(day == null ? "hidden" : "") + " text-md text-[#333]"}
+          >
+            3 · PICK A TIME
+          </Text>
+          <View
+            className={
+              (day == null ? "hidden" : "") + " flex-row flex-wrap gap-3"
+            }
+          >
+            {availableSchedules
+              .find((current) => current.date == day)
+              ?.times.map((current, index) => (
+                <Pressable
+                  onPress={() => setTime(current)}
+                  key={index}
+                  className={
+                    (time == current ? "border" : "") +
+                    " bg-white self-start items-center p-2.5 rounded-xl"
+                  }
+                >
+                  <Text className="text-sm font-bold text-[#777]">
+                    🕐 {formatTime12Hour(current)}
+                  </Text>
+                </Pressable>
+              ))}
           </View>
 
           {/* Submit Button */}
           <Pressable
             onPress={() => {
-              if (context && day && time) setPage("Finalize");
+              if (context && day && time) {
+                setPage("Finalize");
+                setCurrentBook({
+                  context: context,
+                  date: day,
+                  time: time,
+                  context: context,
+                  note: text,
+                  status: null,
+                });
+              }
             }}
             className={
               (context && day && time ? "active:bg-[#b57]" : "opacity-50") +

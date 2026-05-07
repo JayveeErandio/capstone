@@ -1,6 +1,30 @@
 import { Text, View, Pressable, ScrollView } from "react-native";
+import { useContext } from "react";
+import { Variables } from "../../../Variables";
 
 export default function Finalize({ show, setPage }) {
+  const { currentBook, bookAppointment } = useContext(Variables);
+  function formatReadableDate(dateString) {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+  function formatTime12Hour(time24) {
+    let [hours, minutes] = time24.split(":");
+
+    hours = parseInt(hours);
+
+    const suffix = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12 || 12;
+
+    return `${String(hours).padStart(2, "0")}:${minutes} ${suffix}`;
+  }
+
   return (
     <View
       className={(show ? "z-50" : "") + " absolute h-full w-full bg-[#eee]"}
@@ -26,15 +50,19 @@ export default function Finalize({ show, setPage }) {
           <View className="gap-0.5">
             <View className="flex-row justify-between bg-white p-4 items-center">
               <Text className="text-sm text-[#777]">Concern</Text>
-              <Text className="text-sm">{"🏠 Family Issues"}</Text>
+              <Text className="text-sm">{currentBook.context}</Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
               <Text className="text-sm text-[#777]">Date</Text>
-              <Text className="text-sm">{"📆 Mar 17, 2026"}</Text>
+              <Text className="text-sm">
+                {"📆 " + formatReadableDate(currentBook.date)}
+              </Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
               <Text className="text-sm text-[#777]">Time</Text>
-              <Text className="text-sm">{"🕐 2:00 PM"}</Text>
+              <Text className="text-sm">
+                {"🕐 " + formatTime12Hour(currentBook.time ?? "00:00")}
+              </Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
               <Text className="text-sm text-[#777]">Counselor</Text>
@@ -61,6 +89,7 @@ export default function Finalize({ show, setPage }) {
           </View>
           <Pressable
             onPress={() => {
+              bookAppointment();
               setPage("Main");
             }}
             className={"bg-[#c68] p-4 rounded-full active:bg-[#b57]"}

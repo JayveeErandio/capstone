@@ -254,7 +254,7 @@ export async function readNotification(notif_id, user_id) {
 }
 
 export async function putNotification(args) {
-  await supabase.from("notifications").insert([
+  const { data, error } = await supabase.from("notifications").insert([
     {
       title: args.title,
       content: args.content,
@@ -262,6 +262,7 @@ export async function putNotification(args) {
       student_id: args.student_id,
     },
   ]);
+  console.log(data, error);
 }
 
 let channel;
@@ -287,4 +288,37 @@ export async function realtime(setter, user_id) {
 
 export async function removeRealtimeNotification() {
   supabase.removeChannel(channel);
+}
+
+export async function getSchedules() {
+  let { data, error } = await supabase
+    .from("available_schedules")
+    .select("datetime");
+
+  data = data.map((current) => {
+    return current.datetime;
+  });
+  //console.log(data);
+  return data;
+}
+
+export async function putAppointment(args) {
+  await supabase.from("appointments").insert([args]);
+}
+
+export async function deleteAppointment(user_id) {
+  await supabase
+    .from("appointments")
+    .delete()
+    .eq("student_id", user_id)
+    .eq("status", "Pending");
+}
+
+export async function getAppointments(user_id) {
+  const { data, error } = await supabase
+    .from("appointments")
+    .select("*")
+    .eq("student_id", user_id)
+    .order("id", { ascending: false });
+  return data;
 }

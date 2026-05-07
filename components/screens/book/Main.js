@@ -1,6 +1,27 @@
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView, Pressable, Alert } from "react-native";
+import { useContext } from "react";
+import { Variables } from "../../../Variables";
 
 export default function Main({ show, setPage }) {
+  const { books, currentBook, deleteAppointment } = useContext(Variables);
+  function formatAppointment(datetime) {
+    const dateObj = new Date(datetime);
+
+    const date = dateObj.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
+    const time = dateObj.toLocaleTimeString("en-PH", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    return `📆 ${date} · 🕐 ${time}`;
+  }
+
   return (
     <View
       className={(show ? "z-50" : "") + " absolute w-full h-full bg-[#eee]"}
@@ -33,7 +54,13 @@ export default function Main({ show, setPage }) {
             </Pressable>
 
             {/* Front */}
-            <View className="absolute bg-[#000]/60 h-full justify-center hidden">
+            <View
+              className={
+                !currentBook.context
+                  ? "hidden"
+                  : "" + "absolute bg-[#000]/60 h-full justify-center"
+              }
+            >
               <Text className="text-center mx-7 font-bold text-[#fff]">
                 Booking can only be set once. You have ongoing appointment set
                 right now
@@ -51,33 +78,75 @@ export default function Main({ show, setPage }) {
             </Text>
           </View>
 
-          <Text>Your Appointments</Text>
+          <Text
+            className={
+              !currentBook.context && books.length == 0
+                ? "text-center text-sm text-gray-500 mt-12"
+                : ""
+            }
+          >
+            {!currentBook.context && books.length == 0
+              ? "You currently don't have appointments yet."
+              : "Your appointments"}
+          </Text>
 
           {/* Appointment: Current or Ongoing */}
-          <View className="bg-white p-3 rounded-2xl gap-1 border border-[#555]">
+          <View
+            className={
+              !currentBook.context
+                ? "hidden"
+                : "" + " bg-white p-3 rounded-2xl gap-1 border border-[#555]"
+            }
+          >
             <View className="flex-row justify-between">
               <Text className="text-xs bg-[#ffd] border border-[#cca] p-1 px-2 rounded-full text-[#995] font-bold">
-                Pending ⏳
+                {currentBook.status} ⏳
               </Text>
-              <Pressable className="pl-6">
+              <Pressable
+                onPress={async () => {
+                  if (
+                    await new Promise((resolve) => {
+                      Alert.alert(
+                        "Delete appointment",
+                        "Do you want to discontinue your appointment?",
+                        [
+                          {
+                            text: "Yes",
+                            onPress: () => resolve(true), // User cancelled
+                            style: "cancel",
+                          },
+                          {
+                            text: "No",
+                            onPress: () => resolve(false), // User confirmed
+                          },
+                        ],
+                        { cancelable: false },
+                      );
+                    })
+                  ) {
+                    deleteAppointment();
+                  }
+                }}
+                className="pl-6"
+              >
                 <Text className="text-sm text-[#888]">Delete</Text>
               </Pressable>
             </View>
-            <Text className="font-bold ">{"Academic Stress"}</Text>
+            <Text className="font-bold ">{currentBook.context?.slice(3)}</Text>
             <Text className="text-sm text-[#777]">
-              {"📆 Mar 14, 2026 · 🕐 10:00 AM"}
+              {formatAppointment(currentBook.datetime)}
             </Text>
           </View>
 
           {/* Appointment: Past or History */}
-          {[1, 2].map((current, index) => (
+          {books.map((current, index) => (
             <View className="bg-white p-3 rounded-2xl gap-1" key={index}>
               <Text className="text-xs bg-[#eef] border border-[#cca] px-2 rounded-full text-[#779] font-bold self-start">
                 Done
               </Text>
-              <Text className="font-bold ">{"Academic Stress"}</Text>
+              <Text className="font-bold ">{current.context}</Text>
               <Text className="text-sm text-[#777]">
-                {"📆 Mar 14, 2026 · 🕐 10:00 AM"}
+                {formatAppointment(current.datetime)}
               </Text>
             </View>
           ))}

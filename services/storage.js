@@ -66,3 +66,7 @@ export async function putMyPosts(data) {
 export async function putNotifications(data) {
   await AsyncStorage.setItem("notifications", JSON.stringify(data));
 }
+
+export async function putAppointments(data) {
+  await AsyncStorage.setItem("appointments", JSON.stringify(data));
+}

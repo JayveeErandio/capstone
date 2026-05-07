@@ -28,6 +28,9 @@ export const Provider = ({ children }) => {
     door4: null,
   });
   const [notifications, setNotifications] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [currentBook, setCurrentBook] = useState({});
+  const [availableSchedules, setAvailableSchedules] = useState([]);
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
@@ -45,6 +48,40 @@ export const Provider = ({ children }) => {
     await setPosts(data.posts);
     await setMyposts(data.myPosts);
     await setNotifications(data.notifications);
+    let temp = await supabase.getSchedules();
+    const grouped = Object.values(
+      temp.reduce((acc, datetime) => {
+        const dateObj = new Date(datetime);
+
+        const date = dateObj.toLocaleDateString("en-CA");
+
+        const time = dateObj.toLocaleTimeString("en-PH", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+
+        const day = dateObj
+          .toLocaleDateString("en-US", { weekday: "short" })
+          .toUpperCase();
+
+        if (!acc[date]) {
+          acc[date] = {
+            date,
+            day,
+            times: [],
+          };
+        }
+
+        acc[date].times.push(time);
+
+        return acc;
+      }, {}),
+    );
+    setAvailableSchedules(grouped);
+    temp = data.appointments;
+    setBooks(temp.filter((current) => current.status != "Pending"));
+    setCurrentBook(temp.find((current) => current.status == "Pending") ?? {});
 
     const realtimePerformer = async (newData) => {
       setNotifications((prev) => [newData, ...prev]);
@@ -95,6 +132,7 @@ export const Provider = ({ children }) => {
       await storage.putNotifications(
         await supabase.getNotifications(result.id),
       );
+      await storage.putAppointments(await supabase.getAppointments(result.id));
 
       setupData(result);
 
@@ -195,10 +233,10 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    const result = JSON.parse(
-      (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
-    ); // AI-SHUTDOWN
-    //const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
+    //const result = JSON.parse(
+    //  (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
+    //); // AI-SHUTDOWN
+    const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
 
     if (result.isAllowed) {
       await supabase.putNotification({
@@ -206,7 +244,7 @@ export const Provider = ({ children }) => {
         content:
           'Your post "' +
           text.slice(0, 50) +
-          '" does not show any violated rules. You can now check it out in space feed!',
+          '..." does not show any violated rules. You can now check it out in space feed!',
         student_id: user.id,
         type: "post_approved",
       });
@@ -281,6 +319,38 @@ export const Provider = ({ children }) => {
     await storage.putNotifications(newNotifs);
   };
 
+  const bookAppointment = async () => {
+    function toUTCDateTime(date, time) {
+      return new Date(`${date}T${time}:00`)
+        .toISOString()
+        .replace(".000Z", "+00:00");
+    }
+    const newForm = currentBook;
+    newForm.status = "Pending";
+    newForm.datetime = toUTCDateTime(newForm.date, newForm.time);
+    delete newForm.date;
+    delete newForm.time;
+
+    setCurrentBook(newForm);
+    await supabase.putAppointment({ ...newForm, student_id: user.id });
+    await supabase.putNotification({
+      title: "Appointment Request",
+      content:
+        user.last_name.slice(0, 1).toUpperCase() +
+        user.last_name.slice(1) +
+        " (" +
+        user.student_number +
+        ") is requesting an appointment. You can check it on appointments page",
+      type: "request_appointment",
+      student_id: 1,
+    });
+  };
+
+  const deleteAppointment = async () => {
+    setCurrentBook({});
+    await supabase.deleteAppointment(user.id);
+  };
+
   const restartEntries = () => {
     setEntries(
       Object.fromEntries(Object.keys(entries).map((key) => [key, null])),
@@ -333,6 +403,12 @@ export const Provider = ({ children }) => {
         putPost,
         notifications,
         readNotification,
+        availableSchedules,
+        setCurrentBook,
+        currentBook,
+        bookAppointment,
+        deleteAppointment,
+        books,
       }}
     >
       {children}
