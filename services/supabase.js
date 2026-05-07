@@ -12,7 +12,6 @@ export async function tae() {
       user_id: 2,
       expo_token: token,
     });
-    console.log(data, error);
   }
 
   const { data: tokens } = await supabase
@@ -98,7 +97,6 @@ export async function deletePendingPost(post_id) {
 
 export async function deletePost(post_id) {
   const { error } = await supabase.from("posts").delete().eq("id", post_id);
-  console.log("Nadelete na sa supabase hehe");
 }
 
 export async function getPosts(id) {
@@ -110,6 +108,7 @@ export async function getPosts(id) {
         mood,
         content,
         datetime,
+        student_id,
         students (
                 anonymous_name
         ),
@@ -266,7 +265,7 @@ export async function putNotification(args) {
 }
 
 let channel;
-export async function realtimeNotification(setter, user_id) {
+export async function realtime(setter, user_id) {
   channel = supabase
     .channel("notifications-" + user_id)
     .on(

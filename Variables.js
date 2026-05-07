@@ -46,11 +46,11 @@ export const Provider = ({ children }) => {
     await setMyposts(data.myPosts);
     await setNotifications(data.notifications);
 
-    const performNotif = async (newData) => {
+    const realtimePerformer = async (newData) => {
       setNotifications((prev) => [newData, ...prev]);
       await storage.putNotifications([newData, ...notifications]);
     };
-    await supabase.realtimeNotification(performNotif, result.id);
+    await supabase.realtime(realtimePerformer, result.id);
 
     // Variables that need computations
     if (data.statusDays.length > 0) {
@@ -195,11 +195,11 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    //const result = JSON.parse(
-    //  (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
-    //); // AI-SHUTDOWN
-    const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
-    console.log(result);
+    const result = JSON.parse(
+      (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
+    ); // AI-SHUTDOWN
+    //const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
+
     if (result.isAllowed) {
       await supabase.putNotification({
         title: "Post Approved",
