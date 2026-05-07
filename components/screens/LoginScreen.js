@@ -4,7 +4,7 @@ import { View, Text, TextInput, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import LoadingScreen from "./LoadingScreen";
-import { testNotification } from "../../services/notification";
+import { testNotification } from "../../services/mobilenotif";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -20,7 +20,7 @@ export default function LoginScreen() {
       }, 1200);
   }, [valid]);
 
-  testNotification();
+  //testNotification();
 
   return loading ? (
     <LoadingScreen message="Signing you in" />

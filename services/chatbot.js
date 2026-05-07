@@ -1,6 +1,6 @@
 const API_KEY = process.env.EXPO_PUBLIC_GOOGLEAI_KEY;
 
-export async function askAI(question, retries = 3, delay = 2000) {
+async function askAI(question, retries = 3, delay = 2000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await fetch(
@@ -98,5 +98,24 @@ To answer this, base the input below that is about a student's mood in a day:
 EXPLANATION: Door1 means the energy of the user. Door2 means the duration of that his/her feeling. Door3 means his heart feels, this is where already whether positive or negative his mood, light means positive, heavy means negative. Door4 means the context or aspect where his mood came from.
 
 NOTE: Return only the plain text in a format of JSON stringified object or expected return answer. Don't explain it. Just return it with the pure text string only. Dont build any code, just the answer`,
+  );
+}
+
+export async function verifyPost(text) {
+  return await askAI(
+    `
+Return an answer in a stringified JSON with a structure like the example below:
+{
+  isAllowed: false,
+  reason: "He sounds suiciding now. Give urgent."
+}
+EXPLANATION: the "isAllowed" can only have a value true or false. Base it whether the words is profanity or bad words, or the meaning of the input is something needed to give urgent attention or warning to. Example, return false if it has like "fuck", "bitch", etc. If the "isAllowed" is true, dont give reason, else give the reason why. In order to answer this, base the input about the student's saying:
+
+"` +
+      text +
+      `"
+
+NOTE: Return only the plain text in a format of JSON stringified object or expected return answer. Don't explain it. Just return it with the pure text string only. Dont build any code, just the answer
+  `,
   );
 }

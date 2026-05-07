@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Image, Pressable } from "react-native";
+import { Variables } from "../Variables";
 
 export default function Pages({ children }) {
   const screens = React.Children.toArray(children);
   const [activePage, setActivePage] = useState("home");
+  const { notifications } = useContext(Variables);
+  const unread = notifications.reduce(
+    (count, current) => (!current.is_seen ? count + 1 : count),
+    0,
+  );
 
   return (
     <View className="bg-[#f0f0f0] h-full flex justify-between">
@@ -34,11 +40,12 @@ export default function Pages({ children }) {
               {/* For Notification Tab only */}
               <Text
                 className={
-                  "absolute bg-[#e37] text-white text-sm p-1 rounded-full right-1 top-1 translate-x-1/2 -translate-y-1/2 w-7 text-center h-7 " +
+                  (unread == 0 ? "hidden" : "") +
+                  " absolute bg-[#e37] text-white text-sm p-1 rounded-full right-1 top-1 translate-x-1/2 -translate-y-1/2 w-7 text-center h-7 " +
                   (current.props.name != "alerts" ? "hidden" : "")
                 }
               >
-                {1}
+                {unread}
               </Text>
             </View>
           </Pressable>

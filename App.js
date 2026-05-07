@@ -46,7 +46,8 @@ function AppNavigator() {
 export default function App() {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
-      shouldShowAlert: true,
+      shouldShowBanner: true, // shows popup/banner
+      shouldShowList: true,
       shouldPlaySound: true,
       shouldSetBadge: false,
     }),

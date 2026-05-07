@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { View, Text, Pressable, ScrollView, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TextInput,
+  Alert,
+} from "react-native";
 import { Variables } from "../../../Variables";
 import { useContext } from "react";
 
@@ -118,11 +125,25 @@ export default function Create({ index, setPage }) {
           {/* Post Submit Button */}
           <Pressable
             onPress={async () => {
-              console.log(111);
               putPost(mood, text);
-              console.log(222);
               setPage();
-              console.log(333);
+              if (
+                await new Promise((resolve) => {
+                  Alert.alert(
+                    "Verifying your post",
+                    "We'll notify you if your post is allowed to be published. Else, it will undergo to GCU. You can check it via 'Mine' page",
+                    [
+                      {
+                        text: "OK",
+                        onPress: () => resolve(true), // User cancelled
+                      },
+                    ],
+                    { cancelable: false },
+                  );
+                })
+              ) {
+                //HERE YOUR PROGRAM GUYS
+              }
             }}
             className={
               (mood && text ? "active:bg-[#b47]" : "opacity-50") +

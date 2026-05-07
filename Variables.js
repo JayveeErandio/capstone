@@ -2,9 +2,10 @@ import { createContext, useState, useEffect } from "react";
 import { signupUser } from "./services/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const Variables = createContext();
-import { askMood } from "./services/chatbot";
+import * as chatbot from "./services/chatbot";
 import * as storage from "./services/storage";
 import * as supabase from "./services/supabase";
+import { sendPushNotification } from "./services/mobilenotif";
 
 export const Provider = ({ children }) => {
   // Mga variables na globally na gagamitin throughout ng app
@@ -26,12 +27,15 @@ export const Provider = ({ children }) => {
     door3: null,
     door4: null,
   });
+  const [notifications, setNotifications] = useState([]);
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
     async function temp() {
       //console.log(await storage.getFirstDay());\
       //await storage.deleteAll();
+      //supabase.tae();
+      //console.log(await supabase.getNotifications(user.id), 123);
 
       if (await storage.getUser()) setupData();
     }
@@ -45,6 +49,8 @@ export const Provider = ({ children }) => {
     await setPendingPosts(data.pendingPosts);
     await setPosts(data.posts);
     await setMyposts(data.myPosts);
+    await setNotifications(data.notifications);
+    await supabase.realtimeNotification(setNotifications);
 
     // Variables that need computations
     if (data.statusDays.length > 0) {
@@ -86,6 +92,9 @@ export const Provider = ({ children }) => {
       await storage.putPendingPost(await supabase.getPendingPosts(result.id));
       await storage.putPosts(await supabase.getPosts(result.id));
       await storage.putMyPosts(await supabase.getMyPosts(result.id));
+      await storage.putNotifications(
+        await supabase.getNotifications(result.id),
+      );
 
       setupData();
 
@@ -114,7 +123,7 @@ export const Provider = ({ children }) => {
   };
 
   const analyze = async () => {
-    const answer = await askMood(entries);
+    const answer = await chatbot.askMood(entries);
     const result = JSON.parse(answer.slice(8).slice(0, -4));
     //const result = {
     //  comment: "ASO",
@@ -185,12 +194,50 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    setPendingPosts([...pendingPosts, { mood: mood, content: text }]);
-    await supabase.putPost({ student_id: user.id, mood: mood, content: text });
-    await storage.putPendingPost([
-      ...pendingPosts,
-      { mood: mood, content: text },
-    ]);
+    //const result = JSON.parse((await chatbot.verifyPost(text)).slice(8).slice(0, -4)); // AI-SHUTDOWN
+    const result = { isAllowed: true, reason: "" }; // AI-REPLACE
+
+    if (result.isAllowed) {
+      await supabase.putNotification({
+        title: "Post Approved",
+        content:
+          'Your post "' +
+          text.slice(0, 50) +
+          '" does not show any violated rules. You can now check it out in space feed!',
+        student_id: user.id,
+        type: "post_approved",
+      });
+      const { data, error } = await supabase.putPost({
+        mood: mood,
+        content: text,
+        student_id: user.id,
+      });
+      delete data[0].student_id;
+      delete data[0].status;
+
+      data[0].myreact = null;
+      data[0].reactions = {};
+      data[0].students = { anonymous_name: user.anonymous_name };
+
+      await storage.putPosts([data[0], ...posts]);
+      await storage.putMyPosts([data[0], ...myposts]);
+
+      setPosts([data[0], ...posts]);
+      setMyposts([data[0], ...myposts]);
+    } else {
+      const { data, error } = await supabase.putPendingPost({
+        student_id: user.id,
+        mood: mood,
+        content: text,
+        ai_say: result.reason,
+      });
+      delete data[0].student_id;
+      delete data[0].ai_say;
+
+      const temp = [data[0], ...pendingPosts];
+      setPendingPosts(temp);
+      await storage.putPendingPost(temp);
+    }
   };
 
   const deletePost = async (data, isPosted) => {
@@ -204,7 +251,21 @@ export const Provider = ({ children }) => {
       await supabase.deletePendingPost(data.id);
       const newData = pendingPosts.filter((current) => current.id != data.id);
       setPendingPosts(newData);
+      await storage.putPendingPost(newData);
     }
+  };
+
+  const readNotification = async (notif_id) => {
+    const newNotifs = notifications.map((current) => {
+      if (notif_id != null)
+        if (current.id == notif_id) {
+          return { ...current, is_seen: true };
+        } else return current;
+      else return { ...current, is_seen: true };
+    });
+    setNotifications(newNotifs);
+    await supabase.readNotification(notif_id, user.id);
+    await storage.putNotifications(newNotifs);
   };
 
   const restartEntries = () => {
@@ -257,6 +318,8 @@ export const Provider = ({ children }) => {
         deletePost,
         updateReact,
         putPost,
+        notifications,
+        readNotification,
       }}
     >
       {children}

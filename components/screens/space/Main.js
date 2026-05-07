@@ -208,6 +208,13 @@ export default function Main({ index, setPage }) {
               </View>
             </View>
           ))}
+          {posts.length == 0 ? (
+            <Text className="text-center text-gray-400 text-sm mt-12">
+              No posts available yet. Make it start from you!
+            </Text>
+          ) : (
+            ""
+          )}
         </ScrollView>
       </View>
     </View>
