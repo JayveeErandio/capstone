@@ -296,6 +296,30 @@ export const Provider = ({ children }) => {
     }
   };
 
+  const reportPost = async (post) => {
+    await supabase.updateFlagged(post.id);
+    const poser = await supabase.getStudent(post.student_id);
+    const title =
+      capitalizeWords(user.last_name) +
+      " reported " +
+      capitalizeWords(poser.last_name) +
+      "'s post.";
+    const content =
+      'A post "' +
+      post.content.slice(0, 24) +
+      '..." by ' +
+      capitalizeWords(poser.last_name) +
+      " (" +
+      poser.student_number +
+      ") was reported. Check it out why for more details.";
+    await supabase.putNotification({
+      title: title,
+      content: content,
+      type: "reported_post",
+      student_id: 1,
+    });
+  };
+
   const readNotification = async (notif_id) => {
     const newNotifs = notifications.map((current) => {
       if (notif_id != null)
@@ -428,6 +452,22 @@ export const Provider = ({ children }) => {
     }
   };
 
+  function capitalizeWords(sentence) {
+    return sentence
+      .split(" ")
+      .map((word) => {
+        if (!word) return "";
+
+        return word
+          .split("")
+          .map((char, i) => {
+            return i === 0 ? char.toUpperCase() : char.toLowerCase();
+          })
+          .join("");
+      })
+      .join(" ");
+  }
+
   const restartEntries = () => {
     setEntries(
       Object.fromEntries(Object.keys(entries).map((key) => [key, null])),
@@ -478,6 +518,7 @@ export const Provider = ({ children }) => {
         moodToEmoji,
         moodToColor,
         updateJournal,
+        reportPost,
       }}
     >
       {children}

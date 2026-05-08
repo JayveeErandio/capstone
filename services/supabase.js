@@ -334,3 +334,12 @@ export async function updateJournal(journal, user_id) {
     .eq("date", new Date().toISOString().split("T")[0]);
   return { data, error };
 }
+
+export async function updateFlagged(post_id) {
+  await supabase.from("posts").update({ isReported: true }).eq("id", post_id);
+}
+
+export async function getStudent(user_id) {
+  return (await supabase.from("students").select("*").eq("id", user_id))
+    .data[0];
+}

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ index, setPage }) {
-  const { posts, setPosts, updateReact } = useContext(Variables);
+  const { posts, setPosts, updateReact, reportPost } = useContext(Variables);
 
   function formatTime(timestamp) {
     const date = new Date(timestamp); // auto handles UTC → local
@@ -116,7 +116,7 @@ export default function Main({ index, setPage }) {
                         );
                       })
                     ) {
-                      //HERE YOUR PROGRAM GUYS
+                      reportPost(current);
                     }
                   }}
                   className="self-start pb-4 pl-8"
