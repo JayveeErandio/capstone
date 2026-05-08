@@ -52,18 +52,28 @@ export const Provider = ({ children }) => {
     await setPosts(data.posts);
     await setMyposts(data.myPosts);
     await setNotifications(data.notifications);
-    if (
-      data.statusDays.find(
-        (current) => current.date == new Date().toISOString().split("T")[0],
-      )
-    )
+    const recentStatus = data.statusDays.find(
+      (current) => current.date == new Date().toISOString().split("T")[0],
+    );
+    if (recentStatus) {
       setDailyStatus({
         ...JSON.parse(data.user.daily_result),
-        journal: data.statusDays.find(
-          (current) => current.date == new Date().toISOString().split("T")[0],
-        ).journal,
+        journal: recentStatus.journal,
       });
 
+      setEntries({
+        door1:
+          recentStatus.mood == "excited" || recentStatus.mood == "stressed"
+            ? "High"
+            : "Low",
+        door2: null,
+        door3:
+          recentStatus.mood == "excited" || recentStatus.mood == "content"
+            ? "Light"
+            : "Heavy",
+        door4: null,
+      });
+    }
     let temp = await supabase.getSchedules();
     const grouped = Object.values(
       temp.reduce((acc, datetime) => {
@@ -519,6 +529,7 @@ export const Provider = ({ children }) => {
         moodToColor,
         updateJournal,
         reportPost,
+        capitalizeWords,
       }}
     >
       {children}
