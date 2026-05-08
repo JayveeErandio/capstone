@@ -16,7 +16,6 @@ export default function JournalScreen() {
       <Entries name="Entries" />
     </>
   );
-  //console.log(content.props.children[0].props.name);
 
   return (
     <View className="flex-1">

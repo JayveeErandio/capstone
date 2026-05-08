@@ -1,7 +1,30 @@
 import { View, Text, Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { Variables } from "../../../Variables";
+import { useContext } from "react";
 
 export default function Weekly() {
+  const { journWeek, moodToEmoji, moodToColor } = useContext(Variables);
+  function getMajorMood(array) {
+    const counts = {};
+
+    array.forEach((item) => {
+      if (!item.mood) return;
+
+      counts[item.mood] = (counts[item.mood] || 0) + 1;
+    });
+
+    const majorMood = Object.keys(counts).reduce((major, current) => {
+      return counts[current] > counts[major] ? current : major;
+    });
+
+    return {
+      mood: majorMood,
+      count: counts[majorMood],
+    };
+  }
+  const major = getMajorMood(journWeek);
+
   return (
     <View className="px-6 gap-6 py-3">
       {/* Weekly Summary */}
@@ -10,59 +33,39 @@ export default function Weekly() {
 
         {/* Days */}
         <View className="flex-row gap-2">
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-[#ffd]">
-              🍀
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Sun</Text>
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-[#ffd]">
-              ⚡
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Mon</Text>
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-[#ffd]">
-              😤
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Tue</Text>
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-[#ffd]">
-              🍀
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Wed</Text>
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-[#ffd]">
-              ⚡
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Thu</Text>
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#77c] rounded-xl text-center self-start py-3 w-full text-lg bg-[#fff]">
-              🌧
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Fri</Text>
-          </View>
-          <View className="flex-1 gap-1">
-            <Text className="border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-[#ffd]">
-              🍀
-            </Text>
-            <Text className="text-center text-sm text-[#777]">Sat</Text>
-          </View>
+          {journWeek.map((current) => (
+            <View className="flex-1 gap-1" key={current.date}>
+              <Text
+                className={
+                  "border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-" +
+                  moodToColor(current.mood) +
+                  " text-gray-300"
+                }
+              >
+                {moodToEmoji(current.mood)}
+              </Text>
+              <Text className="text-center text-sm text-[#777]">
+                {current.day}
+              </Text>
+            </View>
+          ))}
         </View>
 
         {/* Summary */}
-        <View className="flex-row bg-[#efe] border-[#bcb] border rounded-xl p-3 items-center gap-2">
-          <Text className="text-2xl">🍀</Text>
+        <View
+          className={
+            "flex-row bg-" +
+            moodToColor(major.mood) +
+            " border-[#bcb] border rounded-xl p-3 items-center gap-2"
+          }
+        >
+          <Text className="text-2xl">{moodToEmoji(major.mood)}</Text>
           <View>
             <Text className="font-serif font-bold text-[#575]">
-              Mostly {"Content"}
+              Mostly {major.mood}
             </Text>
             <Text className="text-sm text-[#888]">
-              {3} out of {7} days this week
+              {major.count} out of {7} days this week
             </Text>
           </View>
         </View>
@@ -82,7 +85,7 @@ export default function Weekly() {
             marginTop: 10,
           }}
           data={{
-            labels: ["M", "T", "W", "T", "F", "S", "S"],
+            labels: journWeek.map((current) => current.day.slice(0, 1)),
             datasets: [
               {
                 data: [3, 4, 1, 3, 2, 3, 4],

@@ -14,64 +14,13 @@ export default function HomeScreen() {
     isAnalyzing,
     dailyStatus,
     profcol,
-    firstDay,
     statusDays,
     best,
     streak,
+    journWeek,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
-  function getWeekFrom(startIndex) {
-    const days = ["S", "M", "T", "W", "T", "F", "S"];
-    return [...days.slice(startIndex), ...days.slice(0, startIndex)];
-  }
-  const daysInitial = getWeekFrom(firstDay);
-
-  const dayNow = new Date().getDay();
-  const dateNow = new Date(Date.now()).toISOString().split("T")[0];
-
-  function getCircularWeekDistance(a, b) {
-    return (b - a + 7) % 7;
-  }
-  const diffDay = getCircularWeekDistance(firstDay, dayNow);
-
-  const dayDetails = [];
-  for (let i = 0; i < 7; i++) {
-    const temp = new Date(Date.now() - 86400000 * (diffDay - i))
-      .toISOString()
-      .split("T")[0];
-    const letter = new Date(
-      Date.now() - 86400000 * (diffDay - i),
-    ).toLocaleDateString("en-US", { weekday: "long" })[0];
-    let isHad = !!statusDays.find((current) => current.date == temp);
-
-    dayDetails.push([letter, isHad]);
-  }
-
-  let moodLineups = { excited: 0, content: 0, drained: 0, stressed: 0 };
-  for (let status of statusDays) {
-    moodLineups[status.mood]++;
-  }
-  function getHighestKey(obj) {
-    return Object.keys(obj).reduce((maxKey, key) => {
-      return obj[key] > obj[maxKey] ? key : maxKey;
-    });
-  }
-  let mostMood = statusDays.length > 0 ? getHighestKey(moodLineups) : null;
-  const mostEmoji =
-    statusDays.length > 0
-      ? mostMood == "excited"
-        ? "⚡"
-        : mostMood == "content"
-          ? "🍀"
-          : mostMood == "drained"
-            ? "🌧"
-            : "😤"
-      : null;
-  mostMood =
-    statusDays.length > 0
-      ? mostMood?.charAt(0).toUpperCase() + mostMood?.slice(1)
-      : null;
 
   return (
     <View className="flex-1">
@@ -175,8 +124,8 @@ export default function HomeScreen() {
                   <Text className="text-xs text-[#777]">Total Check-Ins</Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
-                  <Text className="text-2xl">{mostEmoji ?? "😐"}</Text>
-                  <Text className="font-bold">{mostMood ?? "No Data"}</Text>
+                  <Text className="text-2xl">{"😐"}</Text>
+                  <Text className="font-bold">{"No Data"}</Text>
                   <Text className="text-xs text-[#777]">Most felt mood</Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
@@ -190,19 +139,21 @@ export default function HomeScreen() {
               <Text className="text-xs text-[#777]">This week</Text>
               {/* Days */}
               <View className="flex-row gap-1">
-                {dayDetails.map((current, index) => (
+                {journWeek.map((current, index) => (
                   <View className="items-center gap-1 flex-1" key={index}>
                     <View
                       className={
-                        (current[1] ? "bg-[#ca5476]" : "bg-[#ddd]") +
+                        (current.mood ? "bg-[#ca5476]" : "bg-[#ddd]") +
                         " w-10 h-10  rounded-lg justify-center"
                       }
                     >
                       <Text className="text-center">
-                        {current[1] ? "✓" : ""}
+                        {current.mood ? "✓" : ""}
                       </Text>
                     </View>
-                    <Text className="text-sm text-[#777]">{current[0]}</Text>
+                    <Text className="text-sm text-[#777]">
+                      {current.day.slice(0, 1)}
+                    </Text>
                   </View>
                 ))}
               </View>

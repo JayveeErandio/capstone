@@ -1,5 +1,22 @@
 import { supabase } from "../lib/supabase";
 
+export async function login(studentID, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: `${studentID}@moodlink.com`,
+    password: password,
+  });
+
+  if (data.session) {
+    const { data: student } = await supabase
+      .from("students")
+      .select("*")
+      .eq("student_number", studentID)
+      .single();
+
+    return { ...student, success: true };
+  } else return { success: false };
+}
+
 export async function tae() {
   const token = await registerForPushNotificationsAsync();
 
@@ -34,30 +51,6 @@ export async function putPendingPost(value) {
 export async function putPost(value) {
   const { data, error } = await supabase.from("posts").insert([value]).select();
   return { data: data, error: error };
-}
-
-export async function login(studentID, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: `${studentID}@moodlink.com`,
-    password: password,
-  });
-
-  if (data.session) {
-    const { data: student } = await supabase
-      .from("students")
-      .select("*")
-      .eq("student_number", studentID)
-      .single();
-
-    const value = { ...student, success: true };
-    const temp = async () => {
-      await AsyncStorage.setItem("user", JSON.stringify(value));
-    };
-    temp();
-    return value;
-  }
-
-  return { success: false };
 }
 
 export async function logout() {
@@ -258,7 +251,6 @@ export async function putNotification(args) {
       student_id: args.student_id,
     },
   ]);
-  console.log(data, error);
 }
 
 let channel;
@@ -294,7 +286,6 @@ export async function getSchedules() {
   data = data.map((current) => {
     return current.datetime;
   });
-  //console.log(data);
   return data;
 }
 

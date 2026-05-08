@@ -1,7 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-import { signupUser } from "./services/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-export const Variables = createContext();
 import * as chatbot from "./services/chatbot";
 import * as storage from "./services/storage";
 import * as supabase from "./services/supabase";
@@ -11,12 +8,8 @@ export const Provider = ({ children }) => {
   const [user, setUser] = useState({});
   const [firstDay, setFirstDay] = useState(new Date().getDay());
   const [statusDays, setStatusDays] = useState([]);
-  const [dailyStatus, setDailyStatus] = useState();
-  const [best, setBest] = useState(0);
-  const [profcol, setProfcol] = useState(randomColor());
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [page, setPage] = useState("login");
-  const [streak, setStreak] = useState(0);
   const [posts, setPosts] = useState([]);
   const [myposts, setMyposts] = useState([]);
   const [pendingPosts, setPendingPosts] = useState([]);
@@ -30,6 +23,18 @@ export const Provider = ({ children }) => {
   const [books, setBooks] = useState([]);
   const [currentBook, setCurrentBook] = useState({});
   const [availableSchedules, setAvailableSchedules] = useState([]);
+  // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
+  // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
+  // So iistore na natin sya statically
+  const [dailyStatus, setDailyStatus] = useState();
+  const [totalMood, setTotalMood] = useState(0);
+  const [mostMood, setMostMood] = useState();
+  const [curStreak, setCurStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [journWeek, setJournWeek] = useState([]);
+  const [journMonth, setJournMonth] = useState([]);
+  const [journYear, setJournYear] = useState([]);
+  const [journEntry, setJournEntry] = useState([]);
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
@@ -38,7 +43,7 @@ export const Provider = ({ children }) => {
     }
     temp();
   }, []);
-
+  //console.log(statusDays);
   const setupData = async (result) => {
     const data = await storage.getAll();
     await setStatusDays(data.statusDays);
@@ -91,48 +96,21 @@ export const Provider = ({ children }) => {
           current.status == "Pending" || current.status == "Scheduled",
       ) ?? {},
     );
+    computeStatus(data.statusDays);
+    setUser(data.user);
 
     const realtimePerformer = async (newData) => {
       setNotifications((prev) => [newData, ...prev]);
       await storage.putNotifications([newData, ...notifications]);
     };
-    await supabase.realtime(realtimePerformer, result.id);
 
-    // Variables that need computations
-    if (data.statusDays.length > 0) {
-      // To know whether the daily status pertains for today's check-in
-
-      // For First Day Basis
-      const oldest = statusDays.reduce((min, curr) => {
-        return new Date(curr.date) < new Date(min.date) ? curr : min;
-      });
-      setFirstDay(new Date(oldest.date).getDay());
-      await storage.putFirstDay(new Date(oldest.date).getDay());
-
-      // For Streak
-      let count = 0;
-      let curdate = new Date().toISOString().split("T")[0];
-      if (statusDays.find((current) => current.date == curdate)) {
-        let minusDay = 0;
-        do {
-          count++;
-          minusDay++;
-          curdate = new Date(Date.now() - 86400000 * minusDay)
-            .toISOString()
-            .split("T")[0];
-        } while (statusDays.find((current) => current.date == curdate));
-        setStreak(count);
-      }
-    }
-
-    setUser(data.user);
+    supabase.realtime(realtimePerformer, data.user.id);
   };
 
   const login = async (studentID, password) => {
     const result = await supabase.login(studentID, password);
 
     if (result.success) {
-      let temp;
       await storage.putUser(result);
       await storage.putStatusDays(await supabase.getStatusDays(result.id));
       await storage.putPendingPost(await supabase.getPendingPosts(result.id));
@@ -143,20 +121,12 @@ export const Provider = ({ children }) => {
       );
       await storage.putAppointments(await supabase.getAppointments(result.id));
 
-      setupData(result);
+      await setupData(result);
 
-      setUser(result);
       return true;
     }
 
     return false;
-  };
-
-  const deleteAll = function () {
-    setUser({});
-    setPendingPosts([]);
-    setStatusDays([]);
-    setStreak(0);
   };
 
   const logout = async () => {
@@ -167,7 +137,7 @@ export const Provider = ({ children }) => {
   };
 
   const signup = async (ID) => {
-    signupUser(ID);
+    console.log("There has been no events for signup function");
   };
 
   const analyze = async () => {
@@ -211,6 +181,13 @@ export const Provider = ({ children }) => {
       await storage.putFirstDay(firstDay);
       console.log(5656);
     }
+  };
+
+  const deleteAll = function () {
+    setUser({});
+    setPendingPosts([]);
+    setStatusDays([]);
+    setStreak(0);
   };
 
   const updateReact = async (post_id, mood) => {
@@ -360,21 +337,97 @@ export const Provider = ({ children }) => {
     await supabase.deleteAppointment(user.id);
   };
 
+  const computeStatus = async (basis) => {
+    if (basis.length == 0) return;
+
+    let oldestDay, oldestDate, newestDate;
+
+    for (const current of basis) {
+      if (oldestDate == null) {
+        oldestDate = newestDate = current.date;
+        continue;
+      }
+
+      oldestDate = current.date < oldestDate ? current.date : oldestDate;
+      newestDate = current.date > newestDate ? current.date : newestDate;
+    }
+    oldestDay = new Date(oldestDate).getDay();
+
+    function getMostRecentDay(targetDay) {
+      const today = new Date();
+
+      const diff = (today.getDay() - targetDay + 7) % 7;
+
+      today.setDate(today.getDate() - diff);
+
+      return today.toISOString().split("T")[0];
+    }
+
+    let startingDate = getMostRecentDay(oldestDay);
+
+    function generateWeekData(globalArray, startDate) {
+      const week = [];
+      const current = new Date(startDate);
+
+      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      // always generate exactly 7 days
+      for (let i = 0; i < 7; i++) {
+        const formattedDate = current.toISOString().split("T")[0];
+
+        const found = globalArray.find((item) => item.date === formattedDate);
+
+        week.push({
+          mood: found ? found.mood : null,
+          day: dayNames[current.getDay()],
+          date: formattedDate,
+        });
+
+        current.setDate(current.getDate() + 1);
+      }
+
+      return week;
+    }
+
+    setJournWeek(generateWeekData(basis, startingDate));
+  };
+
+  const moodToEmoji = (mood) => {
+    const value = mood?.toLowerCase();
+    switch (value) {
+      case "excited":
+        return "⚡";
+      case "content":
+        return "🍀";
+      case "drained":
+        return "🌧";
+      case "stressed":
+        return "😤";
+      default:
+        return "⦸";
+    }
+  };
+
+  const moodToColor = (mood) => {
+    const value = mood?.toLowerCase();
+    switch (value) {
+      case "excited":
+        return "yellow-100";
+      case "content":
+        return "green-100";
+      case "drained":
+        return "purple-100";
+      case "stressed":
+        return "red-100";
+      default:
+        return null;
+    }
+  };
+
   const restartEntries = () => {
     setEntries(
       Object.fromEntries(Object.keys(entries).map((key) => [key, null])),
     );
-  };
-
-  const updateJournal = () => {
-    // ==== BACKEND ====
-    // Required: Supabase
-    const data = dailyStatus.journal;
-
-    async function updateData() {
-      //HERE
-    }
-    updateData();
   };
 
   return (
@@ -395,13 +448,8 @@ export const Provider = ({ children }) => {
         analyze,
         dailyStatus,
         setDailyStatus,
-        updateJournal,
-        profcol,
-        setProfcol,
         firstDay,
         statusDays,
-        best,
-        streak,
         posts,
         setPosts,
         myposts,
@@ -418,6 +466,9 @@ export const Provider = ({ children }) => {
         bookAppointment,
         deleteAppointment,
         books,
+        journWeek,
+        moodToEmoji,
+        moodToColor,
       }}
     >
       {children}
@@ -425,10 +476,4 @@ export const Provider = ({ children }) => {
   );
 };
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const randomColor = () => {
-  const colors = ["red", "yellow", "green", "cyan", "indigo", "pink"];
-
-  return colors[Math.floor(Math.random() * 6)];
-};
+export const Variables = createContext();
