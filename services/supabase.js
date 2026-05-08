@@ -309,3 +309,28 @@ export async function getAppointments(user_id) {
     .order("id", { ascending: false });
   return data;
 }
+
+export async function updateDailyResult(result, user_id) {
+  const { data, error } = await supabase
+    .from("students")
+    .update({ daily_result: result })
+    .eq("id", user_id);
+  return { data, error };
+}
+
+export async function putStatusDays(record) {
+  const { data, error } = await supabase
+    .from("status_days")
+    .insert([record])
+    .select();
+  return { data, error };
+}
+
+export async function updateJournal(journal, user_id) {
+  const { data, error } = await supabase
+    .from("status_days")
+    .update({ journal: journal })
+    .eq("account_id", user_id)
+    .eq("date", new Date().toISOString().split("T")[0]);
+  return { data, error };
+}

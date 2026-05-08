@@ -328,6 +328,7 @@ function Result() {
             <Text className="bg-[#ffd] border border-[#cca] p-2 px-4 rounded-full italic text-[#552]">
               {dailyStatus.followup}
             </Text>
+
             <TextInput
               onChangeText={(value) =>
                 setDailyStatus({ ...dailyStatus, journal: value })

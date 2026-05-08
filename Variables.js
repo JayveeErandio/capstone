@@ -43,7 +43,7 @@ export const Provider = ({ children }) => {
     }
     temp();
   }, []);
-  //console.log(statusDays);
+
   const setupData = async (result) => {
     const data = await storage.getAll();
     await setStatusDays(data.statusDays);
@@ -52,6 +52,18 @@ export const Provider = ({ children }) => {
     await setPosts(data.posts);
     await setMyposts(data.myPosts);
     await setNotifications(data.notifications);
+    if (
+      data.statusDays.find(
+        (current) => current.date == new Date().toISOString().split("T")[0],
+      )
+    )
+      setDailyStatus({
+        ...JSON.parse(data.user.daily_result),
+        journal: data.statusDays.find(
+          (current) => current.date == new Date().toISOString().split("T")[0],
+        ).journal,
+      });
+
     let temp = await supabase.getSchedules();
     const grouped = Object.values(
       temp.reduce((acc, datetime) => {
@@ -143,17 +155,17 @@ export const Provider = ({ children }) => {
   const analyze = async () => {
     const answer = await chatbot.askMood(entries);
     const result = JSON.parse(answer.slice(8).slice(0, -4));
+
     //const result = {
     //  comment: "ASO",
-    //   suggestions: [{ title: "titulo", details: "detalye", icon: "X" }],
+    //  suggestions: [{ title: "titulo", details: "detalye", icon: "X" }],
     //  followup: "bakit po?",
     //};
     setDailyStatus(result);
+
     await storage.putDailyStatus(result);
-    await supabase
-      .from("students")
-      .update({ daily_result: result })
-      .eq("id", user.id);
+
+    await supabase.updateDailyResult(result, user.id);
 
     const newdata = {
       mood:
@@ -164,23 +176,15 @@ export const Provider = ({ children }) => {
           : entries.door3 == "Light"
             ? "content"
             : "drained",
-      date: new Date(Date.now()).toISOString().split("T")[0],
+      date: new Date().toISOString().split("T")[0],
       account_id: user.id,
     };
-    const { data, error } = await supabase
-      .from("status_days")
-      .insert([newdata])
-      .select();
+    const { data } = await supabase.putStatusDays(newdata);
 
     delete data[0].account_id;
     setStatusDays([...statusDays, data[0]]);
     await storage.putStatusDays(statusDays);
-
-    if (!(await storage.getFirstDay())) {
-      console.log(2323);
-      await storage.putFirstDay(firstDay);
-      console.log(5656);
-    }
+    computeStatus([...statusDays, data[0]]);
   };
 
   const deleteAll = function () {
@@ -430,6 +434,10 @@ export const Provider = ({ children }) => {
     );
   };
 
+  const updateJournal = async (journal) => {
+    await supabase.updateJournal(dailyStatus.journal, user.id);
+  };
+
   return (
     <Variables.Provider
       value={{
@@ -469,6 +477,7 @@ export const Provider = ({ children }) => {
         journWeek,
         moodToEmoji,
         moodToColor,
+        updateJournal,
       }}
     >
       {children}
