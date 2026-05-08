@@ -4,7 +4,6 @@ import { View, Text, TextInput, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import LoadingScreen from "./LoadingScreen";
-import { testNotification } from "../../services/mobilenotif";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -19,8 +18,6 @@ export default function LoginScreen() {
         setValid(null);
       }, 1200);
   }, [valid]);
-
-  //testNotification();
 
   return loading ? (
     <LoadingScreen message="Signing you in" />
@@ -49,6 +46,7 @@ export default function LoginScreen() {
             inputMode="numeric"
             placeholder="e.g. 202310097"
             className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555]"
+            placeholderTextColor="#aaa"
           />
           <Text className="font-bold text-[#333] mt-3">PASSWORD</Text>
           <TextInput
@@ -57,6 +55,7 @@ export default function LoginScreen() {
             autoCapitalize="none"
             placeholder="Enter your password"
             className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] "
+            placeholderTextColor="#aaa"
           />
           <Text
             className={

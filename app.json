@@ -1,7 +1,7 @@
 {
   "expo": {
     "plugins": ["expo-notifications"],
-    "name": "capstone1",
+    "name": "MoodLink",
     "slug": "capstone1",
     "version": "1.0.0",
     "orientation": "portrait",

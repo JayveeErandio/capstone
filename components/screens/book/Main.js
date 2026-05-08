@@ -100,7 +100,8 @@ export default function Main({ show, setPage }) {
           >
             <View className="flex-row justify-between">
               <Text className="text-xs bg-[#ffd] border border-[#cca] p-1 px-2 rounded-full text-[#995] font-bold">
-                {currentBook.status} ⏳
+                {currentBook.status}{" "}
+                {currentBook.status == "Pending" ? "⏳" : "📌"}
               </Text>
               <Pressable
                 onPress={async () => {
@@ -141,10 +142,17 @@ export default function Main({ show, setPage }) {
           {/* Appointment: Past or History */}
           {books.map((current, index) => (
             <View className="bg-white p-3 rounded-2xl gap-1" key={index}>
-              <Text className="text-xs bg-[#eef] border border-[#cca] px-2 rounded-full text-[#779] font-bold self-start">
-                Done
+              <Text
+                className={
+                  (current.status == "Done"
+                    ? "bg-[#eef] text-[#779]"
+                    : "bg-red-200 text-red-700") +
+                  " text-xs border border-[#cca] px-2 rounded-full font-bold self-start"
+                }
+              >
+                {current.status}
               </Text>
-              <Text className="font-bold ">{current.context}</Text>
+              <Text className="font-bold ">{current.context?.slice(3)}</Text>
               <Text className="text-sm text-[#777]">
                 {formatAppointment(current.datetime)}
               </Text>

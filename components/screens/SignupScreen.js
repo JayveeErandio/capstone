@@ -34,6 +34,7 @@ export default function SignupScreen() {
             inputMode="numeric"
             placeholder="e.g. 202310097"
             className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+            placeholderTextColor="#aaa"
           />
         </View>
 

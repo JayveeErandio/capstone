@@ -1,8 +1,4 @@
 import { supabase } from "../lib/supabase";
-import {
-  registerForPushNotificationsAsync,
-  sendPushNotification,
-} from "./mobilenotif";
 
 export async function tae() {
   const token = await registerForPushNotificationsAsync();

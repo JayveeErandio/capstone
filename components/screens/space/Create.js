@@ -111,6 +111,7 @@ export default function Create({ index, setPage }) {
             textAlignVertical="top"
             placeholder="Share what's on your mind... this is your space 🌸"
             value={text}
+            placeholderTextColor="#aaa"
           ></TextInput>
 
           {/* AI Check Reminder */}

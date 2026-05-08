@@ -5,7 +5,6 @@ export const Variables = createContext();
 import * as chatbot from "./services/chatbot";
 import * as storage from "./services/storage";
 import * as supabase from "./services/supabase";
-import { sendPushNotification } from "./services/mobilenotif";
 
 export const Provider = ({ children }) => {
   // Mga variables na globally na gagamitin throughout ng app
@@ -80,8 +79,18 @@ export const Provider = ({ children }) => {
     );
     setAvailableSchedules(grouped);
     temp = data.appointments;
-    setBooks(temp.filter((current) => current.status != "Pending"));
-    setCurrentBook(temp.find((current) => current.status == "Pending") ?? {});
+    setBooks(
+      temp.filter(
+        (current) =>
+          current.status != "Pending" && current.status != "Scheduled",
+      ),
+    );
+    setCurrentBook(
+      temp.find(
+        (current) =>
+          current.status == "Pending" || current.status == "Scheduled",
+      ) ?? {},
+    );
 
     const realtimePerformer = async (newData) => {
       setNotifications((prev) => [newData, ...prev]);
@@ -233,10 +242,10 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    //const result = JSON.parse(
-    //  (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
-    //); // AI-SHUTDOWN
-    const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
+    const result = JSON.parse(
+      (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
+    ); // AI-SHUTDOWN
+    //const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
 
     if (result.isAllowed) {
       await supabase.putNotification({

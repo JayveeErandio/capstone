@@ -17,8 +17,6 @@ import EntryScreen from "./components/screens/EntryScreen";
 import ProfileScreen from "./components/screens/ProfileScreen";
 import ChatbotScreen from "./components/screens/ChatbotScreen";
 
-import * as Notifications from "expo-notifications";
-
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
@@ -44,15 +42,6 @@ function AppNavigator() {
 }
 
 export default function App() {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowBanner: true, // shows popup/banner
-      shouldShowList: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-    }),
-  });
-
   return (
     <Provider>
       {/* Yung SafeAreaView, parang viewport lang sya na sasakupan ng mga UI screen */}
