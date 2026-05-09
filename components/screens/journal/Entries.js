@@ -5,6 +5,7 @@ import { Variables } from "../../../Variables";
 export default function Entries() {
   const { statusDays, capitalizeWords, moodToEmoji } = useContext(Variables);
   const entries = statusDays.filter((current) => !!current.journal);
+  entries.reverse();
 
   function formatDate(datetime) {
     const dateObj = new Date(datetime);

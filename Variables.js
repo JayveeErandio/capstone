@@ -33,6 +33,7 @@ export const Provider = ({ children }) => {
   const [mostMood, setMostMood] = useState();
   const [curStreak, setCurStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
+  const [homeWeek, setHomeWeek] = useState([]);
   const [journWeek, setJournWeek] = useState([]);
   const [journMonth, setJournMonth] = useState([]);
   const [journYear, setJournYear] = useState([]);
@@ -122,6 +123,7 @@ export const Provider = ({ children }) => {
           current.status == "Pending" || current.status == "Scheduled",
       ) ?? {},
     );
+
     computeStatus(data.statusDays);
     setUser(data.user);
 
@@ -403,11 +405,6 @@ export const Provider = ({ children }) => {
   };
 
   const computeStatus = async (basis) => {
-    if (basis.length == 0) {
-      setBestStreak(0);
-      setCurStreak(0);
-    }
-
     let oldestDay, oldestDate, newestDate;
     oldestDate = new Date().toISOString().split("T")[0];
 
@@ -422,6 +419,116 @@ export const Provider = ({ children }) => {
     }
     oldestDay = new Date(oldestDate).getDay();
 
+    if (basis.length > 0) {
+      function getStreaks(data) {
+        const dates = [...new Set(data.map((item) => item.date))].sort(
+          (a, b) => new Date(b) - new Date(a),
+        );
+
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        const isConsecutive = (date1, date2) => {
+          const d1 = new Date(date1);
+          const d2 = new Date(date2);
+
+          d1.setHours(0, 0, 0, 0);
+          d2.setHours(0, 0, 0, 0);
+
+          return (d1 - d2) / oneDay === 1;
+        };
+
+        // -------------------
+        // BEST STREAK
+        // -------------------
+        let bestStreak = 1;
+        let tempBest = 1;
+
+        for (let i = 0; i < dates.length - 1; i++) {
+          if (isConsecutive(dates[i], dates[i + 1])) {
+            tempBest++;
+          } else {
+            tempBest = 1;
+          }
+
+          if (tempBest > bestStreak) {
+            bestStreak = tempBest;
+          }
+        }
+
+        // -------------------
+        // CURRENT STREAK
+        // -------------------
+        const today = new Date();
+        //today.setHours(0, 0, 0, 0);
+
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const format = (d) => d.toISOString().split("T")[0];
+
+        const todayStr = format(today);
+        const yesterdayStr = format(yesterday);
+
+        let currentStreak = 0;
+
+        // Current streak only valid if today OR yesterday exists
+        if (dates.includes(todayStr) || dates.includes(yesterdayStr)) {
+          currentStreak = 1;
+
+          const startIndex = dates.includes(todayStr)
+            ? dates.indexOf(todayStr)
+            : dates.indexOf(yesterdayStr);
+
+          for (let i = startIndex; i < dates.length - 1; i++) {
+            if (isConsecutive(dates[i], dates[i + 1])) {
+              currentStreak++;
+            } else {
+              break;
+            }
+          }
+        }
+
+        return {
+          currentStreak,
+          bestStreak,
+        };
+      }
+      const finalStreaks = getStreaks(basis);
+      setBestStreak(finalStreaks.bestStreak);
+      setCurStreak(finalStreaks.currentStreak);
+    } else {
+      setBestStreak(0);
+      setCurStreak(0);
+    }
+
+    // MAJOR MOOD
+    function getMajorMood(data) {
+      if (!Array.isArray(data) || data.length === 0) {
+        return null;
+      }
+
+      const counts = {};
+
+      for (const item of data) {
+        if (!item.mood) continue;
+
+        counts[item.mood] = (counts[item.mood] || 0) + 1;
+      }
+
+      let majorMood = null;
+      let highest = 0;
+
+      for (const mood in counts) {
+        if (counts[mood] > highest) {
+          highest = counts[mood];
+          majorMood = mood;
+        }
+      }
+
+      return majorMood;
+    }
+    setMostMood(getMajorMood(basis));
+
     function getMostRecentDay(targetDay) {
       const today = new Date();
 
@@ -434,31 +541,33 @@ export const Provider = ({ children }) => {
 
     let startingDate = getMostRecentDay(oldestDay);
 
-    function generateWeekData(globalArray, startDate) {
-      const week = [];
-      const current = new Date(startDate);
+    const weekData = generateWeekData(startingDate, basis);
+    setHomeWeek(weekData);
+    setJournWeek(weekData);
+  };
 
-      const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const generateWeekData = (startDate, basis = statusDays) => {
+    const week = [];
+    const current = new Date(startDate);
 
-      // always generate exactly 7 days
-      for (let i = 0; i < 7; i++) {
-        const formattedDate = current.toISOString().split("T")[0];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-        const found = globalArray.find((item) => item.date === formattedDate);
+    // always generate exactly 7 days
+    for (let i = 0; i < 7; i++) {
+      const formattedDate = current.toISOString().split("T")[0];
 
-        week.push({
-          mood: found ? found.mood : null,
-          day: dayNames[current.getDay()],
-          date: formattedDate,
-        });
+      const found = basis.find((item) => item.date === formattedDate);
 
-        current.setDate(current.getDate() + 1);
-      }
+      week.push({
+        mood: found ? found.mood : null,
+        day: dayNames[current.getDay()],
+        date: formattedDate,
+      });
 
-      return week;
+      current.setDate(current.getDate() + 1);
     }
 
-    setJournWeek(generateWeekData(basis, startingDate));
+    return week;
   };
 
   const moodToEmoji = (mood) => {
@@ -555,7 +664,10 @@ export const Provider = ({ children }) => {
         bookAppointment,
         deleteAppointment,
         books,
+        homeWeek,
         journWeek,
+        setJournWeek,
+        generateWeekData,
         moodToEmoji,
         moodToColor,
         updateJournal,
@@ -566,6 +678,7 @@ export const Provider = ({ children }) => {
         send,
         curStreak,
         bestStreak,
+        mostMood,
       }}
     >
       {children}

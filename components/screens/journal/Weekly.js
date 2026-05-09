@@ -1,10 +1,19 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, Pressable } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { Variables } from "../../../Variables";
 import { useContext } from "react";
 
 export default function Weekly() {
-  const { journWeek, moodToEmoji, moodToColor } = useContext(Variables);
+  const {
+    journWeek,
+    setJournWeek,
+    moodToEmoji,
+    moodToColor,
+    generateWeekData,
+  } = useContext(Variables);
+
+  let haveMood = true;
+
   function getMajorMood(array) {
     const counts = {};
 
@@ -13,6 +22,11 @@ export default function Weekly() {
 
       counts[item.mood] = (counts[item.mood] || 0) + 1;
     });
+
+    if (Object.keys(counts).length == 0) {
+      haveMood = false;
+      return { mood: null, count: 0 };
+    }
 
     const majorMood = Object.keys(counts).reduce((major, current) => {
       return counts[current] > counts[major] ? current : major;
@@ -25,8 +39,58 @@ export default function Weekly() {
   }
   const major = getMajorMood(journWeek);
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const firstDate = new Date(journWeek[0].date);
+  const lastDate = new Date(journWeek[6].date);
+
+  const sameMonth = firstDate.getMonth() == lastDate.getMonth();
+
   return (
     <View className="px-6 gap-6 py-3">
+      <View className="bg-white p-1 rounded-xl gap-3 flex-row items-center">
+        <Pressable
+          onPress={() => {
+            const thatDate = journWeek[0].date;
+            let d = new Date(thatDate);
+            d.setUTCDate(d.getUTCDate() - 7);
+            setJournWeek(generateWeekData(d.toISOString().substr(0, 10)));
+          }}
+          className="p-3 px-5 active:bg-gray-100"
+        >
+          <Text className="text-lg leading-none">❮</Text>
+        </Pressable>
+        <Text className="flex-1 text-center">
+          {monthNames[firstDate.getMonth()]} {firstDate.getDate()} -{" "}
+          {sameMonth ? "" : monthNames[lastDate.getMonth()]}{" "}
+          {lastDate.getDate()}
+        </Text>
+        <Pressable
+          onPress={() => {
+            const thatDate = journWeek[0].date;
+            let d = new Date(thatDate);
+            d.setUTCDate(d.getUTCDate() + 7);
+            setJournWeek(generateWeekData(d.toISOString().substr(0, 10)));
+          }}
+          className="p-3 px-5"
+        >
+          <Text className="text-lg leading-none">❯</Text>
+        </Pressable>
+      </View>
+
       {/* Weekly Summary */}
       <View className="bg-white p-4 rounded-xl gap-3">
         <Text className="text-[#a57]">WEEKLY SUMMARY</Text>
@@ -37,9 +101,7 @@ export default function Weekly() {
             <View className="flex-1 gap-1" key={current.date}>
               <Text
                 className={
-                  "border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg bg-" +
-                  moodToColor(current.mood) +
-                  " text-gray-300"
+                  "border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg text-gray-300"
                 }
               >
                 {moodToEmoji(current.mood)}
@@ -54,15 +116,13 @@ export default function Weekly() {
         {/* Summary */}
         <View
           className={
-            "flex-row bg-" +
-            moodToColor(major.mood) +
-            " border-[#bcb] border rounded-xl p-3 items-center gap-2"
+            "flex-row border-[#bcb] border rounded-xl p-3 items-center gap-2"
           }
         >
           <Text className="text-2xl">{moodToEmoji(major.mood)}</Text>
           <View>
             <Text className="font-serif font-bold text-[#575]">
-              Mostly {major.mood}
+              {haveMood ? "Mostly " + major.mood : "No any status yet"}
             </Text>
             <Text className="text-sm text-[#888]">
               {major.count} out of {7} days this week

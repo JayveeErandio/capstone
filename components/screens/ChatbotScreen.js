@@ -121,8 +121,8 @@ export default function ChatbotScreen() {
                   <Text className="bg-[#b9b] p-2 rounded-full opacity-0">
                     🌸
                   </Text>
-                  <View className="flex-row flex-1">
-                    <Text className="max-w-72 text-sm bg-white p-3 bg-pink-500 text-white rounded-xl rounded-br-none ml-auto">
+                  <View className="flex-row flex-1 ">
+                    <Text className="max-w-72 text-sm p-3 bg-pink-500 text-white rounded-xl rounded-br-none ml-auto">
                       {current.content}
                     </Text>
                   </View>

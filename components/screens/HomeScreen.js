@@ -17,7 +17,10 @@ export default function HomeScreen() {
     statusDays,
     curStreak,
     bestStreak,
-    journWeek,
+    homeWeek,
+    mostMood,
+    capitalizeWords,
+    moodToEmoji,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
@@ -126,8 +129,10 @@ export default function HomeScreen() {
                   <Text className="text-xs text-[#777]">Total Check-Ins</Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
-                  <Text className="text-2xl">{"😐"}</Text>
-                  <Text className="font-bold">{"No Data"}</Text>
+                  <Text className="text-2xl">{moodToEmoji(mostMood)}</Text>
+                  <Text className="font-bold">
+                    {capitalizeWords(mostMood) ?? "No Data"}
+                  </Text>
                   <Text className="text-xs text-[#777]">Most felt mood</Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
@@ -141,7 +146,7 @@ export default function HomeScreen() {
               <Text className="text-xs text-[#777]">This week</Text>
               {/* Days */}
               <View className="flex-row gap-1">
-                {journWeek.map((current, index) => (
+                {homeWeek.map((current, index) => (
                   <View className="items-center gap-1 flex-1" key={index}>
                     <View
                       className={
