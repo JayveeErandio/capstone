@@ -48,13 +48,14 @@ export const Provider = ({ children }) => {
 
   const setupData = async (result) => {
     const data = await storage.getAll();
-    await setStatusDays(data.statusDays);
-    await setDailyStatus(data.dailyStatus);
-    await setPendingPosts(data.pendingPosts);
-    await setPosts(data.posts);
-    await setMyposts(data.myPosts);
-    await setNotifications(data.notifications);
-    await setChats(data.chats);
+    setStatusDays(data.statusDays);
+    setDailyStatus(data.dailyStatus);
+    setPendingPosts(data.pendingPosts);
+    setPosts(data.posts);
+    setMyposts(data.myPosts);
+    setNotifications(data.notifications);
+    setChats(data.chats);
+
     const recentStatus = data.statusDays.find(
       (current) => current.date == new Date().toISOString().split("T")[0],
     );
@@ -402,9 +403,13 @@ export const Provider = ({ children }) => {
   };
 
   const computeStatus = async (basis) => {
-    if (basis.length == 0) return;
+    if (basis.length == 0) {
+      setBestStreak(0);
+      setCurStreak(0);
+    }
 
     let oldestDay, oldestDate, newestDate;
+    oldestDate = new Date().toISOString().split("T")[0];
 
     for (const current of basis) {
       if (oldestDate == null) {
@@ -559,6 +564,8 @@ export const Provider = ({ children }) => {
         chats,
         canSend,
         send,
+        curStreak,
+        bestStreak,
       }}
     >
       {children}

@@ -91,7 +91,7 @@ export default function LoginScreen() {
 
         {/* ==== Footer ==== */}
         <View className="px-7 flex gap-6">
-          <Pressable className="border border-[#f0f0f0] rounded-xl p-4">
+          <Pressable className="border border-[#f0f0f0] rounded-xl p-4 active:bg-[#eff]">
             <Text className="text-[#777] w-full text-center">
               {"\u{1f680}"} Skip — View Demo
             </Text>

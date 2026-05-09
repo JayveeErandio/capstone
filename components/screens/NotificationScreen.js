@@ -26,7 +26,9 @@ export default function NotificationScreen() {
       <View className="bg-[#eee] flex-row justify-between py-6 items-center">
         <View>
           <Text className="font-serif font-bold text-2xl">Notifications</Text>
-          <Text className="text-sm text-[#777]">{3 + " unread"}</Text>
+          <Text className="text-sm text-[#777]">
+            {unread.length + " unread"}
+          </Text>
         </View>
         <Pressable
           onPress={() => {

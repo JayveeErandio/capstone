@@ -15,8 +15,8 @@ export default function HomeScreen() {
     dailyStatus,
     profcol,
     statusDays,
-    best,
-    streak,
+    curStreak,
+    bestStreak,
     journWeek,
   } = useContext(Variables);
   const prof_initialname =
@@ -103,10 +103,10 @@ export default function HomeScreen() {
             <Text className="text-[#c57] font-bold text-sm">YOUR PROGRESS</Text>
             <View className="gap-2">
               <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">
-                <Text className="text-4xl">{streak >= 3 ? "🔥" : "⏳"}</Text>
+                <Text className="text-4xl">{curStreak >= 3 ? "🔥" : "⏳"}</Text>
                 <View className="flex-1">
                   <Text className="text-[#d25e78] font-bold text-3xl font-serif">
-                    {streak} day{streak > 1 ? "s" : ""}
+                    {curStreak} day{curStreak > 1 ? "s" : ""}
                   </Text>
                   <Text className="text-sm text-[#555]">
                     Current check-in streak
@@ -114,7 +114,9 @@ export default function HomeScreen() {
                 </View>
                 <View className="gap-2">
                   <Text className="text-sm text-[#555] text-center">BEST</Text>
-                  <Text className="font-bold text-xl text-center">{best}</Text>
+                  <Text className="font-bold text-xl text-center">
+                    {bestStreak}
+                  </Text>
                 </View>
               </View>
               <View className="flex-row gap-2">
@@ -130,7 +132,7 @@ export default function HomeScreen() {
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">⚡</Text>
-                  <Text className="font-bold">{best}</Text>
+                  <Text className="font-bold">{bestStreak}</Text>
                   <Text className="text-xs text-[#777]">Day best streak</Text>
                 </View>
               </View>
