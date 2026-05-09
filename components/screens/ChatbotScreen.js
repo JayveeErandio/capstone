@@ -2,19 +2,31 @@ import { useNavigation } from "@react-navigation/native";
 import { Text, View, Pressable, TextInput, ScrollView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
+import { Variables } from "../../Variables";
 
 export default function ChatbotScreen() {
+  const { chats, canSend, send } = useContext(Variables);
   const navigation = useNavigation();
   const scrollViewRef = useRef();
-  const [chatbox, setChatbox] = useState([
-    "Hi there 🌸 I'm MoLi, your GCU wellness companion. This is a safe space — feel free to share what's on your mind. What's going on today?",
-    "I feel really drained 🌧️",
-    "Sorry, I had trouble connecting 🌸 Please try again in a moment.",
-    "oraytt",
-    "Welcome",
-  ]);
   const [message, setMessage] = useState("");
+
+  const [time, setTime] = useState(7);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <SafeAreaView>
@@ -53,12 +65,27 @@ export default function ChatbotScreen() {
         </View>
 
         {/* Info Warning */}
-        <View className="flex-row bg-[#ffd] p-4 gap-3 border border-[#995] border-[0.5px]">
-          <Text>⚠️</Text>
+        <View className="flex-row bg-purple-100 p-4 gap-3 border border-[#995] border-[0.5px]">
+          <Text>ℹ️</Text>
           <Text className="flex-1 text-xs leading-4 text-[#774]">
             MoLi offers emotional support only. For urgent concerns, please
             visit GCU Room 201 or use the Appointments feature.
           </Text>
+        </View>
+
+        {/* Chat Related Reminder */}
+        <View
+          className={
+            (time <= 0 ? "hidden" : "") +
+            " flex-row bg-[#ffd] p-4 gap-3 border border-[#995] border-[0.5px]"
+          }
+        >
+          <Text>⚠️</Text>
+          <Text className="flex-1 text-xs leading-4 text-[#774]">
+            Chats unrelated to this app or psychology are prohibited. Violations
+            may result in a 1-hour chat restriction.
+          </Text>
+          <Text className="text-sm text-gray-400">{time}</Text>
         </View>
 
         {/* Main Chats */}
@@ -70,13 +97,21 @@ export default function ChatbotScreen() {
               scrollViewRef.current.scrollToEnd({ animated: true })
             }
           >
-            {chatbox.map((current, index) => {
+            <Text
+              className={
+                (chats.length > 0 ? "hidden" : "") +
+                " text-center mt-12 text-gray-400"
+              }
+            >
+              Got something in mind? Let’s chat 💭
+            </Text>
+            {chats.map((current, index) => {
               const ai = (
                 <View key={index} className="flex-row items-end p-3 gap-2">
                   <Text className="bg-[#b9b] p-2 rounded-full">🌸</Text>
                   <View className="flex-row flex-1">
                     <Text className="max-w-72 text-sm bg-white p-3 rounded-xl rounded-bl-none">
-                      {current}
+                      {current.content}
                     </Text>
                   </View>
                 </View>
@@ -87,15 +122,14 @@ export default function ChatbotScreen() {
                     🌸
                   </Text>
                   <View className="flex-row flex-1">
-                    <Text className="max-w-72 text-sm bg-white p-3 bg-[#d6a] text-white rounded-xl rounded-br-none ml-auto">
-                      {current}
+                    <Text className="max-w-72 text-sm bg-white p-3 bg-pink-500 text-white rounded-xl rounded-br-none ml-auto">
+                      {current.content}
                     </Text>
                   </View>
                 </View>
               );
 
-              if (chatbox.length % 2) return index % 2 ? mine : ai;
-              else return index % 2 ? ai : mine;
+              return current.is_student ? mine : ai;
             })}
           </ScrollView>
         </View>
@@ -109,8 +143,14 @@ export default function ChatbotScreen() {
             value={message}
           ></TextInput>
           <Pressable
+            onPress={() => {
+              if (!(canSend && message != "")) return;
+
+              send(message);
+              setMessage("");
+            }}
             className={
-              (message == "" ? "opacity-50" : "active:bg-[#ccc]") +
+              (canSend && message != "" ? "active:bg-[#ccc]" : "opacity-50") +
               " bg-[#d6a] w-12 h-12 rounded-xl justify-center"
             }
           >

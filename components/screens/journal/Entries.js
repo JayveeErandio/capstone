@@ -41,7 +41,7 @@ export default function Entries() {
               </Text>
             </View>
           </View>
-          <Text className="italic text-[#333] leading-normal">
+          <Text className="text-[#555] leading-normal">
             "{current.journal}"
           </Text>
         </View>

@@ -70,3 +70,7 @@ export async function putNotifications(data) {
 export async function putAppointments(data) {
   await AsyncStorage.setItem("appointments", JSON.stringify(data));
 }
+
+export async function putChats(data) {
+  await AsyncStorage.setItem("chats", JSON.stringify(data));
+}

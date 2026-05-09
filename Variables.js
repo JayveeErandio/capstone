@@ -23,6 +23,8 @@ export const Provider = ({ children }) => {
   const [books, setBooks] = useState([]);
   const [currentBook, setCurrentBook] = useState({});
   const [availableSchedules, setAvailableSchedules] = useState([]);
+  const [chats, setChats] = useState([]);
+  const [canSend, setCanSend] = useState(true);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -52,6 +54,7 @@ export const Provider = ({ children }) => {
     await setPosts(data.posts);
     await setMyposts(data.myPosts);
     await setNotifications(data.notifications);
+    await setChats(data.chats);
     const recentStatus = data.statusDays.find(
       (current) => current.date == new Date().toISOString().split("T")[0],
     );
@@ -142,7 +145,7 @@ export const Provider = ({ children }) => {
         await supabase.getNotifications(result.id),
       );
       await storage.putAppointments(await supabase.getAppointments(result.id));
-
+      await storage.putChats(await supabase.getChats(result.id));
       await setupData(result);
 
       return true;
@@ -152,6 +155,7 @@ export const Provider = ({ children }) => {
   };
 
   const logout = async () => {
+    setCanSend(true);
     await supabase.logout();
     await storage.deleteAll();
     deleteAll();
@@ -166,11 +170,6 @@ export const Provider = ({ children }) => {
     const answer = await chatbot.askMood(entries);
     const result = JSON.parse(answer.slice(8).slice(0, -4));
 
-    //const result = {
-    //  comment: "ASO",
-    //  suggestions: [{ title: "titulo", details: "detalye", icon: "X" }],
-    //  followup: "bakit po?",
-    //};
     setDailyStatus(result);
 
     await storage.putDailyStatus(result);
@@ -375,6 +374,33 @@ export const Provider = ({ children }) => {
     await supabase.deleteAppointment(user.id);
   };
 
+  const send = async (message) => {
+    setCanSend(false);
+    const oldChats = chats;
+    oldChats.push({ id: 0, is_student: true, content: message });
+    supabase.putChats({
+      student_id: user.id,
+      is_student: true,
+      content: message,
+    });
+    const result = JSON.parse(
+      (await chatbot.reply(message)).slice(8).slice(0, -4),
+    );
+    //const result = { answer: "HELL NO", isBanned: false }; // AI-REPLACE
+    oldChats.push({ id: 0, is_student: false, content: result.answer });
+    setChats(oldChats);
+    supabase.putChats({
+      student_id: user.id,
+      is_student: false,
+      content: result.answer,
+    });
+    if (result.isBanned)
+      setTimeout(() => {
+        setCanSend(true);
+      }, 1000 * 20);
+    else setCanSend(true);
+  };
+
   const computeStatus = async (basis) => {
     if (basis.length == 0) return;
 
@@ -530,6 +556,9 @@ export const Provider = ({ children }) => {
         updateJournal,
         reportPost,
         capitalizeWords,
+        chats,
+        canSend,
+        send,
       }}
     >
       {children}

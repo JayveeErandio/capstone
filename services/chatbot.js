@@ -119,3 +119,22 @@ NOTE: Return only the plain text in a format of JSON stringified object or expec
   `,
   );
 }
+
+export async function reply(message) {
+  return await askAI(
+    `
+Return an answer in a stringified JSON with a structure like the example below:
+{
+  answer: "",
+  isBanned: false
+}
+
+And the question/message is this: "` +
+      message +
+      `"
+
+EXPLANATION: Answer or message back it as the usual you. But here is the instruction: you can message back except when the topic or meaning of the question is not related about psychology, mood, emotion, wellbeing, or anything that is related to psychological. Example, when the question is "7+8?", reply it that you don't tolerate or entertain and remind that you only entertain the allowed said topic. And that's the time that you must set that "isBanned" to true. And if so, tell also that his chat will be banned for 1 hour.
+NOTE: Return only the plain text in a format of JSON stringified object or expected return answer. Don't explain it. Just return it with the pure text string only. Dont build any code, just the answer
+    `,
+  );
+}

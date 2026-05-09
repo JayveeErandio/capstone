@@ -343,3 +343,12 @@ export async function getStudent(user_id) {
   return (await supabase.from("students").select("*").eq("id", user_id))
     .data[0];
 }
+
+export async function getChats(user_id) {
+  return (await supabase.from("chats").select("*").eq("student_id", user_id))
+    .data;
+}
+
+export async function putChats(record) {
+  await supabase.from("chats").insert([record]);
+}
