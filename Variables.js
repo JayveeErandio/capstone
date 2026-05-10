@@ -404,6 +404,26 @@ export const Provider = ({ children }) => {
     else setCanSend(true);
   };
 
+  const updateJournal = async () => {
+    setStatusDays(
+      statusDays.map((current) => {
+        if (current.date == new Date().toISOString().split("T")[0]) {
+          return { ...current, journal: dailyStatus.journal };
+        }
+        return current;
+      }),
+    );
+
+    await supabase.updateJournal(dailyStatus.journal, user.id);
+  };
+
+  const changeAnonymousName = async (newName) => {
+    const newData = { ...user, anonymous_name: newName };
+    setUser(newData);
+    supabase.updateAnonymousName(newName, user.id);
+    storage.putUser(newData);
+  };
+
   const computeStatus = async (basis) => {
     let oldestDay, oldestDate, newestDate;
     oldestDate = new Date().toISOString().split("T")[0];
@@ -746,19 +766,6 @@ export const Provider = ({ children }) => {
     );
   };
 
-  const updateJournal = async () => {
-    setStatusDays(
-      statusDays.map((current) => {
-        if (current.date == new Date().toISOString().split("T")[0]) {
-          return { ...current, journal: dailyStatus.journal };
-        }
-        return current;
-      }),
-    );
-
-    await supabase.updateJournal(dailyStatus.journal, user.id);
-  };
-
   return (
     <Variables.Provider
       value={{
@@ -811,6 +818,7 @@ export const Provider = ({ children }) => {
         bestStreak,
         mostMood,
         journYear,
+        changeAnonymousName,
       }}
     >
       {children}

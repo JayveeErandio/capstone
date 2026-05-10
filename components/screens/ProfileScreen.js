@@ -7,13 +7,15 @@ import { Variables } from "../../Variables";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const { user, setUser, logout, profcol, setProfcol } = useContext(Variables);
+  const { user, setUser, logout, changeAnonymousName, capitalizeWords } =
+    useContext(Variables);
 
-  const capitalize = (name) => name.charAt(0).toUpperCase() + name.slice(1);
-  const firstName = capitalize(user["first_name"]);
-  const lastName = capitalize(user["last_name"]);
+  const firstName = capitalizeWords(user["first_name"]);
+  const lastName = capitalizeWords(user["last_name"]);
   const prof_initialname = firstName[0] + lastName[0];
 
+  const oldAnon = user["anonymous_name"];
+  const oldPass = user["password"];
   const [field1, setField1] = useState(user["anonymous_name"]);
   const [field2, setField2] = useState(user["password"]);
 
@@ -53,7 +55,7 @@ export default function ProfileScreen() {
               "bg-red-600 w-20 h-20 rounded-full justify-center mx-auto"
             }
           >
-            <Text className="text-center text-white text-3xl">
+            <Text className="text-center text-white text-4xl">
               {prof_initialname}
             </Text>
           </View>
@@ -77,7 +79,7 @@ export default function ProfileScreen() {
             textAlignVertical="top"
             value={field1}
           />
-          <Text className="mt-5 mb-2">PASSWORD</Text>
+          <Text className="mt-5 mb-2">NEW PASSWORD</Text>
           <TextInput
             onChangeText={setField2}
             secureTextEntry={true}
@@ -86,6 +88,12 @@ export default function ProfileScreen() {
             value={field2}
           />
           <Pressable
+            onPress={() => {
+              if (oldAnon != field1) {
+                changeAnonymousName(field1);
+                navigation.goBack();
+              }
+            }}
             className={
               (user["anonymous_name"] == field1 && user["password"] == field2
                 ? "opacity-50"

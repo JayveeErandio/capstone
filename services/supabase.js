@@ -352,3 +352,10 @@ export async function getChats(user_id) {
 export async function putChats(record) {
   await supabase.from("chats").insert([record]);
 }
+
+export async function updateAnonymousName(newName, user_id) {
+  await supabase
+    .from("students")
+    .update({ anonymous_name: newName })
+    .eq("id", user_id);
+}
