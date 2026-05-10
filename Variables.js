@@ -165,8 +165,8 @@ export const Provider = ({ children }) => {
     await supabase.removeRealtimeNotification();
   };
 
-  const signup = async (ID) => {
-    console.log("There has been no events for signup function");
+  const signup = async (record) => {
+    return await supabase.putStudent(record);
   };
 
   const analyze = async () => {
@@ -422,6 +422,10 @@ export const Provider = ({ children }) => {
     setUser(newData);
     supabase.updateAnonymousName(newName, user.id);
     storage.putUser(newData);
+  };
+
+  const changePassword = async (password) => {
+    return await supabase.updatePassword(password);
   };
 
   const computeStatus = async (basis) => {
@@ -819,6 +823,7 @@ export const Provider = ({ children }) => {
         mostMood,
         journYear,
         changeAnonymousName,
+        changePassword,
       }}
     >
       {children}

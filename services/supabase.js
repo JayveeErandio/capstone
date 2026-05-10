@@ -359,3 +359,27 @@ export async function updateAnonymousName(newName, user_id) {
     .update({ anonymous_name: newName })
     .eq("id", user_id);
 }
+
+export async function putStudent(record) {
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .eq("student_number", record.student_number);
+
+  if (data.length == 0) {
+    await supabase.from("students").upsert(record);
+    return { success: true };
+  } else if (data[0].status != "verified") {
+    await supabase.from("students").upsert(record, {
+      onConflict: "student_number",
+    });
+    return { success: true };
+  } else return { success: false };
+}
+
+export async function updatePassword(password) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: password,
+  });
+  return { data, error };
+}

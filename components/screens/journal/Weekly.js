@@ -180,7 +180,7 @@ export default function Weekly() {
       </View>
 
       {/* Weekly Insight */}
-      <View className="bg-white p-4 rounded-xl gap-2">
+      <View className="bg-white p-4 rounded-xl gap-2 hidden">
         <Text className="text-[#a57]">WEEKLY INSIGHT</Text>
         <Text className="text-[#333] font-bold font-serif italic">
           {"I notice you're riding some natural waves this"}

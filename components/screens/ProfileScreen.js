@@ -7,8 +7,14 @@ import { Variables } from "../../Variables";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const { user, setUser, logout, changeAnonymousName, capitalizeWords } =
-    useContext(Variables);
+  const {
+    user,
+    setUser,
+    logout,
+    changeAnonymousName,
+    capitalizeWords,
+    changePassword,
+  } = useContext(Variables);
 
   const firstName = capitalizeWords(user["first_name"]);
   const lastName = capitalizeWords(user["last_name"]);
@@ -17,7 +23,9 @@ export default function ProfileScreen() {
   const oldAnon = user["anonymous_name"];
   const oldPass = user["password"];
   const [field1, setField1] = useState(user["anonymous_name"]);
-  const [field2, setField2] = useState(user["password"]);
+  const [field2, setField2] = useState("");
+
+  const [invalid, setInvalid] = useState(false);
 
   return (
     <SafeAreaView>
@@ -87,15 +95,31 @@ export default function ProfileScreen() {
             className="bg-[#eee] rounded-xl p-4 text-[#555] border"
             value={field2}
           />
+          <Text
+            className={
+              "text-red-700 text-sm opacity-" + (invalid ? "100" : "0")
+            }
+          >
+            The password is either weak or not allowed.
+          </Text>
           <Pressable
-            onPress={() => {
+            onPress={async () => {
               if (oldAnon != field1) {
                 changeAnonymousName(field1);
                 navigation.goBack();
               }
+              if (field2 != "") {
+                const result = await changePassword(field2);
+                if (result.error) {
+                  setInvalid(true);
+                  setTimeout(() => {
+                    setInvalid(false);
+                  }, 2000);
+                } else navigation.goBack();
+              }
             }}
             className={
-              (user["anonymous_name"] == field1 && user["password"] == field2
+              (user["anonymous_name"] == field1 && field2 == ""
                 ? "opacity-50"
                 : "active:bg-[#b57]") + " bg-[#c68] p-4 rounded-full my-6 "
             }
