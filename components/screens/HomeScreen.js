@@ -131,7 +131,7 @@ export default function HomeScreen() {
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">{moodToEmoji(mostMood)}</Text>
                   <Text className="font-bold">
-                    {capitalizeWords(mostMood) ?? "No Data"}
+                    {mostMood ? capitalizeWords(mostMood) : "No Data"}
                   </Text>
                   <Text className="text-xs text-[#777]">Most felt mood</Text>
                 </View>

@@ -544,6 +544,127 @@ export const Provider = ({ children }) => {
     const weekData = generateWeekData(startingDate, basis);
     setHomeWeek(weekData);
     setJournWeek(weekData);
+
+    function getYearStatistics(data, year) {
+      // Get only entries from the chosen year
+      const filtered = data.filter(
+        (item) => new Date(item.date).getFullYear() === year,
+      );
+
+      // TOTAL ENTRIES
+      const total = filtered.length;
+
+      // JOURNALS COUNT
+      const journals = filtered.filter(
+        (item) => item.journal != null && item.journal !== "",
+      ).length;
+
+      // MOST MOOD
+      const moodCounts = {};
+
+      filtered.forEach((item) => {
+        moodCounts[item.mood] = (moodCounts[item.mood] || 0) + 1;
+      });
+
+      let mostMood = null;
+      let highestMoodCount = 0;
+
+      for (const mood in moodCounts) {
+        if (moodCounts[mood] > highestMoodCount) {
+          highestMoodCount = moodCounts[mood];
+          mostMood = mood;
+        }
+      }
+
+      // LONGEST STREAK
+      const uniqueDates = [
+        ...new Set(filtered.map((item) => item.date)),
+      ].sort();
+
+      let longestStreak = 0;
+      let currentStreak = 0;
+
+      for (let i = 0; i < uniqueDates.length; i++) {
+        if (i === 0) {
+          currentStreak = 1;
+        } else {
+          const prev = new Date(uniqueDates[i - 1]);
+          const curr = new Date(uniqueDates[i]);
+
+          const diffDays = (curr - prev) / (1000 * 60 * 60 * 24);
+
+          if (diffDays === 1) {
+            currentStreak++;
+          } else {
+            currentStreak = 1;
+          }
+        }
+
+        if (currentStreak > longestStreak) {
+          longestStreak = currentStreak;
+        }
+      }
+
+      // MONTHS SUMMARY
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const months = [];
+
+      for (let month = 0; month < 12; month++) {
+        const monthData = filtered.filter(
+          (item) => new Date(item.date).getMonth() === month,
+        );
+
+        let monthMostMood = null;
+
+        if (monthData.length > 0) {
+          const monthMoodCounts = {};
+
+          monthData.forEach((item) => {
+            monthMoodCounts[item.mood] = (monthMoodCounts[item.mood] || 0) + 1;
+          });
+
+          let highest = 0;
+
+          for (const mood in monthMoodCounts) {
+            if (monthMoodCounts[mood] > highest) {
+              highest = monthMoodCounts[mood];
+              monthMostMood = mood;
+            }
+          }
+        }
+
+        months.push({
+          monthOrder: month,
+          name: monthNames[month],
+          total: monthData.length,
+          mostMood: monthMostMood,
+        });
+      }
+
+      return {
+        total,
+        longestStreak,
+        mostMood,
+        journals,
+        months,
+      };
+    }
+
+    setJournYear(getYearStatistics(basis, new Date().getFullYear()));
   };
 
   const generateWeekData = (startDate, basis = statusDays) => {
@@ -603,6 +724,7 @@ export const Provider = ({ children }) => {
   };
 
   function capitalizeWords(sentence) {
+    if (sentence == null) return null;
     return sentence
       .split(" ")
       .map((word) => {
@@ -624,7 +746,16 @@ export const Provider = ({ children }) => {
     );
   };
 
-  const updateJournal = async (journal) => {
+  const updateJournal = async () => {
+    setStatusDays(
+      statusDays.map((current) => {
+        if (current.date == new Date().toISOString().split("T")[0]) {
+          return { ...current, journal: dailyStatus.journal };
+        }
+        return current;
+      }),
+    );
+
     await supabase.updateJournal(dailyStatus.journal, user.id);
   };
 
@@ -679,6 +810,7 @@ export const Provider = ({ children }) => {
         curStreak,
         bestStreak,
         mostMood,
+        journYear,
       }}
     >
       {children}
