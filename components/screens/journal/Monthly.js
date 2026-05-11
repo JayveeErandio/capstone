@@ -158,63 +158,6 @@ export default function Monthly() {
           <Text className="text-sm text-gray-700">{journal}</Text>
         </View>
       </View>
-
-      {/* Mood Trend */}
-      <View className="bg-white p-4 rounded-xl gap-1">
-        <Text className="text-[#a57]">MOOD TREND</Text>
-        <Text className="text-[#888] text-xs">
-          {monthName} — daily mood across the month
-        </Text>
-        <LineChart
-          style={{
-            paddingRight: 25,
-            marginRight: 5,
-            paddingBottom: 18,
-            marginTop: 10,
-          }}
-          data={{
-            labels: [
-              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-              20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-            ],
-            datasets: [
-              {
-                data: [
-                  3, 4, 1, 3, 2, 3, 4, 1, 4, 4, 2, 3, 1, 1, 2, 2, 3, 3, 4, 4, 1,
-                  1, 2, 2, 3, 3, 4, 4, 1, 1, 2,
-                ],
-              },
-            ],
-          }}
-          width={300}
-          height={100}
-          withHorizontalLabels={true}
-          chartConfig={{
-            backgroundColor: "#fff",
-            backgroundGradientFrom: "#fff",
-            backgroundGradientTo: "#fff",
-            decimalPlaces: 0,
-            color: () => "#c79",
-            propsForLabels: {
-              fontSize: 6,
-            },
-          }}
-          segments={3}
-          formatYLabel={(y) => {
-            switch (parseInt(y)) {
-              case 4:
-                return "Exc";
-              case 3:
-                return "Con";
-              case 2:
-                return "Dra";
-              case 1:
-                return "Str";
-            }
-          }}
-          withVerticalLines={false}
-        />
-      </View>
     </View>
   );
 }
