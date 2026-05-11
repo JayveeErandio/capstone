@@ -1,7 +1,14 @@
 import { View, Text, Dimensions, Pressable } from "react-native";
-import { LineChart } from "react-native-chart-kit";
 import { Variables } from "../../../Variables";
 import { useContext } from "react";
+import {
+  BarChart,
+  LineChart,
+  PieChart,
+  PopulationPyramid,
+  RadarChart,
+  BubbleChart,
+} from "react-native-gifted-charts";
 
 export default function Weekly() {
   const {
@@ -58,6 +65,33 @@ export default function Weekly() {
   const lastDate = new Date(journWeek[6].date);
 
   const sameMonth = firstDate.getMonth() == lastDate.getMonth();
+
+  const mapped = journWeek.map((current) => {
+    let num = null;
+
+    switch (current.mood) {
+      case "excited":
+        num = 3;
+        break;
+      case "content":
+        num = 2;
+        break;
+      case "drained":
+        num = 1;
+        break;
+      case "stressed":
+        num = 0;
+        break;
+    }
+
+    return { value: num };
+  });
+  const lastValue = [...mapped]
+    .reverse()
+    .find((item) => item.value !== null)?.value;
+  if (lastValue !== undefined) {
+    mapped.push({ value: lastValue });
+  }
 
   return (
     <View className="px-6 gap-6 py-3">
@@ -132,50 +166,42 @@ export default function Weekly() {
       </View>
 
       {/* Mood Trends */}
-      <View className="bg-white p-4 rounded-xl gap-1">
+      <View className="bg-white p-4 rounded-xl gap-1 overflow-hidden">
         <Text className="text-[#a57]">MOOD TREND</Text>
         <Text className="text-[#999] text-sm">
-          {"Mon"} — {"Sun"} • this week
+          {journWeek[0].day} — {journWeek[6].day} • this week
         </Text>
         <LineChart
-          style={{
-            paddingRight: 60,
-            marginRight: 20,
-            paddingBottom: 18,
-            marginTop: 10,
+          data={mapped}
+          maxValue={3}
+          stepValue={1}
+          thickness={2}
+          areaChart
+          initialSpacing={0}
+          dataPointsRadius={3}
+          initialSpacing={10}
+          width={Dimensions.get("window").width - 120}
+          stepHeight={30}
+          spacing={Dimensions.get("window").width / 9.5}
+          yAxisLabelTexts={["Str", "Dra", "Con", "Exc"]}
+          xAxisLabelTexts={journWeek.map((current) => current.day.slice(0, 1))}
+          startFillColor="#fdd"
+          endFillColor="#fdd"
+          startOpacity={0.5}
+          endOpacity={0.5}
+          color="#d67"
+          dataPointsColor="#a34"
+          dataPointsRadius={4}
+          yAxisTextStyle={{
+            fontSize: 10,
+            color: "gray",
           }}
-          data={{
-            labels: journWeek.map((current) => current.day.slice(0, 1)),
-            datasets: [
-              {
-                data: [3, 4, 1, 3, 2, 3, 4],
-              },
-            ],
+          xAxisLabelTextStyle={{
+            fontSize: 10,
+            color: "gray",
           }}
-          width={300}
-          height={100}
-          withHorizontalLabels={true}
-          chartConfig={{
-            backgroundColor: "#fff",
-            backgroundGradientFrom: "#fff",
-            backgroundGradientTo: "#fff",
-            decimalPlaces: 0,
-            color: () => "#c79",
-          }}
-          segments={3}
-          formatYLabel={(y) => {
-            switch (parseInt(y)) {
-              case 4:
-                return "⚡ Exc";
-              case 3:
-                return "🍀 Con";
-              case 2:
-                return "🌧 Dra";
-              case 1:
-                return "😤 Str";
-            }
-          }}
-          withVerticalLines={false}
+          showDataPointsForMissingValues={false}
+          connectMissingData={false}
         />
       </View>
 
