@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/cli": "latest",
     "@react-navigation/bottom-tabs": "^7.15.9",
     "@react-navigation/native": "^7.2.2",
     "@react-navigation/native-stack": "^7.14.11",
+    "@shopify/react-native-skia": "^2.6.2",
     "@supabase/supabase-js": "^2.104.1",
     "babel-preset-expo": "^55.0.17",
     "expo": "~54.0.33",
@@ -33,8 +35,14 @@
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
-    "react-native-svg": "^15.12.1",
+    "react-native-svg": "15.12.1",
     "tailwindcss": "^3.4.17"
   },
-  "private": true
+  "private": true,
+  "trustedDependencies": [
+    "@shopify/react-native-skia"
+  ],
+  "devDependencies": {
+    "@react-native-community/cli": "latest"
+  }
 }

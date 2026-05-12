@@ -1,6 +1,6 @@
 import { View, Text, Dimensions, Pressable } from "react-native";
 import { Variables } from "../../../Variables";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import {
   BarChart,
   LineChart,
@@ -9,6 +9,7 @@ import {
   RadarChart,
   BubbleChart,
 } from "react-native-gifted-charts";
+import Graph from "../../Graph";
 
 export default function Weekly() {
   const {
@@ -66,32 +67,28 @@ export default function Weekly() {
 
   const sameMonth = firstDate.getMonth() == lastDate.getMonth();
 
-  const mapped = journWeek.map((current) => {
-    let num = null;
+  function mapDays(data) {
+    const moodValueMap = {
+      excited: 4,
+      content: 3,
+      drained: 2,
+      stressed: 1,
+    };
 
-    switch (current.mood) {
-      case "excited":
-        num = 3;
-        break;
-      case "content":
-        num = 2;
-        break;
-      case "drained":
-        num = 1;
-        break;
-      case "stressed":
-        num = 0;
-        break;
-    }
+    return data.map((item) => {
+      const label = item.day?.[0] ?? "";
 
-    return { value: num };
-  });
-  const lastValue = [...mapped]
-    .reverse()
-    .find((item) => item.value !== null)?.value;
-  if (lastValue !== undefined) {
-    mapped.push({ value: lastValue });
+      const mapped = { label };
+
+      if (item.mood && moodValueMap[item.mood] != null) {
+        mapped.value = moodValueMap[item.mood];
+      }
+
+      return mapped;
+    });
   }
+
+  const [graphWidth, setGraphWidth] = useState(0);
 
   return (
     <View className="px-6 gap-6 py-3">
@@ -166,43 +163,39 @@ export default function Weekly() {
       </View>
 
       {/* Mood Trends */}
-      <View className="bg-white p-4 rounded-xl gap-1 overflow-hidden">
+      <View className="p-4 bg-white rounded-xl gap-1 ">
         <Text className="text-[#a57]">MOOD TREND</Text>
         <Text className="text-[#999] text-sm">
           {journWeek[0].day} — {journWeek[6].day} • this week
         </Text>
-        <LineChart
-          data={mapped}
-          maxValue={3}
-          stepValue={1}
-          thickness={2}
-          areaChart
-          initialSpacing={0}
-          dataPointsRadius={3}
-          initialSpacing={10}
-          width={Dimensions.get("window").width - 120}
-          stepHeight={30}
-          spacing={Dimensions.get("window").width / 9.5}
-          yAxisLabelTexts={["Str", "Dra", "Con", "Exc"]}
-          xAxisLabelTexts={journWeek.map((current) => current.day.slice(0, 1))}
-          startFillColor="#fdd"
-          endFillColor="#fdd"
-          startOpacity={0.5}
-          endOpacity={0.5}
-          color="#d67"
-          dataPointsColor="#a34"
-          dataPointsRadius={4}
-          yAxisTextStyle={{
-            fontSize: 10,
-            color: "gray",
+        <View
+          onLayout={(e) => {
+            setGraphWidth(e.nativeEvent.layout.width);
           }}
-          xAxisLabelTextStyle={{
-            fontSize: 10,
-            color: "gray",
-          }}
-          showDataPointsForMissingValues={false}
-          connectMissingData={false}
-        />
+          className="-mt-3"
+        >
+          <Graph width={graphWidth} data={mapDays(journWeek)} />
+        </View>
+        <View className="flex-row gap-2 mt-3">
+          {[
+            ["Excited", "#ea0"],
+            ["Content", "#0d7"],
+            ["Drained", "#c5e"],
+            ["Stressed", "#c00"],
+          ].map((current) => (
+            <View className="flex-row items-center gap-1">
+              <View
+                style={{
+                  backgroundColor: current[1],
+                  width: "10",
+                  height: "10",
+                }}
+                className="rounded-full"
+              ></View>
+              <Text className="text-gray-500 text-sm">{current[0]}</Text>
+            </View>
+          ))}
+        </View>
       </View>
 
       {/* Weekly Insight */}
