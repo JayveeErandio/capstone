@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import Svg, { Circle, Rect, Line, Path } from "react-native-svg";
+import Svg, { Circle, Rect, Line, Path, Polygon } from "react-native-svg";
 import { useState } from "react";
 
 export default function Graph(args) {
@@ -21,7 +21,7 @@ export default function Graph(args) {
           className="pl-2"
         >
           {["Exc", "Con", "Dra", "Str"].map((current) => (
-            <View>
+            <View key={current}>
               <Text className="text-center text-xs text-gray-500 translate-y-1/2 mt-5 mb-1">
                 {current}
               </Text>
@@ -40,11 +40,12 @@ export default function Graph(args) {
       </View>
 
       {/* Row 2 */}
-      <View className="flex-row">
+      <View className="flex-row gap-1">
         <View width={col1width}></View>
         <View className="flex-row flex-1 relative" height={dayHeight}>
-          {args.data.map((current, index, array) => {
-            const herepercent = ((index + 1) / (array.length + 1)) * 100;
+          {args.data?.map((current, index, array) => {
+            const herepercent =
+              array.length > 1 ? 2 + (index / (array.length - 1)) * 96 : 50;
 
             return (
               <Text
@@ -70,11 +71,49 @@ export default function Graph(args) {
 function Canvas(args) {
   const [mustConnect] = useState();
   const [lastPoint, setLastPoint] = useState();
+  const pointRadius = 4;
+  const slightShrink = 3;
+
+  const perform = (data) => {
+    const points = [];
+    const lines = [];
+
+    let noprev = true;
+    for (let i in args.data) {
+      const current = args.data[i];
+
+      if (current.value) {
+        const x =
+          args.data.length > 1
+            ? pointRadius / 2 +
+              slightShrink +
+              (JSON.parse(i) / (args.data.length - 1)) *
+                (args.width - pointRadius - slightShrink * 2)
+            : args.width / 2;
+        const y = ((args.height - 6) * (5 - current.value)) / 4;
+
+        points.push({
+          x,
+          y,
+          color: { 4: "#ea0", 3: "#0d7", 2: "#c5e", 1: "#c00" }[current.value],
+        });
+
+        if (noprev) lines.push([x, y]);
+        else lines.at(-1).push(x, y);
+
+        noprev = false;
+      } else noprev = true;
+    }
+
+    return { points, lines };
+  };
+
+  const graphData = perform(args.data);
 
   return (
     <Svg width={args.width} height={args.height}>
       {[1, 2, 3, 4].map((current, index) => {
-        const strokeWidth = 1;
+        const strokeWidth = 0.5;
         return (
           <Line
             key={index}
@@ -89,55 +128,38 @@ function Canvas(args) {
         );
       })}
 
-      {console.log(args.data)}
-
-      {args.data.map((current, index, array) => {
-        if (!current.value) return;
-
-        const xPos = (index + 1) / (array.length + 1);
-
-        let color;
-
-        switch (current.value) {
-          case 4:
-            color = "#ea0";
-            break;
-          case 3:
-            color = "#0d7";
-            break;
-          case 2:
-            color = "#c5e";
-            break;
-          case 1:
-            color = "#c00";
-            break;
+      {graphData.lines?.map((current) => {
+        let d = "";
+        let polies = current[0] + " " + (args.height - 6) + " ";
+        for (let i = 0; i < current.length / 2; i++) {
+          if (i == 0) d += "M ";
+          else d += "L ";
+          let addend = current[i * 2] + " " + current[i * 2 + 1] + " ";
+          d += addend;
+          polies += addend;
         }
+        polies += current.at(-2) + " " + (args.height - 6);
 
         return (
-          <Circle
-            cx={args.width * xPos}
-            cy="70"
-            cy={((args.height - 6) * (5 - current.value)) / 4}
-            r="7"
-            fill={color}
-            stroke="white"
-            strokeWidth={3}
-          />
+          <>
+            <Polygon points={polies} fill="#faa" opacity={0.3} />
+            <Path d={d} stroke="#d67" strokeWidth={3} fill="none" />
+          </>
         );
       })}
 
-      <Path
-        d="
-    M 10 10
-    L 100 10
-    L 100 100
-    L 10 100
-    
-  "
-        stroke="black"
-        strokeWidth={2}
-        fill="none"
-      />
+      {graphData.points?.map((current) => {
+        return (
+          <Circle
+            cx={current.x}
+            cy={current.y}
+            r={pointRadius}
+            fill={current.color}
+            stroke="white"
+            strokeWidth={1.5}
+          />
+        );
+      })}
     </Svg>
   );
 }

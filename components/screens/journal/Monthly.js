@@ -2,6 +2,7 @@ import { View, Text, FlatList, Pressable } from "react-native";
 import { useState, useContext, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit";
 import { Variables } from "../../../Variables";
+import Graph from "../../Graph";
 
 const buildCalendar = (currentDate = new Date()) => {
   const today = new Date(currentDate);
@@ -41,7 +42,11 @@ export default function Monthly() {
   const monthName = new Date(chosenMonth).toLocaleString("default", {
     month: "long",
   });
-  const selectedStatus = statusDays.find(
+
+  const statusMonths = statusDays.filter((current) =>
+    current.date.startsWith(chosenMonth),
+  );
+  const selectedStatus = statusMonths.find(
     (current) =>
       current.date == chosenMonth + "-" + chosenDay.toString().padStart(2, "0"),
   );
@@ -49,12 +54,65 @@ export default function Monthly() {
   const mood = selectedStatus?.mood;
   const journal = selectedStatus?.journal;
   const statusMap = Object.fromEntries(
-    statusDays.map((item) => [item.date, item]),
+    statusMonths.map((item) => [item.date, item]),
   );
 
-  const totalEntry = statusDays.filter((current) =>
-    current.date.startsWith(chosenMonth),
-  ).length;
+  function generateMonthChartData(data) {
+    if (!data.length) return [];
+
+    const moodMap = {
+      excited: 4,
+      content: 3,
+      drained: 2,
+      stressed: 1,
+    };
+
+    // Get month/year from first entry
+    const sampleDate = new Date(data[0].date);
+
+    const year = sampleDate.getFullYear();
+    const month = sampleDate.getMonth();
+
+    // Total number of days in month
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Dates that should display labels
+    const labelDates = [1, 6, 11, 16, 21, 26, 31];
+
+    // Convert input into lookup by day
+    const lookup = {};
+
+    for (const item of data) {
+      const day = new Date(item.date).getDate();
+
+      lookup[day] = moodMap[item.mood];
+    }
+
+    const result = [];
+
+    // ALWAYS generate every day
+    for (let day = 1; day <= daysInMonth; day++) {
+      const obj = {};
+
+      // Add value only if data exists
+      if (lookup[day] !== undefined) {
+        obj.value = lookup[day];
+      }
+
+      // Add label only on selected dates
+      if (labelDates.includes(day)) {
+        obj.label = day;
+      }
+
+      result.push(obj);
+    }
+
+    return result;
+  }
+
+  const totalEntry = statusMonths.length;
+
+  const [graphWidth, setGraphWidth] = useState(0);
 
   return (
     <View className="px-6 gap-6 py-3">
@@ -156,6 +214,45 @@ export default function Monthly() {
             </View>
           </View>
           <Text className="text-sm text-gray-700">{journal}</Text>
+        </View>
+      </View>
+
+      {/* Mood Trend */}
+      <View className="bg-white p-4 rounded-xl gap-1">
+        <Text className="text-[#a57]">MOOD TREND</Text>
+        <Text className="text-[#888] text-xs">
+          {monthName} — daily mood across the month
+        </Text>
+        <View
+          onLayout={(e) => {
+            setGraphWidth(e.nativeEvent.layout.width);
+          }}
+          className="-mt-3"
+        >
+          <Graph
+            width={graphWidth}
+            data={generateMonthChartData(statusMonths)}
+          />
+        </View>
+        <View className="flex-row gap-2 mt-3">
+          {[
+            ["Excited", "#ea0"],
+            ["Content", "#0d7"],
+            ["Drained", "#c5e"],
+            ["Stressed", "#c00"],
+          ].map((current) => (
+            <View className="flex-row items-center gap-1">
+              <View
+                style={{
+                  backgroundColor: current[1],
+                  width: "10",
+                  height: "10",
+                }}
+                className="rounded-full"
+              ></View>
+              <Text className="text-gray-500 text-sm">{current[0]}</Text>
+            </View>
+          ))}
         </View>
       </View>
     </View>
