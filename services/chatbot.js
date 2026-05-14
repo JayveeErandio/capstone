@@ -52,7 +52,7 @@ async function askAI(question, retries = 3, delay = 2000) {
   }
 }
 
-export async function askMood(entries) {
+export async function askMood(entries, relates) {
   return await askAI(
     `
 Return an answer in a stringified JSON with a structure like the example below:
@@ -95,7 +95,11 @@ To answer this, base the input below that is about a student's mood in a day:
       entries.door4 +
       `",
 }
-EXPLANATION: Door1 means the energy of the user. Door2 means the duration of that his/her feeling. Door3 means his heart feels, this is where already whether positive or negative his mood, light means positive, heavy means negative. Door4 means the context or aspect where his mood came from.
+EXPLANATION: Door1 means the energy of the user. Door2 means the duration of that his/her feeling. Door3 means his heart feels, this is where already whether positive or negative his mood, light means positive, heavy means negative. Door4 means the context or aspect where his mood came from.  And lastly, you must relate to the previous days history below, which the user who entried this has done before
+
+RELATED DATA: ` +
+      JSON.stringify(relates) +
+      `
 
 NOTE: Return only the plain text in a format of JSON stringified object or expected return answer. Don't explain it. Just return it with the pure text string only. Dont build any code, just the answer`,
   );
@@ -120,7 +124,7 @@ NOTE: Return only the plain text in a format of JSON stringified object or expec
   );
 }
 
-export async function reply(message) {
+export async function reply(message, relates) {
   return await askAI(
     `
 Return an answer in a stringified JSON with a structure like the example below:
@@ -133,8 +137,12 @@ And the question/message is this: "` +
       message +
       `"
 
-EXPLANATION: Answer or message back it as the usual you. But here is the instruction: you can message back except when the topic or meaning of the question is not related about psychology, mood, emotion, wellbeing, or anything that is related to psychological. Example, when the question is "7+8?", reply it that you don't tolerate or entertain and remind that you only entertain the allowed said topic. And that's the time that you must set that "isBanned" to true. And if so, tell also that his chat will be banned for 1 hour.
-NOTE: Return only the plain text in a format of JSON stringified object or expected return answer. Don't explain it. Just return it with the pure text string only. Dont build any code, just the answer
-    `,
+EXPLANATION: Answer or message back it as the usual you. But here is the instruction: you can message back except when the topic or meaning of the question is not related about psychology, mood, emotion, wellbeing, or anything that is related to psychological. Example, when the question is "7+8?", reply it that you don't tolerate or entertain and remind that you only entertain the allowed said topic. And that's the time that you must set that "isBanned" to true. And if so, tell also that his chat will be banned for 1 hour. And lastly, you must relate to the previous days history below, which the user who messaged this has entried
+
+RELATED DATA: ` +
+      JSON.stringify(relates) +
+      `
+
+NOTE: Return only the plain text in a format of JSON stringified object or expected return answer. Don't explain it. Just return it with the pure text string only. Dont build any code, just the answer    `,
   );
 }

@@ -140,6 +140,8 @@ export default function ChatbotScreen() {
             onChangeText={setMessage}
             className="flex-1 bg-[#eee] rounded-xl px-3"
             placeholder="Type a message..."
+            placeholderTextColor="#aaa"
+            style={{ color: "#333" }}
             value={message}
           ></TextInput>
           <Pressable

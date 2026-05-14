@@ -195,7 +195,7 @@ export const Provider = ({ children }) => {
 
     delete data[0].account_id;
     setStatusDays([...statusDays, data[0]]);
-    await storage.putStatusDays(statusDays);
+    await storage.putStatusDays([...statusDays, data[0]]);
     computeStatus([...statusDays, data[0]]);
   };
 
@@ -378,6 +378,8 @@ export const Provider = ({ children }) => {
   };
 
   const send = async (message) => {
+    const relatePrevDays = 5;
+
     setCanSend(false);
     const oldChats = chats;
     oldChats.push({ id: 0, is_student: true, content: message });
@@ -386,10 +388,15 @@ export const Provider = ({ children }) => {
       is_student: true,
       content: message,
     });
+
+    // AI's Prompt
+    const relatedDates = [...statusDays]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, relatePrevDays);
+
     const result = JSON.parse(
-      (await chatbot.reply(message)).slice(8).slice(0, -4),
+      (await chatbot.reply(message, relatedDates)).slice(8).slice(0, -4),
     );
-    //const result = { answer: "HELL NO", isBanned: false }; // AI-REPLACE
     oldChats.push({ id: 0, is_student: false, content: result.answer });
     setChats(oldChats);
     supabase.putChats({
@@ -397,6 +404,7 @@ export const Provider = ({ children }) => {
       is_student: false,
       content: result.answer,
     });
+    storage.putChats(oldChats);
     if (result.isBanned)
       setTimeout(() => {
         setCanSend(true);
@@ -405,14 +413,15 @@ export const Provider = ({ children }) => {
   };
 
   const updateJournal = async () => {
-    setStatusDays(
-      statusDays.map((current) => {
-        if (current.date == new Date().toISOString().split("T")[0]) {
-          return { ...current, journal: dailyStatus.journal };
-        }
-        return current;
-      }),
-    );
+    const newData = statusDays.map((current) => {
+      if (current.date == new Date().toISOString().split("T")[0]) {
+        return { ...current, journal: dailyStatus.journal };
+      }
+      return current;
+    });
+    setStatusDays(newData);
+
+    await storage.putStatusDays(newData);
 
     await supabase.updateJournal(dailyStatus.journal, user.id);
   };
@@ -741,7 +750,7 @@ export const Provider = ({ children }) => {
       case "drained":
         return "#cc99ee";
       case "stressed":
-        return "#cc0000";
+        return "#bb0000";
       default:
         return null;
     }

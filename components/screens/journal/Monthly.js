@@ -279,7 +279,7 @@ export default function Monthly() {
                 {moodToEmoji(current.mood)} {capitalizeWords(current.mood)}
               </Text>
               <Text className="text-gray-500 text-xs">
-                {current.count} days · {current.percent.toFixed(2)}%
+                {current.count} days · {parseFloat(current.percent.toFixed(2))}%
               </Text>
             </View>
             <View className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">

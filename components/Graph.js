@@ -128,7 +128,7 @@ function Canvas(args) {
         );
       })}
 
-      {graphData.lines?.map((current) => {
+      {graphData.lines?.map((current, index) => {
         let d = "";
         let polies = current[0] + " " + (args.height - 6) + " ";
         for (let i = 0; i < current.length / 2; i++) {
@@ -141,10 +141,10 @@ function Canvas(args) {
         polies += current.at(-2) + " " + (args.height - 6);
 
         return (
-          <>
+          <View key={index}>
             <Polygon points={polies} fill="#faa" opacity={0.3} />
             <Path d={d} stroke="#d67" strokeWidth={3} fill="none" />
-          </>
+          </View>
         );
       })}
 
