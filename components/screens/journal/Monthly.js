@@ -34,7 +34,8 @@ const buildCalendar = (currentDate = new Date()) => {
 };
 
 export default function Monthly() {
-  const { statusDays, moodToEmoji, capitalizeWords } = useContext(Variables);
+  const { statusDays, moodToEmoji, capitalizeWords, moodToColor } =
+    useContext(Variables);
   const [chosenDay, setChosenDay] = useState(new Date().getDate());
   const [chosenMonth, setChosenMonth] = useState(
     new Date().toISOString().slice(0, 7),
@@ -199,7 +200,10 @@ export default function Monthly() {
             );
           }}
         />
-        <View className="gap-2 bg-[#fef] p-3 rounded-2xl border border-[#cac]">
+        <View
+          className="gap-2 p-3 rounded-2xl border border-[#cac]"
+          style={{ backgroundColor: moodToColor(mood) + "20" }}
+        >
           <View className="flex-row items-center gap-2">
             <Text className="text-2xl w-8 text-center">
               {moodToEmoji(mood)}
@@ -235,25 +239,60 @@ export default function Monthly() {
           />
         </View>
         <View className="flex-row gap-2 mt-3">
-          {[
-            ["Excited", "#ea0"],
-            ["Content", "#0d7"],
-            ["Drained", "#c5e"],
-            ["Stressed", "#c00"],
-          ].map((current) => (
+          {["Excited", "Content", "Drained", "Stressed"].map((current) => (
             <View className="flex-row items-center gap-1">
               <View
                 style={{
-                  backgroundColor: current[1],
+                  backgroundColor: moodToColor(current),
                   width: "10",
                   height: "10",
                 }}
                 className="rounded-full"
               ></View>
-              <Text className="text-gray-500 text-sm">{current[0]}</Text>
+              <Text className="text-gray-500 text-sm">{current}</Text>
             </View>
           ))}
         </View>
+      </View>
+
+      {/* Mood Percentage Breakdown */}
+      <View className="bg-white p-4 rounded-xl gap-4">
+        <Text className="text-[#a57]">MOOD BREAKDOWN</Text>
+        {(function () {
+          let moods = [];
+          for (let status of statusMonths) {
+            let saved = moods.find((current) => current.mood == status.mood);
+            if (saved) saved.count++;
+            else moods.push({ mood: status.mood, count: 1 });
+          }
+          moods.sort((a, b) => b.count - a.count);
+          const total = moods.reduce((prev, next) => prev + next.count, 0);
+          moods = moods.map((current) => ({
+            ...current,
+            percent: (current.count / total) * 100,
+          }));
+          return moods;
+        })().map((current) => (
+          <View className="gap-1">
+            <View className="flex-row justify-between">
+              <Text className="text-gray-500 text-xs">
+                {moodToEmoji(current.mood)} {capitalizeWords(current.mood)}
+              </Text>
+              <Text className="text-gray-500 text-xs">
+                {current.count} days · {current.percent.toFixed(2)}%
+              </Text>
+            </View>
+            <View className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+              <View
+                className="h-full"
+                style={{
+                  width: current.percent + "%",
+                  backgroundColor: moodToColor(current.mood),
+                }}
+              ></View>
+            </View>
+          </View>
+        ))}
       </View>
     </View>
   );

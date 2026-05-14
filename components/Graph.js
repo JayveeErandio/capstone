@@ -148,9 +148,10 @@ function Canvas(args) {
         );
       })}
 
-      {graphData.points?.map((current) => {
+      {graphData.points?.map((current, index) => {
         return (
           <Circle
+            key={index}
             cx={current.x}
             cy={current.y}
             r={pointRadius}

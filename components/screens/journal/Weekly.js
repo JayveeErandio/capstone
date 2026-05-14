@@ -92,6 +92,7 @@ export default function Weekly() {
 
   return (
     <View className="px-6 gap-6 py-3">
+      {/* Weeks Navigation */}
       <View className="bg-white p-1 rounded-xl gap-3 flex-row items-center">
         <Pressable
           onPress={() => {
@@ -134,6 +135,7 @@ export default function Weekly() {
                 className={
                   "border border-[#777] rounded-xl text-center self-start py-3 w-full text-lg text-gray-300"
                 }
+                style={{ backgroundColor: moodToColor(current.mood) + "20" }}
               >
                 {moodToEmoji(current.mood)}
               </Text>
@@ -177,22 +179,17 @@ export default function Weekly() {
           <Graph width={graphWidth} data={mapDays(journWeek)} />
         </View>
         <View className="flex-row gap-2 mt-3">
-          {[
-            ["Excited", "#ea0"],
-            ["Content", "#0d7"],
-            ["Drained", "#c5e"],
-            ["Stressed", "#c00"],
-          ].map((current) => (
+          {["Excited", "Content", "Drained", "Stressed"].map((current) => (
             <View className="flex-row items-center gap-1">
               <View
                 style={{
-                  backgroundColor: current[1],
+                  backgroundColor: moodToColor(current),
                   width: "10",
                   height: "10",
                 }}
                 className="rounded-full"
               ></View>
-              <Text className="text-gray-500 text-sm">{current[0]}</Text>
+              <Text className="text-gray-500 text-sm">{current}</Text>
             </View>
           ))}
         </View>

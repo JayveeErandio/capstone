@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Entries() {
-  const { statusDays, capitalizeWords, moodToEmoji } = useContext(Variables);
+  const { statusDays, capitalizeWords, moodToEmoji, moodToColor } =
+    useContext(Variables);
   const entries = statusDays.filter((current) => !!current.journal);
   entries.reverse();
 
@@ -30,7 +31,10 @@ export default function Entries() {
       {entries.map((current) => (
         <View className="bg-white p-4 rounded-2xl gap-4" key={current.id}>
           <View className="flex-row items-center gap-3">
-            <Text className="bg-[#fff] border border-[#cca] p-2 text-xl rounded-xl">
+            <Text
+              className="border border-[#cca] p-2 text-xl rounded-xl"
+              style={{ backgroundColor: moodToColor(current.mood) + "20" }}
+            >
               {moodToEmoji(current.mood)}
             </Text>
             <View className="gap-1">

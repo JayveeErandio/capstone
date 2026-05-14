@@ -735,13 +735,13 @@ export const Provider = ({ children }) => {
     const value = mood?.toLowerCase();
     switch (value) {
       case "excited":
-        return "yellow-100";
+        return "#eecc00";
       case "content":
-        return "green-100";
+        return "#00ee77";
       case "drained":
-        return "purple-100";
+        return "#cc99ee";
       case "stressed":
-        return "red-100";
+        return "#cc0000";
       default:
         return null;
     }

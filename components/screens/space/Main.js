@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ index, setPage }) {
-  const { posts, setPosts, updateReact, reportPost } = useContext(Variables);
+  const { posts, setPosts, updateReact, reportPost, moodToColor, moodToEmoji } =
+    useContext(Variables);
 
   function formatTime(timestamp) {
     const date = new Date(timestamp); // auto handles UTC → local
@@ -76,14 +77,14 @@ export default function Main({ index, setPage }) {
             <View className="bg-white p-5 rounded-2xl gap-2 mb-5" key={index}>
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
-                  <Text className="text-lg bg-[#fef] p-2 rounded-xl border">
-                    {current.mood == "Excited"
-                      ? "⚡"
-                      : current.mood == "Content"
-                        ? "🍀"
-                        : current.mood == "Drained"
-                          ? "🌧"
-                          : "😤"}
+                  <Text
+                    className="text-lg p-2 rounded-xl border"
+                    style={{
+                      backgroundColor: moodToColor(current.mood) + "20",
+                      borderColor: moodToColor(current.mood),
+                    }}
+                  >
+                    {moodToEmoji(current.mood)}
                   </Text>
                   <View>
                     <Text className="text-[#773] font-bold">
