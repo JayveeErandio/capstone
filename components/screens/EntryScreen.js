@@ -338,6 +338,7 @@ function Result() {
               textAlignVertical="top"
               placeholder="Write your thoughts here..."
               value={dailyStatus.journal}
+              placeholderTextColor={"#bbb"}
             ></TextInput>
           </View>
 
