@@ -31,10 +31,10 @@ export default function SignupScreen() {
             source={require("../../assets/square.png")}
             className="rounded-full w-20 h-20 my-3"
           />
-          <Text className="font-bold text-3xl text-[#333] font-serif text-center">
+          <Text className="font-lora-bold text-3xl text-[#333] text-center">
             Student Registration Verification
           </Text>
-          <Text className="opacity-50 text-sm text-center mx-5">
+          <Text className="opacity-50 text-sm text-center mx-5 font-archivo">
             Submit your student information for verification. The GCU will
             review your details before creating your account. Please wait for an
             email notification regarding your application status.

@@ -25,7 +25,7 @@ export default function NotificationScreen() {
       {/* Header */}
       <View className="bg-[#eee] flex-row justify-between py-6 items-center">
         <View>
-          <Text className="font-serif font-bold text-2xl">Notifications</Text>
+          <Text className="font-lora-bold text-2xl">Notifications</Text>
           <Text className="text-sm text-[#777]">
             {unread.length + " unread"}
           </Text>

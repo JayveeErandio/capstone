@@ -33,31 +33,31 @@ export default function LoginScreen() {
             <Text className="text-4xl text-center">🌸</Text>
           </View>
 
-          <Text className="font-bold text-3xl text-[#333] font-serif">
+          <Text className="font-lora-bold text-3xl text-[#333]">
             Welcome back
           </Text>
-          <Text className="opacity-50 text-sm">
+          <Text className="opacity-50 text-sm font-archivo">
             Sign in to your MoodLink account
           </Text>
         </View>
 
         {/* ==== Forms ==== */}
         <View className="p-7 flex gap-1">
-          <Text className="font-bold text-[#333]">STUDENT ID</Text>
+          <Text className="font-archivo-bold text-[#333]">STUDENT ID</Text>
           <TextInput
             onChangeText={setID}
             inputMode="numeric"
             placeholder="e.g. 202310097"
-            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555]"
+            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] font-archivo"
             placeholderTextColor="#aaa"
           />
-          <Text className="font-bold text-[#333] mt-3">PASSWORD</Text>
+          <Text className="font-archivo-bold text-[#333] mt-4">PASSWORD</Text>
           <TextInput
             onChangeText={setPassword}
             secureTextEntry={true}
             autoCapitalize="none"
             placeholder="Enter your password"
-            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] "
+            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] font-archivo"
             placeholderTextColor="#aaa"
           />
           <Text
@@ -86,7 +86,7 @@ export default function LoginScreen() {
                 : "opacity-50")
             }
           >
-            <Text className="font-bold text-white w-full text-center text-lg">
+            <Text className="text-white w-full text-center text-lg font-archivo-bold">
               Sign In {"\u27F6"}
             </Text>
           </Pressable>
@@ -95,29 +95,29 @@ export default function LoginScreen() {
         {/* ==== Footer ==== */}
         <View className="px-7 flex gap-6">
           <Pressable className="border border-[#f0f0f0] rounded-xl p-4 active:bg-[#eff]">
-            <Text className="text-[#777] w-full text-center">
+            <Text className="text-[#777] w-full text-center font-archivo">
               {"\u{1f680}"} Skip — View Demo
             </Text>
           </Pressable>
           <View className="flex-row mx-auto">
-            <Text className="self-start text-[#777]">
+            <Text className="self-start text-[#777] font-archivo">
               Don't have an account?{" "}
             </Text>
             <Text
               onPress={() => {
                 navigation.navigate("Signup");
               }}
-              className="font-bold text-[#c6a] self-start"
+              className="font-archivo-bold text-[#c6a] self-start"
             >
               Sign up
             </Text>
           </View>
           <View className="flex-row border border-[#ccc] rounded-lg gap-3 p-4 items-center bg-[#fff0ff]">
             <Text className="text-xl">🏫</Text>
-            <Text className="flex-1 text-[#555] text-sm">
+            <Text className="flex-1 text-[#555] text-sm font-archivo">
               MoodLink is an official FEU Diliman GCU app. Use your{" "}
-              <Text className="font-bold">FEU student credentials</Text> to sign
-              in.
+              <Text className="font-archivo-bold">FEU student credentials</Text>{" "}
+              to sign in.
             </Text>
           </View>
         </View>

@@ -33,7 +33,7 @@ export default function HomeScreen() {
           <View className="flex-row gap-7 pb-5">
             <View className="flex-1 gap-2">
               <Text className="text-[#777]">Good morning {"\u2728"}</Text>
-              <Text className="text-3xl font-bold text-[#333] font-serif">
+              <Text className="text-3xl font-lora-bold text-[#333]">
                 How are you feeling today?
               </Text>
             </View>
@@ -61,9 +61,7 @@ export default function HomeScreen() {
             <View className="flex-row gap-2 items-center">
               <Text className="text-4xl">🚪</Text>
               <View className="flex-1 gap-1">
-                <Text className="font-bold font-serif text-xl">
-                  Mood Check-In
-                </Text>
+                <Text className="font-lora-bold text-xl">Mood Check-In</Text>
                 <Text className="text-[#555] text-xs">
                   4 quick questions to understand what you're feeling.
                 </Text>
@@ -91,7 +89,7 @@ export default function HomeScreen() {
               onPress={() => navigation.navigate("Entry")}
               className="bg-[#c57] rounded-full p-4 active:bg-[#b46]"
             >
-              <Text className="text-white text-center font-bold text-lg">
+              <Text className="text-white text-center font-archivo-bold text-lg">
                 {isAnalyzing
                   ? "Analyzing..."
                   : dailyStatus == null
@@ -108,7 +106,7 @@ export default function HomeScreen() {
               <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">
                 <Text className="text-4xl">{curStreak >= 3 ? "🔥" : "⏳"}</Text>
                 <View className="flex-1">
-                  <Text className="text-[#d25e78] font-bold text-3xl font-serif">
+                  <Text className="text-[#d25e78] font-lora-bold text-3xl">
                     {curStreak} day{curStreak > 1 ? "s" : ""}
                   </Text>
                   <Text className="text-sm text-[#555]">

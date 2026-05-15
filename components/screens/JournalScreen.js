@@ -21,7 +21,7 @@ export default function JournalScreen() {
     <View className="flex-1">
       {/* Header */}
       <View className="p-6 gap-2">
-        <Text className="text-2xl font-bold font-serif">My Journal</Text>
+        <Text className="text-2xl font-lora-bold">My Journal</Text>
         <Text className="text-[#777] text-sm">
           Patterns, entries, & mood trends
         </Text>
@@ -38,7 +38,7 @@ export default function JournalScreen() {
               <Text
                 className={
                   (current.props.name == page ? "text-white" : "text-[#777]") +
-                  " text-center"
+                  " text-center font-archivo"
                 }
               >
                 {current.props.name}

@@ -48,7 +48,7 @@ export default function Main({ index, setPage }) {
       {/* Header */}
       <View className="flex-row justify-between items-center py-6 bg-[#eee]">
         <View>
-          <Text className="text-2xl font-bold font-serif">MoodSpace 🌸</Text>
+          <Text className="text-2xl font-lora-bold">MoodSpace 🌸</Text>
           <Text className="text-sm text-[#777]">
             A safe space to share how you feel
           </Text>

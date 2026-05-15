@@ -8,7 +8,14 @@ module.exports = {
   ],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        lora: ["Lora"],
+        "lora-bold": ["LoraBold"],
+        archivo: ["Archivo"],
+        "archivo-bold": ["ArchivoBold"],
+      },
+    },
   },
   plugins: [],
 };

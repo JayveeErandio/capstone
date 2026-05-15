@@ -44,6 +44,7 @@ export const Provider = ({ children }) => {
   useEffect(() => {
     async function temp() {
       if (await storage.getUser()) setupData();
+      else setIsLoaded(true);
     }
     temp();
   }, []);

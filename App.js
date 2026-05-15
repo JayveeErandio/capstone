@@ -17,11 +17,19 @@ import EntryScreen from "./components/screens/EntryScreen";
 import ProfileScreen from "./components/screens/ProfileScreen";
 import ChatbotScreen from "./components/screens/ChatbotScreen";
 import LoadingScreen from "./components/screens/LoadingScreen";
+import { useFonts } from "expo-font";
 
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
   const { user, isLoaded } = useContext(Variables);
+
+  const [fontsLoaded] = useFonts({
+    Lora: require("./assets/fonts/lora.ttf"),
+    LoraBold: require("./assets/fonts/Lora-Bold.ttf"),
+    Archivo: require("./assets/fonts/Archivo-Regular.ttf"),
+    ArchivoBold: require("./assets/fonts/Archivo-Bold.ttf"),
+  });
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

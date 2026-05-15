@@ -1,6 +1,9 @@
 {
   "expo": {
-    "plugins": ["expo-notifications"],
+    "plugins": [
+      "expo-notifications",
+      "expo-font"
+    ],
     "name": "MoodLink",
     "slug": "capstone1",
     "version": "1.0.0",

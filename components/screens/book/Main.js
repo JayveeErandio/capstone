@@ -27,7 +27,7 @@ export default function Main({ show, setPage }) {
       className={(show ? "z-50" : "") + " absolute w-full h-full bg-[#eee]"}
     >
       <View className="bg-white p-5">
-        <Text className="text-[#333] text-2xl font-bold font-serif">
+        <Text className="text-[#333] text-2xl font-lora-bold">
           GCU Appointments 📅
         </Text>
         <Text className="text-sm text-[#777]">
