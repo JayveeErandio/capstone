@@ -25,11 +25,14 @@ export default function LoginScreen() {
     <SafeAreaView>
       <View className="bg-[#fff] h-full">
         {/* ==== Headline Top ==== */}
-        <View className="bg-[#f5ebf4] flex items-center py-8">
-          <Image
-            source={require("../../assets/square.png")}
-            className="rounded-full w-20 h-20 my-3"
-          />
+        <View className="bg-[#f5ebf4] flex items-center py-12 gap-2">
+          <View
+            className="rounded-full h-20 w-20 justify-center"
+            style={{ backgroundColor: "#d16583" }}
+          >
+            <Text className="text-4xl text-center">🌸</Text>
+          </View>
+
           <Text className="font-bold text-3xl text-[#333] font-serif">
             Welcome back
           </Text>
@@ -110,10 +113,7 @@ export default function LoginScreen() {
             </Text>
           </View>
           <View className="flex-row border border-[#ccc] rounded-lg gap-3 p-4 items-center bg-[#fff0ff]">
-            <Image
-              source={require("../../assets/square.png")}
-              className="w-10 h-10 my-3"
-            />
+            <Text className="text-xl">🏫</Text>
             <Text className="flex-1 text-[#555] text-sm">
               MoodLink is an official FEU Diliman GCU app. Use your{" "}
               <Text className="font-bold">FEU student credentials</Text> to sign
