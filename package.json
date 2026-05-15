@@ -43,6 +43,7 @@
     "@shopify/react-native-skia"
   ],
   "devDependencies": {
-    "@react-native-community/cli": "latest"
+    "@react-native-community/cli": "latest",
+    "supabase": "^2.98.2"
   }
 }

@@ -5,6 +5,7 @@ import * as supabase from "./services/supabase";
 
 export const Provider = ({ children }) => {
   // Mga variables na globally na gagamitin throughout ng app
+  const [isLoaded, setIsLoaded] = useState(false);
   const [user, setUser] = useState({});
   const [firstDay, setFirstDay] = useState(new Date().getDay());
   const [statusDays, setStatusDays] = useState([]);
@@ -48,6 +49,8 @@ export const Provider = ({ children }) => {
   }, []);
 
   const setupData = async (result) => {
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
+
     const data = await storage.getAll();
     setStatusDays(data.statusDays);
     setDailyStatus(data.dailyStatus);
@@ -133,6 +136,7 @@ export const Provider = ({ children }) => {
     };
 
     supabase.realtime(realtimePerformer, data.user.id);
+    setIsLoaded(true);
   };
 
   const login = async (studentID, password) => {
@@ -833,6 +837,7 @@ export const Provider = ({ children }) => {
         journYear,
         changeAnonymousName,
         changePassword,
+        isLoaded,
       }}
     >
       {children}

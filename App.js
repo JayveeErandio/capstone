@@ -16,26 +16,31 @@ import MainScreen from "./components/screens/MainScreen";
 import EntryScreen from "./components/screens/EntryScreen";
 import ProfileScreen from "./components/screens/ProfileScreen";
 import ChatbotScreen from "./components/screens/ChatbotScreen";
+import LoadingScreen from "./components/screens/LoadingScreen";
 
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
-  const { user } = useContext(Variables);
+  const { user, isLoaded } = useContext(Variables);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user?.success ? (
-        <>
-          <Stack.Screen name="Main" component={MainScreen} />
-          <Stack.Screen name="Entry" component={EntryScreen} />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Chatbot" component={ChatbotScreen} />
-        </>
+      {isLoaded ? (
+        user?.success ? (
+          <>
+            <Stack.Screen name="Main" component={MainScreen} />
+            <Stack.Screen name="Entry" component={EntryScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="Chatbot" component={ChatbotScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+          </>
+        )
       ) : (
-        <>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-        </>
+        <Stack.Screen name="Loading" component={LoadingScreen} />
       )}
     </Stack.Navigator>
   );
