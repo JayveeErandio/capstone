@@ -50,8 +50,6 @@ export const Provider = ({ children }) => {
   }, []);
 
   const setupData = async (result) => {
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
-
     const data = await storage.getAll();
     setStatusDays(data.statusDays);
     setDailyStatus(data.dailyStatus);

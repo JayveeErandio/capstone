@@ -60,7 +60,7 @@ export default function ProfileScreen() {
           </View>
           <View
             className={
-              "bg-red-600 w-20 h-20 rounded-full justify-center mx-auto"
+              "bg-cyan-600 w-20 h-20 rounded-full justify-center mx-auto"
             }
           >
             <Text className="text-center text-white text-4xl">

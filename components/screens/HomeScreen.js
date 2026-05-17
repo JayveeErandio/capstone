@@ -32,23 +32,23 @@ export default function HomeScreen() {
           {/* Headline */}
           <View className="flex-row gap-7 pb-5">
             <View className="flex-1 gap-2">
-              <Text className="text-[#777]">Good morning {"\u2728"}</Text>
+              <Text className="text-[#777] font-archivo">
+                Good morning {"\u2728"}
+              </Text>
               <Text className="text-3xl font-lora-bold text-[#333]">
                 How are you feeling today?
               </Text>
             </View>
             <Pressable
-              onPress={() => {
+              onPress={async () => {
                 navigation.navigate("Profile");
-                return;
-                setEntries(
-                  Object.fromEntries(
-                    Object.entries(entries).map(([key]) => [key, ""]),
-                  ),
-                );
-                setUser({});
+                const response = await fetch("http://192.168.0.100:3000/");
+
+                const json = await response.json();
+
+                console.log(json.message);
               }}
-              className={"bg-red-600 w-14 h-14 rounded-full justify-center"}
+              className={"bg-cyan-600 w-14 h-14 rounded-full justify-center"}
             >
               <Text className="text-center text-white text-2xl">
                 {prof_initialname}
@@ -62,28 +62,28 @@ export default function HomeScreen() {
               <Text className="text-4xl">🚪</Text>
               <View className="flex-1 gap-1">
                 <Text className="font-lora-bold text-xl">Mood Check-In</Text>
-                <Text className="text-[#555] text-xs">
+                <Text className="text-[#555] text-xs font-archivo">
                   4 quick questions to understand what you're feeling.
                 </Text>
               </View>
             </View>
             <View className="flex-row gap-2">
-              <View className="flex-1 bg-white rounded-lg p-2 gap-1 items-center">
-                <Text className="text-2xl">⚡</Text>
-                <Text className="text-xs text-[#555]">Energy</Text>
-              </View>
-              <View className="flex-1 bg-white rounded-lg p-2 gap-1 items-center">
-                <Text className="text-2xl">⏰</Text>
-                <Text className="text-xs text-[#555]">Duration</Text>
-              </View>
-              <View className="flex-1 bg-white rounded-lg p-2 gap-1 items-center">
-                <Text className="text-2xl">❤</Text>
-                <Text className="text-xs text-[#555]">Heart</Text>
-              </View>
-              <View className="flex-1 bg-white rounded-lg p-2 gap-1 items-center">
-                <Text className="text-2xl">📦</Text>
-                <Text className="text-xs text-[#555]">Context</Text>
-              </View>
+              {[
+                ["⚡", "Energy"],
+                ["⏰", "Duration"],
+                ["❤", "Heart"],
+                ["📦", "Context"],
+              ].map((current) => (
+                <View
+                  key={current[0]}
+                  className="flex-1 bg-white rounded-lg p-2 gap-1 items-center"
+                >
+                  <Text className="text-2xl">{current[0]}</Text>
+                  <Text className="text-xs text-[#555] font-archivo">
+                    {current[1]}
+                  </Text>
+                </View>
+              ))}
             </View>
             <Pressable
               onPress={() => navigation.navigate("Entry")}
@@ -101,7 +101,9 @@ export default function HomeScreen() {
 
           {/* User's Progress */}
           <View className="bg-white mt-6 p-5 rounded-3xl gap-3">
-            <Text className="text-[#c57] font-bold text-sm">YOUR PROGRESS</Text>
+            <Text className="text-[#c57] font-archivo-bold text-sm">
+              YOUR PROGRESS
+            </Text>
             <View className="gap-2">
               <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">
                 <Text className="text-4xl">{curStreak >= 3 ? "🔥" : "⏳"}</Text>
@@ -109,13 +111,15 @@ export default function HomeScreen() {
                   <Text className="text-[#d25e78] font-lora-bold text-3xl">
                     {curStreak} day{curStreak > 1 ? "s" : ""}
                   </Text>
-                  <Text className="text-sm text-[#555]">
+                  <Text className="text-sm text-[#555] font-archivo">
                     Current check-in streak
                   </Text>
                 </View>
                 <View className="gap-2">
-                  <Text className="text-sm text-[#555] text-center">BEST</Text>
-                  <Text className="font-bold text-xl text-center">
+                  <Text className="text-sm text-[#555] text-center font-archivo">
+                    BEST
+                  </Text>
+                  <Text className="font-archivo-bold text-xl text-center">
                     {bestStreak}
                   </Text>
                 </View>
@@ -123,25 +127,33 @@ export default function HomeScreen() {
               <View className="flex-row gap-2">
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">📅</Text>
-                  <Text className="font-bold">{statusDays.length}</Text>
-                  <Text className="text-xs text-[#777]">Total Check-Ins</Text>
+                  <Text className="font-archivo-bold">{statusDays.length}</Text>
+                  <Text className="text-xs text-[#777] font-archivo">
+                    Total Check-Ins
+                  </Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">{moodToEmoji(mostMood)}</Text>
-                  <Text className="font-bold">
+                  <Text className="font-archivo-bold">
                     {mostMood ? capitalizeWords(mostMood) : "No Data"}
                   </Text>
-                  <Text className="text-xs text-[#777]">Most felt mood</Text>
+                  <Text className="text-xs text-[#777] font-archivo">
+                    Most felt mood
+                  </Text>
                 </View>
                 <View className="bg-[#f0f0f0] flex-1 items-center py-2 rounded-xl gap-1">
                   <Text className="text-2xl">⚡</Text>
-                  <Text className="font-bold">{bestStreak}</Text>
-                  <Text className="text-xs text-[#777]">Day best streak</Text>
+                  <Text className="font-archivo-bold">{bestStreak}</Text>
+                  <Text className="text-xs text-[#777] font-archivo">
+                    Day best streak
+                  </Text>
                 </View>
               </View>
             </View>
             <View className="gap-1">
-              <Text className="text-xs text-[#777]">This week</Text>
+              <Text className="text-xs text-[#777] font-archivo">
+                This week
+              </Text>
               {/* Days */}
               <View className="flex-row gap-1">
                 {homeWeek.map((current, index) => (
@@ -156,7 +168,7 @@ export default function HomeScreen() {
                         {current.mood ? "✓" : ""}
                       </Text>
                     </View>
-                    <Text className="text-sm text-[#777]">
+                    <Text className="text-sm text-[#777] font-archivo">
                       {current.day.slice(0, 1)}
                     </Text>
                   </View>

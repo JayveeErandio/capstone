@@ -5,7 +5,7 @@ import { Variables } from "../Variables";
 export default function Pages({ children }) {
   const screens = React.Children.toArray(children);
   const [activePage, setActivePage] = useState("home");
-  const { notifications } = useContext(Variables);
+  const { notifications, capitalizeWords } = useContext(Variables);
   const unread = notifications.reduce(
     (count, current) => (!current.is_seen ? count + 1 : count),
     0,
@@ -30,11 +30,10 @@ export default function Pages({ children }) {
             }
             key={index}
           >
-            <View className="flex items-center">
+            <View className="flex items-center gap-1">
               <Text className="text-xl">{current.props.icon}</Text>
-              <Text className="text-xs text-[#888]">
-                {current.props.name.charAt(0).toUpperCase() +
-                  current.props.name.slice(1)}
+              <Text className="text-xs text-[#888] font-archivo">
+                {capitalizeWords(current.props.name)}
               </Text>
 
               {/* For Notification Tab only */}

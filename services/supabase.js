@@ -1,4 +1,10 @@
 import { supabase } from "../lib/supabase";
+import { getDevicePushTokenAsync } from "expo-notifications";
+
+let tokenDevice;
+(async () => {
+  tokenDevice = (await getDevicePushTokenAsync()).data;
+})();
 
 export async function login(studentID, password) {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -13,31 +19,12 @@ export async function login(studentID, password) {
       .eq("student_number", studentID)
       .single();
 
+    const { data, error } = await supabase
+      .from("token_devices")
+      .insert({ student_id: student.id, token: tokenDevice });
+
     return { ...student, success: true };
   } else return { success: false };
-}
-
-export async function tae() {
-  const token = await registerForPushNotificationsAsync();
-
-  if (!token) {
-    const { data, error } = await supabase.from("user_push_tokens").upsert({
-      user_id: 2,
-      expo_token: token,
-    });
-  }
-
-  const { data: tokens } = await supabase
-    .from("user_push_tokens")
-    .select("expo_token")
-    .eq("user_id", 2);
-
-  await sendPushNotification({
-    expoTokens: tokens.map((t) => t.expo_token),
-    title: "New message 💬",
-    body: "TALAGA BARNN?",
-    data: { user_id: 2 },
-  });
 }
 
 export async function putPendingPost(value) {
@@ -54,8 +41,12 @@ export async function putPost(value) {
 }
 
 export async function logout() {
+  const { data, error } = await supabase
+    .from("token_devices")
+    .delete()
+    .eq("token", tokenDevice);
+
   await supabase.auth.signOut();
-  const { data } = await supabase.auth.getSession();
 }
 
 export async function getStatusDays(id) {
@@ -382,4 +373,27 @@ export async function updatePassword(password) {
     password: password,
   });
   return { data, error };
+}
+
+export async function tae() {
+  const token = await registerForPushNotificationsAsync();
+
+  if (!token) {
+    const { data, error } = await supabase.from("user_push_tokens").upsert({
+      user_id: 2,
+      expo_token: token,
+    });
+  }
+
+  const { data: tokens } = await supabase
+    .from("user_push_tokens")
+    .select("expo_token")
+    .eq("user_id", 2);
+
+  await sendPushNotification({
+    expoTokens: tokens.map((t) => t.expo_token),
+    title: "New message 💬",
+    body: "TALAGA BARNN?",
+    data: { user_id: 2 },
+  });
 }
