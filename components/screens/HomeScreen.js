@@ -42,7 +42,9 @@ export default function HomeScreen() {
             <Pressable
               onPress={async () => {
                 navigation.navigate("Profile");
-                const response = await fetch("http://192.168.0.100:3000/");
+                const response = await fetch(
+                  "https://capstone-xuwy.onrender.com/",
+                );
 
                 const json = await response.json();
 
