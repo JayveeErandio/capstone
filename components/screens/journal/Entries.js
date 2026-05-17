@@ -38,15 +38,15 @@ export default function Entries() {
               {moodToEmoji(current.mood)}
             </Text>
             <View className="gap-1">
-              <Text className="text-[#996] font-bold">
+              <Text className="text-[#996] font-archivo-bold">
                 {capitalizeWords(current.mood)}
               </Text>
-              <Text className="text-xs text-[#888]">
+              <Text className="text-xs text-[#888] font-archivo">
                 {formatDate(current.date)}
               </Text>
             </View>
           </View>
-          <Text className="text-[#555] leading-normal">
+          <Text className="text-[#555] leading-normal font-archivo">
             "{current.journal}"
           </Text>
         </View>

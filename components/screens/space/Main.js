@@ -49,23 +49,23 @@ export default function Main({ index, setPage }) {
       <View className="flex-row justify-between items-center py-6 bg-[#eee]">
         <View>
           <Text className="text-2xl font-lora-bold">MoodSpace 🌸</Text>
-          <Text className="text-sm text-[#777]">
+          <Text className="text-sm text-[#777] font-archivo">
             A safe space to share how you feel
           </Text>
         </View>
         <View className="flex-row items-center gap-2">
           <Pressable
             onPress={() => setPage("Create")}
-            className="bg-[#c57] p-3 rounded-full active:bg-[#000]"
+            className="bg-[#c57] p-3 rounded-full active:bg-[#b46]"
           >
-            <Text className="text-white text-sm">✍🏻 Post</Text>
+            <Text className="text-white text-sm font-archivo">✍🏻 Post</Text>
           </Pressable>
           <Pressable
             onPress={() => setPage("Mine")}
             className="bg-white items-center p-2 rounded-lg border border-[#777] gap-1 active:bg-[#eee]"
           >
             <Text className="text-sm">📝</Text>
-            <Text className="text-xs text-[#555]">Mine</Text>
+            <Text className="text-xs text-[#555] font-archivo">Mine</Text>
           </Pressable>
         </View>
       </View>
@@ -87,10 +87,10 @@ export default function Main({ index, setPage }) {
                     {moodToEmoji(current.mood)}
                   </Text>
                   <View>
-                    <Text className="text-[#773] font-bold">
+                    <Text className="text-[#773] font-archivo-bold">
                       {current.students.anonymous_name}
                     </Text>
-                    <Text className="text-sm text-[#777]">
+                    <Text className="text-sm text-[#777] font-archivo">
                       {current.mood} • {formatTime(current.datetime)}
                     </Text>
                   </View>
@@ -122,10 +122,14 @@ export default function Main({ index, setPage }) {
                   }}
                   className="self-start pb-4 pl-8"
                 >
-                  <Text className="text-sm text-[#bbb]">Report</Text>
+                  <Text className="text-sm text-[#bbb] font-archivo">
+                    Report
+                  </Text>
                 </Pressable>
               </View>
-              <Text className="leading-normal">{current.content}</Text>
+              <Text className="leading-normal font-archivo">
+                {current.content}
+              </Text>
               {/* Reaction Buttons */}
               <View className="flex-row gap-2">
                 <Pressable

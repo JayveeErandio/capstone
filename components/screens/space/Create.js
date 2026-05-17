@@ -24,9 +24,9 @@ export default function Create({ index, setPage }) {
           onPress={setPage}
           className="bg-white p-2 px-5 rounded-full active:bg-[#f7f7f7]"
         >
-          <Text className="text-[#555]">{"\u27F5 Back"}</Text>
+          <Text className="text-[#555] font-archivo">{"\u27F5 Back"}</Text>
         </Pressable>
-        <Text className="font-bold text-xl font-serif">New Post</Text>
+        <Text className="font-lora-bold text-xl">New Post</Text>
       </View>
 
       <ScrollView className="bg-[#eee]">
@@ -35,10 +35,10 @@ export default function Create({ index, setPage }) {
           <View className="flex-row bg-[#ffd] border border-[#cc8] rounded-xl p-4 gap-3">
             <Text className="text-xl">⚠️</Text>
             <View className="flex-1">
-              <Text className="text-sm text-[#aa0] font-bold">
+              <Text className="text-sm text-[#aa0] font-archivo-bold">
                 Anonymity Notice
               </Text>
-              <Text className="text-xs text-[#995]">
+              <Text className="text-xs text-[#995] font-archivo">
                 Your post will appear anonymous to other students. However, GCU
                 can trace posts back to your registered account if necessary.
               </Text>
@@ -53,7 +53,7 @@ export default function Create({ index, setPage }) {
             <View className="flex-row justify-between">
               <View className="flex-row items-center gap-2">
                 <Text className="text-xl">📋</Text>
-                <Text className="text-sm font-bold text-[#333]">
+                <Text className="text-sm font-archivo-bold text-[#333]">
                   Community Rules
                 </Text>
               </View>
@@ -74,7 +74,7 @@ export default function Create({ index, setPage }) {
           </Text>
 
           {/* Moods */}
-          <Text className="text-[#c57] font-bold text-sm">
+          <Text className="text-[#c57] font-archivo-bold text-sm">
             HOW ARE YOU FEELING?
           </Text>
           <View className="flex-row gap-3 -mt-3">
@@ -96,20 +96,24 @@ export default function Create({ index, setPage }) {
               >
                 <View className="items-center gap-1 p-3">
                   <Text className="text-2xl">{current[0]}</Text>
-                  <Text className="text-xs text-[#777]">{current[1]}</Text>
+                  <Text className="text-xs text-[#777] font-archivo">
+                    {current[1]}
+                  </Text>
                 </View>
               </Pressable>
             ))}
           </View>
 
           {/* Text Post */}
-          <Text className="text-[#c57] font-bold text-sm">YOUR POST</Text>
+          <Text className="text-[#c57] text-sm font-archivo-bold">
+            YOUR POST
+          </Text>
           <TextInput
             onChangeText={setText}
             multiline
-            className="bg-white rounded-xl p-4 h-32 text-[#555] text-sm -mt-3"
+            className="bg-white rounded-xl p-4 h-32 text-[#555] -mt-3 font-archivo"
             textAlignVertical="top"
-            placeholder="Share what's on your mind... this is your space 🌸"
+            placeholder="Share what's on your mind... this is your space"
             value={text}
             placeholderTextColor="#aaa"
           ></TextInput>
@@ -117,7 +121,7 @@ export default function Create({ index, setPage }) {
           {/* AI Check Reminder */}
           <View className="flex-row items-center bg-[#fef] gap-3 p-3 border border-[#eae] rounded-2xl">
             <Text className="text-2xl">🤖</Text>
-            <Text className="flex-1 text-sm leading-tight text-[#888]">
+            <Text className="flex-1 text-sm leading-tight text-[#888] font-archivo">
               Your post will be scanned by AI before publishing. Posts that may
               violate rules will be held for review.
             </Text>
@@ -151,7 +155,7 @@ export default function Create({ index, setPage }) {
               " bg-[#c58] p-4 rounded-full "
             }
           >
-            <Text className="text-white text-center font-bold">
+            <Text className="text-white text-center font-archivo-bold text-lg">
               Post to MoodSpace 🌸
             </Text>
           </Pressable>

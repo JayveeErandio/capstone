@@ -105,7 +105,7 @@ export default function Weekly() {
         >
           <Text className="text-lg leading-none">❮</Text>
         </Pressable>
-        <Text className="flex-1 text-center">
+        <Text className="flex-1 text-center font-archivo">
           {monthNames[firstDate.getMonth()]} {firstDate.getDate()} -{" "}
           {sameMonth ? "" : monthNames[lastDate.getMonth()]}{" "}
           {lastDate.getDate()}
@@ -125,7 +125,7 @@ export default function Weekly() {
 
       {/* Weekly Summary */}
       <View className="bg-white p-4 rounded-xl gap-3">
-        <Text className="text-[#a57]">WEEKLY SUMMARY</Text>
+        <Text className="text-[#a57] font-archivo">WEEKLY SUMMARY</Text>
 
         {/* Days */}
         <View className="flex-row gap-2">
@@ -139,7 +139,7 @@ export default function Weekly() {
               >
                 {moodToEmoji(current.mood)}
               </Text>
-              <Text className="text-center text-sm text-[#777]">
+              <Text className="text-center text-sm text-[#777] font-archivo">
                 {current.day}
               </Text>
             </View>
@@ -151,13 +151,14 @@ export default function Weekly() {
           className={
             "flex-row border-[#bcb] border rounded-xl p-3 items-center gap-2"
           }
+          style={{ backgroundColor: moodToColor(major.mood) + "10" }}
         >
           <Text className="text-2xl">{moodToEmoji(major.mood)}</Text>
           <View>
-            <Text className="font-serif font-bold text-[#575]">
+            <Text className="font-lora-bold text-[#575]">
               {haveMood ? "Mostly " + major.mood : "No any status yet"}
             </Text>
-            <Text className="text-sm text-[#888]">
+            <Text className="text-sm text-[#888] font-archivo">
               {major.count} out of {7} days this week
             </Text>
           </View>
@@ -166,8 +167,8 @@ export default function Weekly() {
 
       {/* Mood Trends */}
       <View className="p-4 bg-white rounded-xl gap-1 ">
-        <Text className="text-[#a57]">MOOD TREND</Text>
-        <Text className="text-[#999] text-sm">
+        <Text className="text-[#a57] font-archivo">MOOD TREND</Text>
+        <Text className="text-[#999] text-sm font-archivo">
           {journWeek[0].day} — {journWeek[6].day} • this week
         </Text>
         <View
@@ -189,7 +190,9 @@ export default function Weekly() {
                 }}
                 className="rounded-full"
               ></View>
-              <Text className="text-gray-500 text-sm">{current}</Text>
+              <Text className="text-gray-500 text-sm font-archivo">
+                {current}
+              </Text>
             </View>
           ))}
         </View>

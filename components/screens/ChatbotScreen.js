@@ -50,10 +50,10 @@ export default function ChatbotScreen() {
               🌸
             </Text>
             <View>
-              <Text className="font-bold font-serif text-lg">MoLi 🌸</Text>
+              <Text className="font-lora-bold text-lg">MoLi 🌸</Text>
               <View className="flex-row">
-                <Text className="text-6xl leading-5 text-[#0c0]">·</Text>
-                <Text className="text-sm text-[#888]">
+                <Text className="text-6xl leading-4 text-[#0c0]">·</Text>
+                <Text className="text-xs text-[#888] font-archivo">
                   Online · GCU Wellness AI
                 </Text>
               </View>
@@ -67,7 +67,7 @@ export default function ChatbotScreen() {
         {/* Info Warning */}
         <View className="flex-row bg-purple-100 p-4 gap-3 border border-[#995] border-[0.5px]">
           <Text>ℹ️</Text>
-          <Text className="flex-1 text-xs leading-4 text-[#774]">
+          <Text className="flex-1 text-xs leading-4 text-[#774] font-archivo">
             MoLi offers emotional support only. For urgent concerns, please
             visit GCU Room 201 or use the Appointments feature.
           </Text>
@@ -110,7 +110,7 @@ export default function ChatbotScreen() {
                 <View key={index} className="flex-row items-end p-3 gap-2">
                   <Text className="bg-[#b9b] p-2 rounded-full">🌸</Text>
                   <View className="flex-row flex-1">
-                    <Text className="max-w-72 text-sm bg-white p-3 rounded-xl rounded-bl-none">
+                    <Text className="max-w-72 text-sm bg-white p-3 rounded-xl rounded-bl-none font-archivo">
                       {current.content}
                     </Text>
                   </View>
@@ -122,7 +122,7 @@ export default function ChatbotScreen() {
                     🌸
                   </Text>
                   <View className="flex-row flex-1 ">
-                    <Text className="max-w-72 text-sm p-3 bg-pink-500 text-white rounded-xl rounded-br-none ml-auto">
+                    <Text className="max-w-72 text-sm p-3 bg-pink-500 text-white rounded-xl rounded-br-none ml-auto font-archivo">
                       {current.content}
                     </Text>
                   </View>
@@ -138,7 +138,7 @@ export default function ChatbotScreen() {
         <View className="bg-white flex-row p-3 gap-2">
           <TextInput
             onChangeText={setMessage}
-            className="flex-1 bg-[#eee] rounded-xl px-3"
+            className="flex-1 bg-[#eee] rounded-xl px-3 font-archivo"
             placeholder="Type a message..."
             placeholderTextColor="#aaa"
             style={{ color: "#333" }}

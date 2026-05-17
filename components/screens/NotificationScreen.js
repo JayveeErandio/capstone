@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Variables } from "../../Variables";
 
 export default function NotificationScreen() {
-  const { notifications, readNotification } = useContext(Variables);
+  const { notifications, readNotification, formatTime } = useContext(Variables);
   const read = notifications.filter((current) => current.is_seen);
   const unread = notifications.filter((current) => !current.is_seen);
 
@@ -26,7 +26,7 @@ export default function NotificationScreen() {
       <View className="bg-[#eee] flex-row justify-between py-6 items-center">
         <View>
           <Text className="font-lora-bold text-2xl">Notifications</Text>
-          <Text className="text-sm text-[#777]">
+          <Text className="text-sm text-[#777] font-archivo">
             {unread.length + " unread"}
           </Text>
         </View>
@@ -39,7 +39,9 @@ export default function NotificationScreen() {
             " bg-white self-start p-2 px-3 rounded-full"
           }
         >
-          <Text className="text-sm text-[#555]">Mark all read</Text>
+          <Text className="text-sm text-[#555] font-archivo">
+            Mark all read
+          </Text>
         </Pressable>
       </View>
 
@@ -49,7 +51,7 @@ export default function NotificationScreen() {
           <Text className="bg-[#ddf] text-center text-[#99c] text-3xl rounded-lg font-bold">
             ℹ️
           </Text>
-          <Text className="text-sm text-[#777] leading-4 flex-1">
+          <Text className="text-sm text-[#777] leading-4 flex-1 font-archivo">
             By clicking the unread notification, you confirm that you already
             read it.
           </Text>
@@ -59,7 +61,7 @@ export default function NotificationScreen() {
         <Text
           className={
             (unread.length == 0 ? "hidden" : "") +
-            " text-[#c59] font-bold text-sm mb-2"
+            " text-[#c59] font-archivo-bold text-sm mb-2"
           }
         >
           UNREAD
@@ -78,9 +80,15 @@ export default function NotificationScreen() {
               </Text>
               <View className="flex-row flex-1">
                 <View className="flex-1 gap-1">
-                  <Text className="text-sm font-bold">{current.title}</Text>
-                  <Text className="text-xs text-[#777]">{current.content}</Text>
-                  <Text className="text-xs text-[#777]">{"2m ago"}</Text>
+                  <Text className="text-sm font-archivo-bold">
+                    {current.title}
+                  </Text>
+                  <Text className="text-xs text-[#777] font-archivo">
+                    {current.content}
+                  </Text>
+                  <Text className="text-xs text-[#777] font-archivo">
+                    {formatTime(current.datetime)}
+                  </Text>
                 </View>
                 <Text className="text-5xl text-[#c69] leading-6">•</Text>
               </View>
@@ -92,7 +100,7 @@ export default function NotificationScreen() {
         <Text
           className={
             (read.length == 0 ? "hidden" : "") +
-            " text-[#c59] font-bold text-sm mb-2"
+            " text-[#c59] font-archivo-bold text-sm mb-2"
           }
         >
           EARLIER
@@ -107,9 +115,15 @@ export default function NotificationScreen() {
             </Text>
             <View className="flex-row flex-1">
               <View className="flex-1 gap-1">
-                <Text className="text-sm font-bold">{current.title}</Text>
-                <Text className="text-xs text-[#777]">{current.content}</Text>
-                <Text className="text-xs text-[#777]">{"2m ago"}</Text>
+                <Text className="text-sm font-archivo-bold">
+                  {current.title}
+                </Text>
+                <Text className="text-xs text-[#777] font-archivo">
+                  {current.content}
+                </Text>
+                <Text className="text-xs text-[#777] font-archivo">
+                  {formatTime(current.datetime)}
+                </Text>
               </View>
             </View>
           </View>

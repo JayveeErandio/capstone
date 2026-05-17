@@ -30,7 +30,7 @@ export default function Main({ show, setPage }) {
         <Text className="text-[#333] text-2xl font-lora-bold">
           GCU Appointments 📅
         </Text>
-        <Text className="text-sm text-[#777]">
+        <Text className="text-sm text-[#777] font-archivo">
           Book a session with a GCU counselor
         </Text>
       </View>
@@ -43,10 +43,10 @@ export default function Main({ show, setPage }) {
               className="flex-row justify-between bg-[#d69] active:bg-[#c58] p-5 items-center"
             >
               <View>
-                <Text className="text-white text-lg font-serif font-bold">
+                <Text className="text-white text-lg font-lora-bold">
                   Book an Appointment
                 </Text>
-                <Text className="text-white text-sm">
+                <Text className="text-white text-sm font-archivo">
                   Schedule time with a GCU counselor
                 </Text>
               </View>
@@ -61,7 +61,7 @@ export default function Main({ show, setPage }) {
                   : "" + "absolute bg-[#000]/60 h-full justify-center"
               }
             >
-              <Text className="text-center mx-7 font-bold text-[#fff]">
+              <Text className="text-center mx-7 font-archivo-bold text-[#fff]">
                 Booking can only be set once. You have ongoing appointment set
                 right now
               </Text>
@@ -71,17 +71,18 @@ export default function Main({ show, setPage }) {
             <Text className="text-center text-[#99c] text-3xl rounded-lg font-bold">
               ℹ️
             </Text>
-            <Text className="text-xs text-[#777] leading-4 flex-1">
-              All sessions are <Text className="font-bold">confidential</Text>.
-              For urgent concerns, please visit the GCU office directly at Room
-              201, Admin Building.
+            <Text className="text-xs text-[#777] leading-4 flex-1 font-archivo">
+              All sessions are{" "}
+              <Text className="font-archivo-bold">confidential</Text>. For
+              urgent concerns, please visit the GCU office directly at Room 201,
+              Admin Building.
             </Text>
           </View>
 
           <Text
             className={
               !currentBook.context && books.length == 0
-                ? "text-center text-sm text-gray-500 mt-12"
+                ? "text-center text-sm text-gray-500 mt-12 font-archivo"
                 : ""
             }
           >
@@ -99,7 +100,7 @@ export default function Main({ show, setPage }) {
             }
           >
             <View className="flex-row justify-between">
-              <Text className="text-xs bg-[#ffd] border border-[#cca] p-1 px-2 rounded-full text-[#995] font-bold">
+              <Text className="text-xs bg-[#ffd] border border-[#cca] p-1 px-2 rounded-full text-[#995] font-archivo-bold">
                 {currentBook.status}{" "}
                 {currentBook.status == "Pending" ? "⏳" : "📌"}
               </Text>
@@ -130,11 +131,13 @@ export default function Main({ show, setPage }) {
                 }}
                 className="pl-6"
               >
-                <Text className="text-sm text-[#888]">Delete</Text>
+                <Text className="text-sm text-[#888] font-archivo">Delete</Text>
               </Pressable>
             </View>
-            <Text className="font-bold ">{currentBook.context?.slice(3)}</Text>
-            <Text className="text-sm text-[#777]">
+            <Text className="font-archivo-bold">
+              {currentBook.context?.slice(3)}
+            </Text>
+            <Text className="text-sm text-[#777] font-archivo">
               {formatAppointment(currentBook.datetime)}
             </Text>
           </View>
@@ -147,13 +150,15 @@ export default function Main({ show, setPage }) {
                   (current.status == "Done"
                     ? "bg-[#eef] text-[#779]"
                     : "bg-red-200 text-red-700") +
-                  " text-xs border border-[#cca] px-2 rounded-full font-bold self-start"
+                  " text-xs border border-[#cca] px-2 rounded-full font-archivo-bold self-start"
                 }
               >
                 {current.status}
               </Text>
-              <Text className="font-bold ">{current.context?.slice(3)}</Text>
-              <Text className="text-sm text-[#777]">
+              <Text className="font-archivo-bold">
+                {current.context?.slice(3)}
+              </Text>
+              <Text className="text-sm text-[#777] font-archivo">
                 {formatAppointment(current.datetime)}
               </Text>
             </View>

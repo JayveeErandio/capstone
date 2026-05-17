@@ -44,80 +44,84 @@ export default function SignupScreen() {
         {/* ==== Forms ==== */}
         <View className="p-7 flex gap-5">
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">LAST NAME</Text>
+            <Text className="font-archivo-bold text-[#333]">LAST NAME</Text>
             <TextInput
               onChangeText={setLastName}
               value={lastName}
               placeholder="e.g. Dela Cruz"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">FIRST NAME</Text>
+            <Text className="font-archivo-bold text-[#333]">FIRST NAME</Text>
             <TextInput
               onChangeText={setFirstName}
               value={firstName}
               placeholder="e.g. Juan"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">YEAR LEVEL</Text>
+            <Text className="font-archivo-bold text-[#333]">YEAR LEVEL</Text>
             <TextInput
               onChangeText={setYearLevel}
               value={yearLevel}
               maxLength={1}
               inputMode="numeric"
               placeholder="e.g. 4"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">SECTION</Text>
+            <Text className="font-archivo-bold text-[#333]">SECTION</Text>
             <TextInput
               onChangeText={setSection}
               value={section}
               placeholder="e.g. DW31"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">ANONYMOUS NAME</Text>
-            <Text className="text-xs text-gray-400">
+            <Text className="font-archivo-bold text-[#333]">
+              ANONYMOUS NAME
+            </Text>
+            <Text className="text-xs text-gray-400 font-archivo">
               (Your public screen name throughout the app.)
             </Text>
             <TextInput
               onChangeText={setAnonymous}
               value={anonymous}
               placeholder="e.g. moodlinkerist"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">STUDENT NUMBER</Text>
+            <Text className="font-archivo-bold text-[#333]">
+              STUDENT NUMBER
+            </Text>
             <TextInput
               onChangeText={setStudentNumber}
               value={studentNumber}
               inputMode="numeric"
               placeholder="e.g. 202310097"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
-            <Text className="font-bold text-[#333]">PASSWORD</Text>
+            <Text className="font-archivo-bold text-[#333]">PASSWORD</Text>
             <TextInput
               onChangeText={setPassword}
               value={password}
               secureTextEntry={true}
               autoCapitalize="none"
               placeholder="Enter your password"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee]"
+              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
               placeholderTextColor="#aaa"
             />
           </View>
@@ -165,7 +169,7 @@ export default function SignupScreen() {
               }
             }}
             className={
-              "bg-[#c6a] rounded-xl p-5  " +
+              "bg-[#c6a] rounded-xl p-5 " +
               (lastName != "" &&
               firstName != "" &&
               yearLevel != "" &&
@@ -177,7 +181,7 @@ export default function SignupScreen() {
                 : "opacity-50")
             }
           >
-            <Text className="font-bold text-white w-full text-center text-lg">
+            <Text className="font-archivo-bold text-white w-full text-center text-lg">
               Request to GCU {"\u27F6"}
             </Text>
           </Pressable>
@@ -185,7 +189,9 @@ export default function SignupScreen() {
             onPress={() => navigation.goBack()}
             className="border border-[#ccc] rounded-xl p-4 active:bg-[#eee]"
           >
-            <Text className="text-[#777] w-full text-center">Go Back</Text>
+            <Text className="text-[#777] w-full text-center font-archivo">
+              Go Back
+            </Text>
           </Pressable>
         </View>
       </SafeAreaView>

@@ -46,7 +46,7 @@ export default function ProfileScreen() {
               >
                 <Text className="text-2xl font-bold text-center ">‹</Text>
               </Pressable>
-              <Text className="text-lg font-bold font-serif">My Profile</Text>
+              <Text className="text-lg font-lora-bold">My Profile</Text>
             </View>
             <Pressable
               onPress={async () => {
@@ -55,7 +55,7 @@ export default function ProfileScreen() {
               }}
               className="bg-[#c59] p-2 px-5 rounded-xl"
             >
-              <Text className="text-white font-bold">Log Out</Text>
+              <Text className="text-white font-archivo-bold">Log Out</Text>
             </Pressable>
           </View>
           <View
@@ -67,27 +67,25 @@ export default function ProfileScreen() {
               {prof_initialname}
             </Text>
           </View>
-          <Text className="text-center font-serif font-bold">
+          <Text className="text-center text-lg font-lora-bold">
             {firstName} {lastName}
           </Text>
-          <Text className="text-center text-sm text-[#777] -mt-2">
+          <Text className="text-center text-sm text-[#777] -mt-2 font-archivo">
             {user["student_number"]} · {user["section"]}
           </Text>
         </View>
         <ScrollView className="px-5">
-          <Text className="mt-5 mb-2">
-            ANONYMOUS NAME{" "}
-            <Text className="text-[#777] text-xs">
-              (Your screen name in Mood Space)
-            </Text>
+          <Text className="mt-5 font-archivo-bold">ANONYMOUS NAME</Text>
+          <Text className="text-[#555] text-xs font-archivo">
+            (Your screen name in Mood Space)
           </Text>
           <TextInput
             onChangeText={setField1}
-            className="bg-[#eee] rounded-xl p-4 text-[#555] border"
+            className="bg-[#eee] rounded-xl p-3 text-[#555] border font-archivo"
             textAlignVertical="top"
             value={field1}
           />
-          <Text className="mt-5 mb-2">NEW PASSWORD</Text>
+          <Text className="mt-5 font-archivo-bold">NEW PASSWORD</Text>
           <TextInput
             onChangeText={setField2}
             secureTextEntry={true}
@@ -124,7 +122,9 @@ export default function ProfileScreen() {
                 : "active:bg-[#b57]") + " bg-[#c68] p-4 rounded-full my-6 "
             }
           >
-            <Text className="text-white text-center font-bold">Save</Text>
+            <Text className="text-white text-center font-archivo-bold text-lg">
+              Save
+            </Text>
           </Pressable>
         </ScrollView>
       </KeyboardAwareScrollView>

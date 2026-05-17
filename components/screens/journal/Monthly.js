@@ -132,7 +132,7 @@ export default function Monthly() {
             >
               <Text className="leading-none text-gray-500">❮</Text>
             </Pressable>
-            <Text className="text-[#a57] w-36 text-center">
+            <Text className="text-[#a57] w-36 text-center font-archivo">
               {monthName.toUpperCase()} {new Date(chosenMonth).getFullYear()}
             </Text>
             <Pressable
@@ -147,12 +147,14 @@ export default function Monthly() {
               <Text className="leading-none text-gray-500">❯</Text>
             </Pressable>
           </View>
-          <Text className="text-[#888] text-xs">{totalEntry} check-ins</Text>
+          <Text className="text-[#888] text-xs font-archivo">
+            {totalEntry} check-ins
+          </Text>
         </View>
 
         <View className="flex-row justify-between px-5">
           {["S", "M", "T", "W", "T", "F", "S"].map((current, index) => (
-            <Text className="text-[#555] text-sm" key={index}>
+            <Text className="text-[#555] text-sm font-archivo" key={index}>
               {current}
             </Text>
           ))}
@@ -186,7 +188,7 @@ export default function Monthly() {
                     className={
                       (item.day == chosenDay
                         ? " text-white "
-                        : " text-[#777] ") + " text-sm font-bold"
+                        : " text-[#777] ") + " text-sm font-archivo-bold"
                     }
                   >
                     {item.day}
@@ -202,29 +204,29 @@ export default function Monthly() {
         />
         <View
           className="gap-2 p-3 rounded-2xl border border-[#cac]"
-          style={{ backgroundColor: moodToColor(mood) + "20" }}
+          style={{ backgroundColor: moodToColor(mood) + "10" }}
         >
           <View className="flex-row items-center gap-2">
             <Text className="text-2xl w-8 text-center">
               {moodToEmoji(mood)}
             </Text>
             <View>
-              <Text className="font-bold">
+              <Text className="font-archivo-bold">
                 {mood ? capitalizeWords(mood) : "No entry"}
               </Text>
-              <Text className="text-sm text-[#777]">
+              <Text className="text-sm text-[#777] font-archivo">
                 {chosenDay} {monthName} {new Date(chosenMonth).getFullYear()}
               </Text>
             </View>
           </View>
-          <Text className="text-sm text-gray-700">{journal}</Text>
+          <Text className="text-sm text-gray-700 font-archivo">{journal}</Text>
         </View>
       </View>
 
       {/* Mood Trend */}
       <View className="bg-white p-4 rounded-xl gap-1">
-        <Text className="text-[#a57]">MOOD TREND</Text>
-        <Text className="text-[#888] text-xs">
+        <Text className="text-[#a57] font-archivo">MOOD TREND</Text>
+        <Text className="text-[#888] text-xs font-archivo">
           {monthName} — daily mood across the month
         </Text>
         <View
@@ -249,7 +251,9 @@ export default function Monthly() {
                 }}
                 className="rounded-full"
               ></View>
-              <Text className="text-gray-500 text-sm">{current}</Text>
+              <Text className="text-gray-500 text-sm font-archivo">
+                {current}
+              </Text>
             </View>
           ))}
         </View>
@@ -257,7 +261,7 @@ export default function Monthly() {
 
       {/* Mood Percentage Breakdown */}
       <View className="bg-white p-4 rounded-xl gap-4">
-        <Text className="text-[#a57]">MOOD BREAKDOWN</Text>
+        <Text className="text-[#a57] font-archivo">MOOD BREAKDOWN</Text>
         {(function () {
           let moods = [];
           for (let status of statusMonths) {
@@ -275,10 +279,10 @@ export default function Monthly() {
         })().map((current) => (
           <View className="gap-1">
             <View className="flex-row justify-between">
-              <Text className="text-gray-500 text-xs">
+              <Text className="text-gray-500 text-xs font-archivo">
                 {moodToEmoji(current.mood)} {capitalizeWords(current.mood)}
               </Text>
-              <Text className="text-gray-500 text-xs">
+              <Text className="text-gray-500 text-xs font-archivo">
                 {current.count} days · {parseFloat(current.percent.toFixed(2))}%
               </Text>
             </View>

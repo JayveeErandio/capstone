@@ -22,7 +22,7 @@ export default function Graph(args) {
         >
           {["Exc", "Con", "Dra", "Str"].map((current) => (
             <View key={current}>
-              <Text className="text-center text-xs text-gray-500 translate-y-1/2 mt-5 mb-1">
+              <Text className="text-center text-xs text-gray-500 translate-y-1/2 mt-5 mb-1 font-archivo">
                 {current}
               </Text>
             </View>
@@ -50,7 +50,7 @@ export default function Graph(args) {
             return (
               <Text
                 key={index}
-                className="absolute -translate-x-1/2 text-xs text-gray-500"
+                className="absolute -translate-x-1/2 text-xs text-gray-500 font-archivo"
                 style={{
                   left: `${herepercent}%`,
                 }}

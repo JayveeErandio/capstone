@@ -3,8 +3,14 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Mine({ index, setPage }) {
-  const { myposts, pendingPosts, deletePost, updateReact } =
-    useContext(Variables);
+  const {
+    myposts,
+    pendingPosts,
+    deletePost,
+    updateReact,
+    moodToEmoji,
+    capitalizeWords,
+  } = useContext(Variables);
   const final = [...pendingPosts, ...myposts];
 
   function formatTime(timestamp) {
@@ -52,9 +58,9 @@ export default function Mine({ index, setPage }) {
           onPress={setPage}
           className="bg-white p-2 px-5 rounded-full active:bg-[#f7f7f7]"
         >
-          <Text className="text-[#555]">{"\u27F5 Back"}</Text>
+          <Text className="text-[#555] font-archivo">{"\u27F5 Back"}</Text>
         </Pressable>
-        <Text className="font-bold text-xl font-serif">My Posts</Text>
+        <Text className="font-lora-bold text-xl">My Posts</Text>
       </View>
       <ScrollView className="bg-[#eee]">
         <View className="pb-5">
@@ -69,7 +75,7 @@ export default function Mine({ index, setPage }) {
               <Text
                 className={
                   (current.datetime ? "hidden" : "") +
-                  " bg-[#fec] self-start p-1 px-2 border text-xs font-bold text-[#b97] rounded-full border-[#a97]"
+                  " bg-[#fec] self-start p-1 px-2 border text-xs text-[#b97] rounded-full border-[#a97] font-archivo-bold"
                 }
               >
                 ⏳ Under review by GCU
@@ -77,19 +83,13 @@ export default function Mine({ index, setPage }) {
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
                   <Text className="text-lg bg-[#fee] p-2 rounded-xl border">
-                    {current.mood == "Excited"
-                      ? "⚡"
-                      : current.mood == "Content"
-                        ? "🍀"
-                        : current.mood == "Drained"
-                          ? "🌧"
-                          : "😤"}
+                    {moodToEmoji(current.mood)}
                   </Text>
                   <View>
-                    <Text className="text-[#773] font-bold">
-                      {current.mood}
+                    <Text className="text-[#773] font-archivo-bold">
+                      {capitalizeWords(current.mood)}
                     </Text>
-                    <Text className="text-sm text-[#777]">
+                    <Text className="text-sm text-[#777] font-archivo">
                       {!!current.datetime
                         ? "Posted " + formatTime(current.datetime)
                         : "Not yet posted"}
@@ -125,10 +125,14 @@ export default function Mine({ index, setPage }) {
                   }}
                   className="self-start pb-4 pl-8"
                 >
-                  <Text className="text-sm text-[#bbb]">Delete</Text>
+                  <Text className="text-sm text-[#bbb] font-archivo">
+                    Delete
+                  </Text>
                 </Pressable>
               </View>
-              <Text className="leading-normal">{current.content}</Text>
+              <Text className="leading-normal font-archivo">
+                {current.content}
+              </Text>
 
               {/* Reactions Button */}
               <View

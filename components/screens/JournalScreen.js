@@ -22,7 +22,7 @@ export default function JournalScreen() {
       {/* Header */}
       <View className="p-6 gap-2">
         <Text className="text-2xl font-lora-bold">My Journal</Text>
-        <Text className="text-[#777] text-sm">
+        <Text className="text-[#777] text-sm font-archivo">
           Patterns, entries, & mood trends
         </Text>
         <View className="flex-row gap-2">

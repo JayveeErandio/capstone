@@ -8,45 +8,51 @@ export default function Yearly() {
   return (
     <View className="px-6 gap-6 py-3">
       <View className="bg-[#e7e7f0] p-4 rounded-xl gap-4">
-        <Text className="text-sm text-[#935]">
+        <Text className="text-sm text-[#935] font-archivo">
           {new Date().getFullYear()} AT A GLANCE
         </Text>
         <View className="flex-row gap-4">
           <View className="bg-white flex-1 p-4 rounded-xl gap-1">
             <Text className="text-3xl">📅</Text>
-            <Text className="text-xl font-bold font-serif">
-              {journYear.total}
+            <Text className="text-xl font-lora-bold">{journYear.total}</Text>
+            <Text className="text-sm text-[#777] font-archivo">
+              Total Check-Ins
             </Text>
-            <Text className="text-sm text-[#777]">Total Check-Ins</Text>
           </View>
           <View className="bg-white flex-1 p-4 rounded-xl gap-1">
             <Text className="text-3xl">🔥</Text>
-            <Text className="text-xl font-bold font-serif">
+            <Text className="text-xl font-lora-bold">
               {journYear.longestStreak}
             </Text>
-            <Text className="text-sm text-[#777]">Longest Streak</Text>
+            <Text className="text-sm text-[#777] font-archivo">
+              Longest Streak
+            </Text>
           </View>
         </View>
         <View className="flex-row gap-4">
           <View className="bg-white flex-1 p-4 rounded-xl gap-1">
             <Text className="text-3xl">{moodToEmoji(journYear.mostMood)}</Text>
-            <Text className="text-xl font-bold font-serif">
+            <Text className="text-xl font-lora-bold">
               {capitalizeWords(journYear.mostMood) ?? "No data yet"}
             </Text>
-            <Text className="text-sm text-[#777]">Most felt mood</Text>
+            <Text className="text-sm text-[#777] font-archivo">
+              Most felt mood
+            </Text>
           </View>
           <View className="bg-white flex-1 p-4 rounded-xl gap-1">
             <Text className="text-3xl">📓</Text>
-            <Text className="text-xl font-bold font-serif">
-              {journYear.journals}
+            <Text className="text-xl font-lora-bold">{journYear.journals}</Text>
+            <Text className="text-sm text-[#777] font-archivo">
+              Journal Entries
             </Text>
-            <Text className="text-sm text-[#777]">Journal Entries</Text>
           </View>
         </View>
       </View>
 
       <View className="bg-white p-4 rounded-xl gap-4">
-        <Text className="text-sm text-[#935]">YEARLY MOOD HEATMAP</Text>
+        <Text className="text-sm text-[#935] font-archivo">
+          YEARLY MOOD HEATMAP
+        </Text>
         <View className="flex-row flex-wrap px-2">
           {journYear.months.map((month) => (
             <View key={month.monthOrder} className="w-1/4 p-1 ">
@@ -59,8 +65,10 @@ export default function Yearly() {
                 }
               >
                 <Text className="text-xl">{moodToEmoji(month.mostMood)}</Text>
-                <Text className="text-sm">{month.name}</Text>
-                <Text className="text-xs text-[#888]">{month.total + "d"}</Text>
+                <Text className="text-sm font-archivo">{month.name}</Text>
+                <Text className="text-xs text-[#888] font-archivo">
+                  {month.total + "d"}
+                </Text>
               </View>
             </View>
           ))}

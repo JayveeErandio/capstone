@@ -776,6 +776,43 @@ export const Provider = ({ children }) => {
       .join(" ");
   }
 
+  function formatTime(timestamp) {
+    const date = new Date(timestamp); // auto handles UTC → local
+    const now = new Date();
+
+    const diffMs = now - date;
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    // 🕒 Just now / seconds
+    if (seconds < 60) return "just now";
+
+    // ⏱ Minutes
+    if (minutes < 60) return `${minutes}m ago`;
+
+    // 🕐 Hours
+    if (hours < 24) return `${hours}h ago`;
+
+    // 📅 Yesterday
+    if (days === 1) return "yesterday";
+
+    // 📆 Days ago
+    if (days < 7) return `${days}d ago`;
+
+    // 🗓 Fallback to full date (e.g., Jan 18 | 6:38 PM)
+    return date
+      .toLocaleString("en-PH", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .replace(",", " |");
+  }
+
   const restartEntries = () => {
     setEntries(
       Object.fromEntries(Object.keys(entries).map((key) => [key, null])),
@@ -837,6 +874,7 @@ export const Provider = ({ children }) => {
         changeAnonymousName,
         changePassword,
         isLoaded,
+        formatTime,
       }}
     >
       {children}
