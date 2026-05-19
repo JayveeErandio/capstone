@@ -161,6 +161,7 @@ export default function Create({ show, setPage }) {
               Review Appointment ➞
             </Text>
           </Pressable>
+          <View className="h-28"></View>
         </View>
       </ScrollView>
     </View>

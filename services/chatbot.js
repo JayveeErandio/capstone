@@ -1,6 +1,6 @@
 const API_KEY = process.env.EXPO_PUBLIC_GOOGLEAI_KEY;
 
-async function askAI(question, retries = 3, delay = 2000) {
+async function askAI(question, retries = 5, delay = 2000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await fetch(

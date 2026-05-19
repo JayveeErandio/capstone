@@ -128,6 +128,7 @@ export default function NotificationScreen() {
             </View>
           </View>
         ))}
+        <View className="h-28"></View>
       </ScrollView>
     </View>
   );

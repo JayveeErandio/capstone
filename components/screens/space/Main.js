@@ -220,6 +220,7 @@ export default function Main({ index, setPage }) {
           ) : (
             ""
           )}
+          <View className="h-28"></View>
         </ScrollView>
       </View>
     </View>

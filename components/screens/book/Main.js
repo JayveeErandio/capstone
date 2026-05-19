@@ -163,6 +163,7 @@ export default function Main({ show, setPage }) {
               </Text>
             </View>
           ))}
+          <View className="h-28"></View>
         </View>
       </ScrollView>
     </View>

@@ -49,6 +49,9 @@ export default function JournalScreen() {
       </View>
       <ScrollView>
         {content.props.children.find((current) => current.props.name == page)}
+        <View className="h-32">
+          <Text></Text>
+        </View>
       </ScrollView>
     </View>
   );

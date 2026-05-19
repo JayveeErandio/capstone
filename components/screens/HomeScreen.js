@@ -26,7 +26,7 @@ export default function HomeScreen() {
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
 
   return (
-    <View className="flex-1">
+    <View className="">
       <ScrollView>
         <View className="p-8 pb-24">
           {/* Headline */}
@@ -178,13 +178,16 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
+
+          <View className="h-20"></View>
         </View>
       </ScrollView>
 
       {/* AI Chatbot Button */}
       <Pressable
         onPress={() => navigation.navigate("Chatbot")}
-        className="absolute bottom-7 right-7 bg-[#c68] p-4 rounded-full active:bg-[#b57]"
+        className="absolute right-7 bg-[#c68] p-4 rounded-full active:bg-[#b57]"
+        style={{ bottom: "15%", boxShadow: "0px 0px 8px rgba(0,0,0,0.2)" }}
       >
         <Text className="text-3xl">💬</Text>
       </Pressable>

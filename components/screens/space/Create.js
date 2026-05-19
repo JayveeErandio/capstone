@@ -14,7 +14,8 @@ export default function Create({ index, setPage }) {
   const { putPost } = useContext(Variables);
   const [collapse, setCollapse] = useState(true);
   const [mood, setMood] = useState();
-  const [text, setText] = useState();
+  const [text, setText] = useState("");
+  const maxChar = 75;
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
@@ -108,15 +109,21 @@ export default function Create({ index, setPage }) {
           <Text className="text-[#c57] text-sm font-archivo-bold">
             YOUR POST
           </Text>
-          <TextInput
-            onChangeText={setText}
-            multiline
-            className="bg-white rounded-xl p-4 h-32 text-[#555] -mt-3 font-archivo"
-            textAlignVertical="top"
-            placeholder="Share what's on your mind... this is your space"
-            value={text}
-            placeholderTextColor="#aaa"
-          ></TextInput>
+          <View>
+            <TextInput
+              onChangeText={setText}
+              multiline
+              className="bg-white rounded-xl p-4 h-24 text-[#555] -mt-3 font-archivo"
+              textAlignVertical="top"
+              placeholder="Share what's on your mind... this is your space"
+              value={text}
+              placeholderTextColor="#aaa"
+              maxLength={maxChar}
+            ></TextInput>
+            <Text className="absolute bottom-0 right-0 m-2 text-sm font-archivo opacity-50">
+              {text.length}/{maxChar}
+            </Text>
+          </View>
 
           {/* AI Check Reminder */}
           <View className="flex-row items-center bg-[#fef] gap-3 p-3 border border-[#eae] rounded-2xl">
@@ -132,23 +139,19 @@ export default function Create({ index, setPage }) {
             onPress={async () => {
               putPost(mood, text);
               setPage();
-              if (
-                await new Promise((resolve) => {
-                  Alert.alert(
-                    "Verifying your post",
-                    "We'll notify you if your post is allowed to be published. Else, it will undergo to GCU. You can check it via 'Mine' page",
-                    [
-                      {
-                        text: "OK",
-                        onPress: () => resolve(true), // User cancelled
-                      },
-                    ],
-                    { cancelable: false },
-                  );
-                })
-              ) {
-                //HERE YOUR PROGRAM GUYS
-              }
+              await new Promise((resolve) => {
+                Alert.alert(
+                  "Verifying your post",
+                  "We'll notify you if your post is allowed to be published. Else, it will undergo to GCU. You can check it via 'Mine' page",
+                  [
+                    {
+                      text: "OK",
+                      onPress: () => resolve(true),
+                    },
+                  ],
+                  { cancelable: true },
+                );
+              });
             }}
             className={
               (mood && text ? "active:bg-[#b47]" : "opacity-50") +

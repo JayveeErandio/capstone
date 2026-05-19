@@ -228,6 +228,7 @@ export default function Mine({ index, setPage }) {
           ) : (
             ""
           )}
+          <View className="h-28"></View>
         </View>
       </ScrollView>
     </View>
