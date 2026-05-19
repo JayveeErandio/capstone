@@ -1,10 +1,5 @@
 import { supabase } from "../lib/supabase";
-import { getDevicePushTokenAsync } from "expo-notifications";
-
-let tokenDevice;
-(async () => {
-  tokenDevice = (await getDevicePushTokenAsync()).data;
-})();
+import * as Notifications from "expo-notifications";
 
 export async function login(studentID, password) {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -19,12 +14,26 @@ export async function login(studentID, password) {
       .eq("student_number", studentID)
       .single();
 
-    const { data, error } = await supabase
-      .from("token_devices")
-      .insert({ student_id: student.id, token: tokenDevice });
+    if ((await Notifications.requestPermissionsAsync()).status == "granted") {
+      const { data, error } = await supabase.from("token_devices").insert({
+        student_id: student.id,
+        token: (await Notifications.getExpoPushTokenAsync()).data,
+      });
+    }
 
     return { ...student, success: true };
   } else return { success: false };
+}
+
+export async function logout() {
+  await supabase.auth.signOut();
+
+  if ((await Notifications.requestPermissionsAsync()).status == "granted") {
+    const { data, error } = await supabase
+      .from("token_devices")
+      .delete()
+      .eq("token", (await Notifications.getExpoPushTokenAsync()).data);
+  }
 }
 
 export async function putPendingPost(value) {
@@ -38,15 +47,6 @@ export async function putPendingPost(value) {
 export async function putPost(value) {
   const { data, error } = await supabase.from("posts").insert([value]).select();
   return { data: data, error: error };
-}
-
-export async function logout() {
-  const { data, error } = await supabase
-    .from("token_devices")
-    .delete()
-    .eq("token", tokenDevice);
-
-  await supabase.auth.signOut();
 }
 
 export async function getStatusDays(id) {
@@ -204,6 +204,22 @@ export async function updateReact(post_id, student_id, reaction) {
         .from("reactions")
         .insert([{ post_id: post_id, student_id: student_id, type: reaction }]);
     }
+
+    fetch(
+      "http://192.168.0.100:3000/react",
+      //"https://capstone-xuwy.onrender.com/",,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reactorId: student_id,
+          postId: post_id,
+          type: reaction,
+        }),
+      },
+    );
   }
 }
 

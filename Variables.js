@@ -233,8 +233,6 @@ export const Provider = ({ children }) => {
     storage.putMyPosts(current);
 
     await supabase.updateReact(post_id, user.id, mood);
-
-    await supabase.updateReact(post_id, user.id, mood);
   };
 
   const putPost = async (mood, text) => {

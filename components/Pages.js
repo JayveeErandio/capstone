@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, Vibration } from "react-native";
 import { Variables } from "../Variables";
 
 export default function Pages({ children }) {
@@ -28,6 +28,7 @@ export default function Pages({ children }) {
           <Pressable
             onPress={() => {
               setActivePage(current.props.name);
+              Vibration.vibrate(100);
             }}
             className={
               (activePage == current.props.name ? "bg-[#eee]" : "") +

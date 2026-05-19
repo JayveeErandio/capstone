@@ -3,6 +3,17 @@ import { View, ScrollView, Text, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
+import * as Notification from "expo-notifications";
+
+async function sendTestNotification() {
+  await Notification.scheduleNotificationAsync({
+    content: {
+      title: "Test",
+      body: "Hello",
+    },
+    trigger: null, // immediate
+  });
+}
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -42,13 +53,6 @@ export default function HomeScreen() {
             <Pressable
               onPress={async () => {
                 navigation.navigate("Profile");
-                const response = await fetch(
-                  "https://capstone-xuwy.onrender.com/",
-                );
-
-                const json = await response.json();
-
-                console.log(json.message);
               }}
               className={"bg-cyan-600 w-14 h-14 rounded-full justify-center"}
             >

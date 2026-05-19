@@ -81,9 +81,9 @@ export default function Main({ show, setPage }) {
 
           <Text
             className={
-              !currentBook.context && books.length == 0
-                ? "text-center text-sm text-gray-500 mt-12 font-archivo"
-                : ""
+              (!currentBook.context && books.length == 0
+                ? "text-center text-sm text-gray-500 mt-12"
+                : "") + " font-archivo"
             }
           >
             {!currentBook.context && books.length == 0
