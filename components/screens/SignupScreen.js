@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import InputField from "../InputField";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -45,45 +46,27 @@ export default function SignupScreen() {
         <View className="p-7 flex gap-5">
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">LAST NAME</Text>
-            <TextInput
-              onChangeText={setLastName}
-              value={lastName}
+            <InputField
               placeholder="e.g. Dela Cruz"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
+              onChangeText={setLastName}
             />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">FIRST NAME</Text>
-            <TextInput
-              onChangeText={setFirstName}
-              value={firstName}
-              placeholder="e.g. Juan"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
-            />
+            <InputField placeholder="e.g. Juan" onChangeText={setFirstName} />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">YEAR LEVEL</Text>
-            <TextInput
+            <InputField
               onChangeText={setYearLevel}
-              value={yearLevel}
               maxLength={1}
-              inputMode="numeric"
               placeholder="e.g. 4"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
+              numeric
             />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">SECTION</Text>
-            <TextInput
-              onChangeText={setSection}
-              value={section}
-              placeholder="e.g. DW31"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
-            />
+            <InputField onChangeText={setSection} placeholder="e.g. DW31" />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">
@@ -92,37 +75,28 @@ export default function SignupScreen() {
             <Text className="text-xs text-gray-400 font-archivo">
               (Your public screen name throughout the app.)
             </Text>
-            <TextInput
+            <InputField
               onChangeText={setAnonymous}
               value={anonymous}
               placeholder="e.g. moodlinkerist"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">
               STUDENT NUMBER
             </Text>
-            <TextInput
+            <InputField
               onChangeText={setStudentNumber}
-              value={studentNumber}
-              inputMode="numeric"
+              numeric
               placeholder="e.g. 202310097"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
             />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">PASSWORD</Text>
-            <TextInput
+            <InputField
               onChangeText={setPassword}
-              value={password}
-              secureTextEntry={true}
-              autoCapitalize="none"
+              password
               placeholder="Enter your password"
-              className="border rounded-lg px-3 border-[#ccc] text-[#555] bg-[#eee] font-archivo"
-              placeholderTextColor="#aaa"
             />
           </View>
           <Text

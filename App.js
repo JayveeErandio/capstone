@@ -81,3 +81,6 @@ export default function App() {
     </Provider>
   );
 }
+
+// BUILD COMMAND
+//eas build -p android --profile preview

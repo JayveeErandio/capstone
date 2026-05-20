@@ -3,7 +3,9 @@ import { Variables } from "../../Variables";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import LoadingScreen from "./LoadingScreen";
+import InputField from "../InputField";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -12,6 +14,7 @@ export default function LoginScreen() {
   const { login, page, setPage } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   useEffect(() => {
     if (valid == false)
       setTimeout(() => {
@@ -44,22 +47,18 @@ export default function LoginScreen() {
         {/* ==== Forms ==== */}
         <View className="p-7 flex gap-1">
           <Text className="font-archivo-bold text-[#333]">STUDENT ID</Text>
-          <TextInput
+          <InputField
             onChangeText={setID}
-            inputMode="numeric"
             placeholder="e.g. 202310097"
-            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] font-archivo"
-            placeholderTextColor="#aaa"
+            numeric
           />
           <Text className="font-archivo-bold text-[#333] mt-4">PASSWORD</Text>
-          <TextInput
-            onChangeText={setPassword}
-            secureTextEntry={true}
-            autoCapitalize="none"
+          <InputField
+            password
             placeholder="Enter your password"
-            className="border rounded-lg px-3 py-3 border-[#ccc] bg-[#fff] text-[#555] font-archivo"
-            placeholderTextColor="#aaa"
+            onChangeText={setPassword}
           />
+
           <Text
             className={
               (valid == false ? "" : "opacity-0") +

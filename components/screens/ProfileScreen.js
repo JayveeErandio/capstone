@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useState } from "react";
 import { Variables } from "../../Variables";
+import InputField from "../InputField";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -79,20 +80,20 @@ export default function ProfileScreen() {
           <Text className="text-[#555] text-xs font-archivo">
             (Your screen name in Mood Space)
           </Text>
-          <TextInput
+          <InputField
             onChangeText={setField1}
-            className="bg-[#eee] rounded-xl p-3 text-[#555] border font-archivo"
-            textAlignVertical="top"
             value={field1}
+            placeholder="e.g. moodlinkerist"
           />
+
           <Text className="mt-5 font-archivo-bold">NEW PASSWORD</Text>
-          <TextInput
+          <InputField
             onChangeText={setField2}
-            secureTextEntry={true}
-            autoCapitalize="none"
-            className="bg-[#eee] rounded-xl p-4 text-[#555] border"
+            password
             value={field2}
+            placeholder="Enter your new password"
           />
+
           <Text
             className={
               "text-red-700 text-sm opacity-" + (invalid ? "100" : "0")

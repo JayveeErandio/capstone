@@ -1,6 +1,9 @@
 {
   "expo": {
-    "plugins": ["expo-notifications", "expo-font"],
+    "plugins": [
+      "expo-notifications",
+      "expo-font"
+    ],
     "name": "MoodLink",
     "slug": "capstone1",
     "version": "1.0.0",
@@ -29,11 +32,11 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
+    "owner": "jperandio",
     "extra": {
       "eas": {
-        "projectId": "2a38c216-9b51-45a3-844c-acb5bdcff699"
+        "projectId": "ac5b7a1d-d4dc-4c22-839c-c673d5e7fdf8"
       }
-    },
-    "owner": "jayveeerandio"
+    }
   }
 }
