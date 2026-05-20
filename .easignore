@@ -1,2 +1,6 @@
+backend/
 backend
 backend/node_modules
+android/
+android
+.git
