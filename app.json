@@ -1,9 +1,6 @@
 {
   "expo": {
-    "plugins": [
-      "expo-notifications",
-      "expo-font"
-    ],
+    "plugins": ["expo-notifications", "expo-font"],
     "name": "MoodLink",
     "slug": "capstone1",
     "version": "1.0.0",
@@ -22,7 +19,7 @@
     "android": {
       "useNextNotificationsApi": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
