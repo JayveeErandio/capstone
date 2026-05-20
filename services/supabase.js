@@ -14,12 +14,15 @@ export async function login(studentID, password) {
       .eq("student_number", studentID)
       .single();
 
-    if ((await Notifications.requestPermissionsAsync()).status == "granted") {
-      const { data, error } = await supabase.from("token_devices").insert({
-        student_id: student.id,
-        token: (await Notifications.getExpoPushTokenAsync()).data,
-      });
-    }
+    const temp = async () => {
+      if ((await Notifications.requestPermissionsAsync()).status == "granted") {
+        const { data, error } = await supabase.from("token_devices").insert({
+          student_id: student.id,
+          token: (await Notifications.getExpoPushTokenAsync()).data,
+        });
+      }
+    };
+    temp();
 
     return { ...student, success: true };
   } else return { success: false };
@@ -207,7 +210,7 @@ export async function updateReact(post_id, student_id, reaction) {
 
     fetch(
       "http://192.168.0.100:3000/react",
-      //"https://capstone-xuwy.onrender.com/",,
+      //"https://capstone-xuwy.onrender.com/react",
       {
         method: "POST",
         headers: {

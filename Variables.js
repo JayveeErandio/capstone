@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
-import * as chatbot from "./services/chatbot";
 import * as storage from "./services/storage";
 import * as supabase from "./services/supabase";
+import * as backend from "./services/backend";
 
 export const Provider = ({ children }) => {
   // Mga variables na globally na gagamitin throughout ng app
@@ -173,8 +173,12 @@ export const Provider = ({ children }) => {
   };
 
   const analyze = async () => {
-    const answer = await chatbot.askMood(entries);
-    const result = JSON.parse(answer.slice(8).slice(0, -4));
+    const relatePrevDays = 5;
+    const relatedDates = [...statusDays]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, relatePrevDays);
+
+    const result = await backend.assess(entries, relatedDates);
 
     setDailyStatus(result);
 
@@ -236,10 +240,7 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    const result = JSON.parse(
-      (await chatbot.verifyPost(text)).slice(8).slice(0, -4),
-    ); // AI-SHUTDOWN
-    //const result = { isAllowed: true, reason: "Nakakabastos may muraa" }; // AI-REPLACE
+    const result = await backend.verifyPost(text);
 
     if (result.isAllowed) {
       await supabase.putNotification({
@@ -384,6 +385,7 @@ export const Provider = ({ children }) => {
     setCanSend(false);
     const oldChats = chats;
     oldChats.push({ id: 0, is_student: true, content: message });
+    setChats(oldChats);
     supabase.putChats({
       student_id: user.id,
       is_student: true,
@@ -395,9 +397,8 @@ export const Provider = ({ children }) => {
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, relatePrevDays);
 
-    const result = JSON.parse(
-      (await chatbot.reply(message, relatedDates)).slice(8).slice(0, -4),
-    );
+    const result = await backend.chat(message, relatedDates);
+
     oldChats.push({ id: 0, is_student: false, content: result.answer });
     setChats(oldChats);
     supabase.putChats({
