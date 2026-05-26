@@ -127,6 +127,7 @@ export default function SignupScreen() {
                   daily_result: password,
                   anonymous_name: anonymous,
                 });
+
                 if (result.success) {
                   navigation.goBack();
                   Alert.alert(

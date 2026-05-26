@@ -62,6 +62,7 @@ export const Provider = ({ children }) => {
     const recentStatus = data.statusDays.find(
       (current) => current.date == new Date().toISOString().split("T")[0],
     );
+
     if (recentStatus) {
       setDailyStatus({
         ...JSON.parse(data.user.daily_result),
@@ -80,8 +81,9 @@ export const Provider = ({ children }) => {
             : "Heavy",
         door4: null,
       });
-    }
-    let temp = await supabase.getSchedules();
+    } else setDailyStatus(null);
+
+    let temp = await backend.getSchedules();
     const grouped = Object.values(
       temp.reduce((acc, datetime) => {
         const dateObj = new Date(datetime);
@@ -111,6 +113,7 @@ export const Provider = ({ children }) => {
         return acc;
       }, {}),
     );
+
     setAvailableSchedules(grouped);
     temp = data.appointments;
     setBooks(
@@ -119,6 +122,7 @@ export const Provider = ({ children }) => {
           current.status != "Pending" && current.status != "Scheduled",
       ),
     );
+
     setCurrentBook(
       temp.find(
         (current) =>
@@ -139,20 +143,18 @@ export const Provider = ({ children }) => {
   };
 
   const login = async (studentID, password) => {
-    const result = await supabase.login(studentID, password);
+    const result = await backend.login(studentID, password);
 
     if (result.success) {
-      await storage.putUser(result);
-      await storage.putStatusDays(await supabase.getStatusDays(result.id));
-      await storage.putPendingPost(await supabase.getPendingPosts(result.id));
-      await storage.putPosts(await supabase.getPosts(result.id));
-      await storage.putMyPosts(await supabase.getMyPosts(result.id));
-      await storage.putNotifications(
-        await supabase.getNotifications(result.id),
-      );
-      await storage.putAppointments(await supabase.getAppointments(result.id));
-      await storage.putChats(await supabase.getChats(result.id));
-      await setupData(result);
+      await storage.putUser(result.user);
+      await storage.putStatusDays(result.statusDays);
+      await storage.putPendingPost(result.pendingPosts);
+      await storage.putPosts(result.posts);
+      await storage.putMyPosts(result.myPosts);
+      await storage.putNotifications(result.notifications);
+      await storage.putAppointments(result.appointments);
+      await storage.putChats(result.chats);
+      await setupData();
 
       return true;
     }
@@ -169,7 +171,7 @@ export const Provider = ({ children }) => {
   };
 
   const signup = async (record) => {
-    return await supabase.putStudent(record);
+    return await backend.putStudent(record);
   };
 
   const analyze = async () => {
@@ -178,27 +180,13 @@ export const Provider = ({ children }) => {
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, relatePrevDays);
 
-    const result = await backend.assess(entries, relatedDates);
+    const result = await backend.assess(entries, relatedDates, user.id);
 
-    setDailyStatus(result);
+    setDailyStatus(result.result);
 
-    await storage.putDailyStatus(result);
+    await storage.putDailyStatus(result.result);
 
-    await supabase.updateDailyResult(result, user.id);
-
-    const newdata = {
-      mood:
-        entries.door1 == "High"
-          ? entries.door3 == "Light"
-            ? "excited"
-            : "stressed"
-          : entries.door3 == "Light"
-            ? "content"
-            : "drained",
-      date: new Date().toISOString().split("T")[0],
-      account_id: user.id,
-    };
-    const { data } = await supabase.putStatusDays(newdata);
+    const data = result.statusDay;
 
     delete data[0].account_id;
     setStatusDays([...statusDays, data[0]]);
@@ -208,9 +196,15 @@ export const Provider = ({ children }) => {
 
   const deleteAll = function () {
     setUser({});
+    setDailyStatus();
     setPendingPosts([]);
     setStatusDays([]);
-    setStreak(0);
+    setEntries({
+      door1: null,
+      door2: null,
+      door3: null,
+      door4: null,
+    });
   };
 
   const updateReact = async (post_id, mood) => {

@@ -1,31 +1,29 @@
 import { supabase } from "../lib/supabase";
 import * as Notifications from "expo-notifications";
 
-export async function login(studentID, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: `${studentID}@moodlink.com`,
-    password: password,
-  });
+let channel;
+export async function realtime(setter, user_id) {
+  channel = supabase
+    .channel("notifications-" + user_id)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "notifications",
+        filter: `student_id=eq.${user_id}`,
+      },
+      (payload) => {
+        const data = payload.new;
+        delete data.student_id;
+        setter(data);
+      },
+    )
+    .subscribe();
+}
 
-  if (data.session) {
-    const { data: student } = await supabase
-      .from("students")
-      .select("*")
-      .eq("student_number", studentID)
-      .single();
-
-    const temp = async () => {
-      if ((await Notifications.requestPermissionsAsync()).status == "granted") {
-        const { data, error } = await supabase.from("token_devices").insert({
-          student_id: student.id,
-          token: (await Notifications.getExpoPushTokenAsync()).data,
-        });
-      }
-    };
-    temp();
-
-    return { ...student, success: true };
-  } else return { success: false };
+export async function removeRealtimeNotification() {
+  supabase.removeChannel(channel);
 }
 
 export async function logout() {
@@ -52,25 +50,6 @@ export async function putPost(value) {
   return { data: data, error: error };
 }
 
-export async function getStatusDays(id) {
-  const { data, error } = await supabase
-    .from("status_days")
-    .select("date, id, journal, mood")
-    .eq("account_id", id);
-  return data;
-}
-
-export async function getPendingPosts(id) {
-  const { data, error } = await supabase
-    .from("pending_posts")
-    .select("*")
-    .eq("student_id", id)
-    .order("id", { ascending: false });
-  data.forEach((obj) => delete obj.student_id);
-  data.forEach((obj) => delete obj.ai_say);
-  return data;
-}
-
 export async function deletePendingPost(post_id) {
   const { error } = await supabase
     .from("pending_posts")
@@ -80,106 +59,6 @@ export async function deletePendingPost(post_id) {
 
 export async function deletePost(post_id) {
   const { error } = await supabase.from("posts").delete().eq("id", post_id);
-}
-
-export async function getPosts(id) {
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      `
-        id, 
-        mood,
-        content,
-        datetime,
-        student_id,
-        students (
-                anonymous_name
-        ),
-        reactions (
-                type,
-                student_id
-        )
-        `,
-    )
-    .order("id", { ascending: false })
-    .limit(7);
-
-  function groupReactions(posts, currentUserId) {
-    return posts.map((post) => {
-      const counts = {};
-      let myreact = null;
-
-      post.reactions?.forEach((r) => {
-        if (!r?.type) return;
-
-        // detect your reaction
-        if (r.student_id === currentUserId) {
-          myreact = r.type;
-          return; // 👈 skip counting your own reaction
-        }
-
-        // count others' reactions only
-        counts[r.type] = (counts[r.type] || 0) + 1;
-      });
-
-      return {
-        ...post,
-        reactions: counts,
-        myreact,
-      };
-    });
-  }
-
-  return groupReactions(data, id);
-}
-
-export async function getMyPosts(id) {
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      `
-        id, 
-        mood,
-        content,
-        datetime,
-        student_id,
-        reactions (
-                type,
-                student_id
-        )
-        `,
-    )
-    .eq("student_id", id)
-    .order("id", { ascending: false });
-  data.forEach((obj) => delete obj.student_id);
-
-  function groupReactions(posts, currentUserId) {
-    return posts.map((post) => {
-      const counts = {};
-      let myreact = null;
-
-      post.reactions?.forEach((r) => {
-        if (!r?.type) return;
-
-        // detect your reaction
-        if (r.student_id === currentUserId) {
-          myreact = r.type;
-          return; // 👈 skip counting your own reaction
-        }
-
-        // count others' reactions only
-        counts[r.type] = (counts[r.type] || 0) + 1;
-      });
-
-      return {
-        ...post,
-        reactions: counts,
-        myreact,
-      };
-    });
-  }
-
-  return groupReactions(data, id);
 }
 
 export async function updateReact(post_id, student_id, reaction) {
@@ -226,19 +105,6 @@ export async function updateReact(post_id, student_id, reaction) {
   }
 }
 
-export async function getNotifications(user_id) {
-  let { data, error } = await supabase
-    .from("notifications")
-    .select("*")
-    .eq("student_id", user_id)
-    .order("id", { ascending: false });
-
-  for (let current of data) {
-    delete current.student_id;
-  }
-  return data;
-}
-
 export async function readNotification(notif_id, user_id) {
   if (notif_id != null)
     await supabase
@@ -263,42 +129,6 @@ export async function putNotification(args) {
   ]);
 }
 
-let channel;
-export async function realtime(setter, user_id) {
-  channel = supabase
-    .channel("notifications-" + user_id)
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "notifications",
-        filter: `student_id=eq.${user_id}`,
-      },
-      (payload) => {
-        const data = payload.new;
-        delete data.student_id;
-        setter(data);
-      },
-    )
-    .subscribe();
-}
-
-export async function removeRealtimeNotification() {
-  supabase.removeChannel(channel);
-}
-
-export async function getSchedules() {
-  let { data, error } = await supabase
-    .from("available_schedules")
-    .select("datetime");
-
-  data = data.map((current) => {
-    return current.datetime;
-  });
-  return data;
-}
-
 export async function putAppointment(args) {
   await supabase.from("appointments").insert([args]);
 }
@@ -309,15 +139,6 @@ export async function deleteAppointment(user_id) {
     .delete()
     .eq("student_id", user_id)
     .eq("status", "Pending");
-}
-
-export async function getAppointments(user_id) {
-  const { data, error } = await supabase
-    .from("appointments")
-    .select("*")
-    .eq("student_id", user_id)
-    .order("id", { ascending: false });
-  return data;
 }
 
 export async function updateDailyResult(result, user_id) {
@@ -352,11 +173,6 @@ export async function updateFlagged(post_id) {
 export async function getStudent(user_id) {
   return (await supabase.from("students").select("*").eq("id", user_id))
     .data[0];
-}
-
-export async function getChats(user_id) {
-  return (await supabase.from("chats").select("*").eq("student_id", user_id))
-    .data;
 }
 
 export async function putChats(record) {
@@ -416,3 +232,5 @@ export async function tae() {
     data: { user_id: 2 },
   });
 }
+
+//if ((await Notifications.requestPermissionsAsync()).status == "granted") {

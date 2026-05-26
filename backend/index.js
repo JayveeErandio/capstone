@@ -170,12 +170,182 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello from backend JAJAJA" });
 });
 
+app.post("/login", async (req, res) => {
+  const { studentNumber, password } = req.body;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: `${studentNumber}@moodlink.com`,
+    password: password,
+  });
+
+  if (data.session) {
+    // Student
+    const { data: student } = await supabase
+      .from("students")
+      .select("*")
+      .eq("student_number", studentNumber)
+      .single();
+
+    // Status Days
+    const { data: statusDays } = await supabase
+      .from("status_days")
+      .select("date, id, journal, mood")
+      .eq("account_id", student.id);
+
+    // Pending Posts
+    const { data: pendingPosts } = await supabase
+      .from("pending_posts")
+      .select("id, mood, content")
+      .eq("student_id", student.id)
+      .order("id", { ascending: false });
+
+    // Just a special function for posts and myposts
+    function groupReactions(posts, currentUserId) {
+      return posts.map((post) => {
+        const counts = {};
+        let myreact = null;
+
+        post.reactions?.forEach((r) => {
+          if (!r?.type) return;
+
+          // detect your reaction
+          if (r.student_id === currentUserId) {
+            myreact = r.type;
+            return; // 👈 skip counting your own reaction
+          }
+
+          // count others' reactions only
+          counts[r.type] = (counts[r.type] || 0) + 1;
+        });
+
+        return {
+          ...post,
+          reactions: counts,
+          myreact,
+        };
+      });
+    }
+
+    // Posts
+    const { data: posts } = await supabase
+      .from("posts")
+      .select(
+        `
+            id, 
+            mood,
+            content,
+            datetime,
+            student_id,
+            students (
+                    anonymous_name
+            ),
+            reactions (
+                    type,
+                    student_id
+            )
+            `,
+      )
+      .order("id", { ascending: false })
+      .limit(7);
+
+    const { data: myPosts } = await supabase
+      .from("posts")
+      .select(
+        `
+              id, 
+              mood,
+              content,
+              datetime,
+              reactions (
+                      type,
+                      student_id
+              )
+              `,
+      )
+      .eq("student_id", student.id)
+      .order("id", { ascending: false });
+
+    const { data: notifications } = await supabase
+      .from("notifications")
+      .select("id, type, title, content, is_seen, datetime")
+      .eq("student_id", student.id)
+      .order("id", { ascending: false });
+
+    const { data: appointments } = await supabase
+      .from("appointments")
+      .select("*")
+      .eq("student_id", student.id)
+      .order("id", { ascending: false });
+
+    const { data: chats } = await supabase
+      .from("chats")
+      .select("*")
+      .eq("student_id", student.id);
+
+    res.json({
+      user: { ...student, success: true },
+      statusDays: statusDays,
+      pendingPosts: pendingPosts,
+      posts: groupReactions(posts, student.id),
+      myPosts: groupReactions(myPosts, student.id),
+      notifications: notifications,
+      appointments: appointments,
+      chats: chats,
+      success: true,
+    });
+  } else res.json({ success: false });
+});
+
+app.post("/signup", async (req, res) => {
+  let { record } = req.body;
+  record = JSON.parse(record);
+
+  const { data, error } = await supabase
+    .from("students")
+    .select("*")
+    .eq("student_number", record.student_number);
+
+  if (data.length == 0) {
+    await supabase.from("students").upsert(record);
+    res.json({ success: true });
+  } else if (data[0].status != "verified") {
+    await supabase.from("students").upsert(record, {
+      onConflict: "student_number",
+    });
+    res.json({ success: true });
+  } else res.json({ success: false });
+});
+
 app.post("/ai/assess", async (req, res) => {
-  const { entries, relatedDates } = req.body;
+  const { entries, relatedDates, userID } = req.body;
   const result = JSON.parse(
     (await assess(entries, relatedDates)).slice(8).slice(0, -4),
   );
-  res.json(result);
+
+  await supabase
+    .from("students")
+    .update({ daily_result: result })
+    .eq("id", userID);
+
+  const newdata = {
+    mood:
+      entries.door1 == "High"
+        ? entries.door3 == "Light"
+          ? "excited"
+          : "stressed"
+        : entries.door3 == "Light"
+          ? "content"
+          : "drained",
+    date: new Date().toISOString().split("T")[0],
+    account_id: userID,
+  };
+
+  const { data, error } = await supabase
+    .from("status_days")
+    .insert([newdata])
+    .select();
+
+  res.json({ result: result, statusDay: data });
 });
 
 app.post("/ai/verifypost", async (req, res) => {
@@ -235,12 +405,16 @@ app.post("/react", async (req, res) => {
   res.json({ received: true });
 });
 
-app.get("/students", async (req, res) => {
-  const { data, error } = await supabase
-    .from("students")
-    .select("*")
-    .order("id", { ascending: false });
-  res.json(data);
+app.post("/getSchedules", async (req, res) => {
+  const { data } = await supabase
+    .from("available_schedules")
+    .select("datetime");
+
+  res.json(
+    data.map((current) => {
+      return current.datetime;
+    }),
+  );
 });
 
 const PORT = process.env.PORT || 3000;
