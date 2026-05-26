@@ -74,3 +74,11 @@ export async function putAppointments(data) {
 export async function putChats(data) {
   await AsyncStorage.setItem("chats", JSON.stringify(data));
 }
+
+export async function getChosenTheme() {
+  return await AsyncStorage.getItem("chosenTheme");
+}
+
+export async function setChosenTheme(data) {
+  await AsyncStorage.setItem("chosenTheme", JSON.stringify(data));
+}

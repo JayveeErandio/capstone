@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, Image, Pressable, Vibration } from "react-native";
 import { Variables } from "../Variables";
 
 export default function Pages({ children }) {
   const screens = React.Children.toArray(children);
   const [activePage, setActivePage] = useState("home");
-  const { notifications, capitalizeWords } = useContext(Variables);
+  const { notifications, capitalizeWords, chosenTheme } = useContext(Variables);
   const unread = notifications.reduce(
     (count, current) => (!current.is_seen ? count + 1 : count),
     0,
@@ -31,9 +31,14 @@ export default function Pages({ children }) {
               Vibration.vibrate(100);
             }}
             className={
-              (activePage == current.props.name ? "bg-[#eee]" : "") +
               " flex-1 items-center gap-1 aspect-square justify-center rounded-full"
             }
+            style={{
+              backgroundColor:
+                activePage == current.props.name
+                  ? (chosenTheme ? chosenTheme : "#cc5599") + "40"
+                  : "white",
+            }}
             key={index}
           >
             <View>

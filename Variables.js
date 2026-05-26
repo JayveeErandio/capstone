@@ -26,6 +26,7 @@ export const Provider = ({ children }) => {
   const [availableSchedules, setAvailableSchedules] = useState([]);
   const [chats, setChats] = useState([]);
   const [canSend, setCanSend] = useState(true);
+  const [chosenTheme, setChosenTheme] = useState();
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -45,6 +46,7 @@ export const Provider = ({ children }) => {
     async function temp() {
       if (await storage.getUser()) setupData();
       else setIsLoaded(true);
+      setChosenTheme(await storage.getChosenTheme());
     }
     temp();
   }, []);
@@ -431,6 +433,11 @@ export const Provider = ({ children }) => {
 
   const changePassword = async (password) => {
     return await supabase.updatePassword(password);
+  };
+
+  const changeTheme = async (theme) => {
+    setChosenTheme(theme);
+    storage.setChosenTheme(theme);
   };
 
   const computeStatus = async (basis) => {
@@ -868,6 +875,8 @@ export const Provider = ({ children }) => {
         changePassword,
         isLoaded,
         formatTime,
+        chosenTheme,
+        changeTheme,
       }}
     >
       {children}

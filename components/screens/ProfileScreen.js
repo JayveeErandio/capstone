@@ -15,6 +15,10 @@ export default function ProfileScreen() {
     changeAnonymousName,
     capitalizeWords,
     changePassword,
+    moodToColor,
+    moodToEmoji,
+    chosenTheme,
+    changeTheme,
   } = useContext(Variables);
 
   const firstName = capitalizeWords(user["first_name"]);
@@ -25,8 +29,24 @@ export default function ProfileScreen() {
   const oldPass = user["password"];
   const [field1, setField1] = useState(user["anonymous_name"]);
   const [field2, setField2] = useState("");
+  const [theme, setTheme] = useState(chosenTheme);
 
   const [invalid, setInvalid] = useState(false);
+
+  const colorToMood = function (color) {
+    switch (color) {
+      case "#eecc00":
+        return "Excited";
+      case "#00ee77":
+        return "Content";
+      case "#cc99ee":
+        return "Drained";
+      case "#bb0000":
+        return "Stressed";
+      default:
+        return "Default";
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -47,7 +67,7 @@ export default function ProfileScreen() {
               >
                 <Text className="text-2xl font-bold text-center ">‹</Text>
               </Pressable>
-              <Text className="text-lg font-lora-bold">My Profile</Text>
+              <Text className="text-lg font-lora-bold">Profile & Settings</Text>
             </View>
             <Pressable
               onPress={async () => {
@@ -75,6 +95,7 @@ export default function ProfileScreen() {
             {user["student_number"]} · {user["section"]}
           </Text>
         </View>
+
         <ScrollView className="px-5">
           <Text className="mt-5 font-archivo-bold">ANONYMOUS NAME</Text>
           <Text className="text-[#555] text-xs font-archivo">
@@ -86,6 +107,7 @@ export default function ProfileScreen() {
             placeholder="e.g. moodlinkerist"
           />
 
+          {/* Password */}
           <Text className="mt-5 font-archivo-bold">NEW PASSWORD</Text>
           <InputField
             onChangeText={setField2}
@@ -93,7 +115,6 @@ export default function ProfileScreen() {
             value={field2}
             placeholder="Enter your new password"
           />
-
           <Text
             className={
               "text-red-700 text-sm opacity-" + (invalid ? "100" : "0")
@@ -101,6 +122,61 @@ export default function ProfileScreen() {
           >
             The password is either weak or not allowed.
           </Text>
+
+          {/* Theme Color */}
+          <View className="bg-white p-4 rounded-xl gap-1">
+            <Text className="text-[#a57] font-archivo">THEME COLOR</Text>
+            <View className="flex-row flex-wrap justify-center">
+              {["Excited", "Content", "Drained", "Stressed", "Default"].map(
+                (current) => (
+                  <Pressable
+                    key={current}
+                    onPress={() => setTheme(moodToColor(current))}
+                    className={
+                      (theme == moodToColor(current) ? "bg-gray-100" : "") +
+                      " rounded-lg w-1/3 p-3 justify-center items-center gap-1"
+                    }
+                  >
+                    <View
+                      className="rounded-full w-9 aspect-square border border-[#888]"
+                      style={{
+                        backgroundColor: moodToColor(current) ?? "#c59",
+                      }}
+                    ></View>
+                    <Text>
+                      {moodToEmoji(current) == "⦸"
+                        ? "🌸"
+                        : moodToEmoji(current)}
+                    </Text>
+                    <Text className="font-archivo text-xs text-[#555]">
+                      {current}
+                    </Text>
+                  </Pressable>
+                ),
+              )}
+            </View>
+            <View
+              className="flex-row p-3 border rounded-xl gap-2 items-center"
+              style={{
+                backgroundColor: theme ? theme + "20" : "#cc559920",
+                borderColor: theme,
+              }}
+            >
+              <View
+                className="rounded-full w-8 aspect-square border"
+                style={{ backgroundColor: theme ?? "#c59" }}
+              ></View>
+              <View>
+                <Text className="font-archivo text-sm">
+                  {colorToMood(theme)} theme selected
+                </Text>
+                <Text className="font-archivo text-xs">
+                  This will apply across the whole app
+                </Text>
+              </View>
+            </View>
+          </View>
+
           <Pressable
             onPress={async () => {
               if (oldAnon != field1) {
@@ -116,11 +192,17 @@ export default function ProfileScreen() {
                   }, 2000);
                 } else navigation.goBack();
               }
+              if (chosenTheme != theme) {
+                changeTheme(theme);
+                navigation.goBack();
+              }
             }}
             className={
-              (user["anonymous_name"] == field1 && field2 == ""
+              (user["anonymous_name"] == field1 &&
+              field2 == "" &&
+              chosenTheme == theme
                 ? "opacity-50"
-                : "active:bg-[#b57]") + " bg-[#c68] p-4 rounded-full my-6 "
+                : "active:bg-[#b48]") + " bg-[#c59] p-4 rounded-full my-6 "
             }
           >
             <Text className="text-white text-center font-archivo-bold text-lg">

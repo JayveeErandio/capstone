@@ -32,6 +32,7 @@ export default function HomeScreen() {
     mostMood,
     capitalizeWords,
     moodToEmoji,
+    chosenTheme,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
@@ -93,7 +94,7 @@ export default function HomeScreen() {
             </View>
             <Pressable
               onPress={() => navigation.navigate("Entry")}
-              className="bg-[#c57] rounded-full p-4 active:bg-[#b46]"
+              className={"bg-[#c59] rounded-full p-4 active:bg-[#c59]"}
             >
               <Text className="text-white text-center font-archivo-bold text-lg">
                 {isAnalyzing
