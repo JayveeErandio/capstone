@@ -9,6 +9,7 @@ export default function NotificationScreen() {
     formatTime,
     darkenColor,
     chosenTheme,
+    softenColor,
   } = useContext(Variables);
   const read = notifications.filter((current) => current.is_seen);
   const unread = notifications.filter((current) => !current.is_seen);
@@ -80,7 +81,7 @@ export default function NotificationScreen() {
             }}
             className="p-4 rounded-2xl mb-3 border"
             style={{
-              backgroundColor: chosenTheme + "50",
+              backgroundColor: softenColor(chosenTheme),
               borderColor: chosenTheme,
             }}
             key={current.id}

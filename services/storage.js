@@ -82,3 +82,11 @@ export async function getChosenTheme() {
 export async function setChosenTheme(data) {
   await AsyncStorage.setItem("chosenTheme", data);
 }
+
+export async function get(key) {
+  return JSON.parse(await AsyncStorage.getItem(key));
+}
+
+export async function setFreeTrial(value) {
+  AsyncStorage.setItem("freeTrial", JSON.stringify(value));
+}

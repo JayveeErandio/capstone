@@ -40,10 +40,15 @@ export const Provider = ({ children }) => {
   const [journMonth, setJournMonth] = useState([]);
   const [journYear, setJournYear] = useState([]);
   const [journEntry, setJournEntry] = useState([]);
+  const [freeTrial, setFreeTrial] = useState(true);
+  const [onDemo, setOnDemo] = useState(false);
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
     async function temp() {
+      if ((await storage.get("freeTrial")) == null) storage.setFreeTrial(true);
+      else if ((await storage.get("freeTrial")) == false) setFreeTrial(false);
+
       if (await storage.getUser()) setupData();
       else setIsLoaded(true);
       setChosenTheme(await storage.getChosenTheme());
@@ -178,23 +183,26 @@ export const Provider = ({ children }) => {
   };
 
   const analyze = async () => {
-    const relatePrevDays = 5;
-    const relatedDates = [...statusDays]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, relatePrevDays);
+    if (user?.student_number) {
+      const relatePrevDays = 5;
+      const relatedDates = [...statusDays]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, relatePrevDays);
+      const result = await backend.assess(entries, relatedDates, user.id);
+      setDailyStatus(result.result);
 
-    const result = await backend.assess(entries, relatedDates, user.id);
+      await storage.putDailyStatus(result.result);
 
-    setDailyStatus(result.result);
+      const data = result.statusDay;
 
-    await storage.putDailyStatus(result.result);
-
-    const data = result.statusDay;
-
-    delete data[0].account_id;
-    setStatusDays([...statusDays, data[0]]);
-    await storage.putStatusDays([...statusDays, data[0]]);
-    computeStatus([...statusDays, data[0]]);
+      delete data[0].account_id;
+      setStatusDays([...statusDays, data[0]]);
+      await storage.putStatusDays([...statusDays, data[0]]);
+      computeStatus([...statusDays, data[0]]);
+    } else {
+      const result = await backend.assessFree(entries);
+      setDailyStatus(result.result);
+    }
   };
 
   const deleteAll = function () {
@@ -757,7 +765,7 @@ export const Provider = ({ children }) => {
       case "excited":
         return "#eecc00";
       case "content":
-        return "#00ee77";
+        return "#00ee99";
       case "drained":
         return "#cc99ee";
       case "stressed":
@@ -794,6 +802,32 @@ export const Provider = ({ children }) => {
 
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   };
+
+  function softenColor(hex, amount = 0.8) {
+    if (hex == null) return "#fff";
+    hex = hex.replace("#", "");
+
+    // Expand shorthand (#0e0 -> #00ee00)
+    if (hex.length === 3) {
+      hex = hex
+        .split("")
+        .map((c) => c + c)
+        .join("");
+    }
+
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    // Mix with white
+    r = Math.round(r + (255 - r) * amount);
+    g = Math.round(g + (255 - g) * amount);
+    b = Math.round(b + (255 - b) * amount);
+
+    const toHex = (v) => v.toString(16).padStart(2, "0");
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
 
   function capitalizeWords(sentence) {
     if (sentence == null) return null;
@@ -855,6 +889,11 @@ export const Provider = ({ children }) => {
     );
   };
 
+  const removeFree = async () => {
+    setFreeTrial(false);
+    storage.setFreeTrial(false);
+  };
+
   return (
     <Variables.Provider
       value={{
@@ -914,6 +953,12 @@ export const Provider = ({ children }) => {
         chosenTheme,
         changeTheme,
         darkenColor,
+        softenColor,
+        freeTrial,
+        onDemo,
+        setOnDemo,
+        setFreeTrial,
+        removeFree,
       }}
     >
       {children}

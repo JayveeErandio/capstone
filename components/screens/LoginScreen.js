@@ -11,8 +11,15 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const [ID, setID] = useState(0);
   const [password, setPassword] = useState("");
-  const { login, page, setPage, darkenColor, chosenTheme } =
-    useContext(Variables);
+  const {
+    login,
+    page,
+    setPage,
+    darkenColor,
+    chosenTheme,
+    freeTrial,
+    setOnDemo,
+  } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -93,9 +100,20 @@ export default function LoginScreen() {
 
         {/* ==== Footer ==== */}
         <View className="px-7 flex gap-6">
-          <Pressable className="border border-[#f0f0f0] rounded-xl p-4 active:bg-[#eff]">
+          <Pressable
+            onPress={() => {
+              setOnDemo(true);
+              setTimeout(() => {
+                navigation.navigate("Entry");
+              }, 300);
+            }}
+            className={
+              (freeTrial ? "" : "hidden") +
+              " border border-[#f0f0f0] rounded-xl p-4 active:bg-[#eff]"
+            }
+          >
             <Text className="text-[#777] w-full text-center font-archivo">
-              {"\u{1f680}"} Skip — View Demo
+              🚀 Skip — View Demo
             </Text>
           </Pressable>
           <View className="flex-row mx-auto">

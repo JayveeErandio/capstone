@@ -348,6 +348,12 @@ app.post("/ai/assess", async (req, res) => {
   res.json({ result: result, statusDay: data });
 });
 
+app.post("/ai/assessFree", async (req, res) => {
+  const { entries } = req.body;
+  const result = JSON.parse((await assess(entries, [])).slice(8).slice(0, -4));
+  res.json({ result: result });
+});
+
 app.post("/ai/verifypost", async (req, res) => {
   const { text } = req.body;
   const result = JSON.parse((await verifyPost(text)).slice(8).slice(0, -4));

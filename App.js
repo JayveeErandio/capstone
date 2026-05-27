@@ -23,7 +23,7 @@ import * as Notification from "expo-notifications";
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
-  const { user, isLoaded } = useContext(Variables);
+  const { user, isLoaded, onDemo } = useContext(Variables);
 
   //SETUP: FONTS
   const [fontsLoaded] = useFonts({
@@ -60,6 +60,10 @@ function AppNavigator() {
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
+            <Stack.Screen
+              name={onDemo ? "Entry" : "ASO"}
+              component={EntryScreen}
+            />
           </>
         )
       ) : (

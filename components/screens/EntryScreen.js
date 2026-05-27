@@ -23,11 +23,16 @@ const Stack = createNativeStackNavigator();
 
 function Header({ order }) {
   const navigation = useNavigation();
+  const { setOnDemo } = useContext(Variables);
+
   return (
     <View className="flex-row justify-between items-center">
       <View className="p-1">
         <Pressable
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.goBack();
+            if (order == 1) setOnDemo(false);
+          }}
           className="bg-white rounded-full p-2 px-5"
           style={styles.shadow}
         >
@@ -222,8 +227,15 @@ function Door4() {
 
 function Result() {
   const navigation = useNavigation();
-  const { entries, dailyStatus, setDailyStatus, updateJournal } =
-    useContext(Variables);
+  const {
+    entries,
+    dailyStatus,
+    setDailyStatus,
+    updateJournal,
+    onDemo,
+    setOnDemo,
+    removeFree,
+  } = useContext(Variables);
 
   // Mood Identification by Decision Tree Algorithm
   const mood =
@@ -305,7 +317,12 @@ function Result() {
                 </View>
               ))}
             </View>
-            <Pressable className="bg-[#edd] border border-dashed border-[#a77] p-5 rounded-2xl active:bg-[#ecc]">
+            <Pressable
+              className={
+                (onDemo ? "hidden" : "") +
+                " bg-[#edd] border border-dashed border-[#a77] p-5 rounded-2xl active:bg-[#ecc]"
+              }
+            >
               <Text className="text-center text-[#b58] font-bold">
                 Suggestions didn't help? Get GCU Support
               </Text>
@@ -313,7 +330,11 @@ function Result() {
           </View>
 
           {/* Journal Notes */}
-          <View className="bg-white p-5 rounded-xl gap-3">
+          <View
+            className={
+              (onDemo ? "hidden" : "") + " bg-white p-5 rounded-xl gap-3"
+            }
+          >
             <View className="flex-row items-center gap-3">
               <Text className="bg-[#eee] text-2xl p-2 rounded-xl">📒</Text>
               <View>
@@ -345,8 +366,17 @@ function Result() {
           {/* Done or Submit */}
           <Pressable
             onPress={() => {
-              updateJournal();
-              navigation.navigate("Main");
+              if (onDemo) {
+                removeFree();
+                navigation.navigate("Login");
+
+                setTimeout(function () {
+                  setOnDemo(false);
+                }, 700);
+              } else {
+                updateJournal();
+                navigation.navigate("Main");
+              }
             }}
             className="bg-[#c7a] rounded-full p-4 active:bg-[#b69] mb-20"
           >
@@ -361,7 +391,7 @@ function Result() {
 }
 
 export default function EntryScreen() {
-  const { restartEntries, isAnalyzing, setIsAnalyzing, dailyStatus } =
+  const { restartEntries, isAnalyzing, setIsAnalyzing, dailyStatus, onDemo } =
     useContext(Variables);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -386,7 +416,10 @@ export default function EntryScreen() {
             buttons={[
               {
                 text: "Go Home",
-                event: () => navigation.navigate("Main"),
+                event: () => {
+                  if (onDemo) navigation.navigate("Login");
+                  else navigation.navigate("Main");
+                },
               },
             ]}
           />
