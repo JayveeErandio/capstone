@@ -34,8 +34,14 @@ const buildCalendar = (currentDate = new Date()) => {
 };
 
 export default function Monthly() {
-  const { statusDays, moodToEmoji, capitalizeWords, moodToColor } =
-    useContext(Variables);
+  const {
+    statusDays,
+    moodToEmoji,
+    capitalizeWords,
+    moodToColor,
+    darkenColor,
+    chosenTheme,
+  } = useContext(Variables);
   const [chosenDay, setChosenDay] = useState(new Date().getDate());
   const [chosenMonth, setChosenMonth] = useState(
     new Date().toISOString().slice(0, 7),
@@ -132,7 +138,10 @@ export default function Monthly() {
             >
               <Text className="leading-none text-gray-500">❮</Text>
             </Pressable>
-            <Text className="text-[#a57] w-36 text-center font-archivo">
+            <Text
+              className="w-36 text-center font-archivo"
+              style={{ color: darkenColor(chosenTheme) }}
+            >
               {monthName.toUpperCase()} {new Date(chosenMonth).getFullYear()}
             </Text>
             <Pressable
@@ -225,7 +234,12 @@ export default function Monthly() {
 
       {/* Mood Trend */}
       <View className="bg-white p-4 rounded-xl gap-1">
-        <Text className="text-[#a57] font-archivo">MOOD TREND</Text>
+        <Text
+          className="font-archivo-bold text-sm"
+          style={{ color: darkenColor(chosenTheme) }}
+        >
+          MOOD TREND
+        </Text>
         <Text className="text-[#888] text-xs font-archivo">
           {monthName} — daily mood across the month
         </Text>
@@ -261,7 +275,12 @@ export default function Monthly() {
 
       {/* Mood Percentage Breakdown */}
       <View className="bg-white p-4 rounded-xl gap-4">
-        <Text className="text-[#a57] font-archivo">MOOD BREAKDOWN</Text>
+        <Text
+          className="font-archivo-bold text-sm"
+          style={{ color: darkenColor(chosenTheme) }}
+        >
+          MOOD BREAKDOWN
+        </Text>
         {(function () {
           let moods = [];
           for (let status of statusMonths) {

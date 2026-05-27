@@ -11,7 +11,7 @@ import { Variables } from "../../../Variables";
 import { useContext } from "react";
 
 export default function Create({ index, setPage }) {
-  const { putPost } = useContext(Variables);
+  const { putPost, darkenColor, chosenTheme } = useContext(Variables);
   const [collapse, setCollapse] = useState(true);
   const [mood, setMood] = useState();
   const [text, setText] = useState("");
@@ -75,7 +75,10 @@ export default function Create({ index, setPage }) {
           </Text>
 
           {/* Moods */}
-          <Text className="text-[#c57] font-archivo-bold text-sm">
+          <Text
+            className="font-archivo-bold text-sm"
+            style={{ color: darkenColor(chosenTheme) }}
+          >
             HOW ARE YOU FEELING?
           </Text>
           <View className="flex-row gap-3 -mt-3">
@@ -154,9 +157,9 @@ export default function Create({ index, setPage }) {
               });
             }}
             className={
-              (mood && text ? "active:bg-[#b47]" : "opacity-50") +
-              " bg-[#c58] p-4 rounded-full "
+              (mood && text ? "" : "opacity-50") + " p-4 rounded-full "
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-center font-archivo-bold text-lg">
               Post to MoodSpace 🌸

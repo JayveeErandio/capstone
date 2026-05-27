@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Finalize({ show, setPage }) {
-  const { currentBook, bookAppointment } = useContext(Variables);
+  const { currentBook, bookAppointment, darkenColor, chosenTheme } =
+    useContext(Variables);
   function formatReadableDate(dateString) {
     const date = new Date(dateString);
 
@@ -92,7 +93,8 @@ export default function Finalize({ show, setPage }) {
               bookAppointment();
               setPage("Main");
             }}
-            className={"bg-[#c68] p-4 rounded-full active:bg-[#b57]"}
+            className="p-4 rounded-full"
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-center font-bold">
               Submit Appointment Request ✓

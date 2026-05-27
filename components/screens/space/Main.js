@@ -3,8 +3,16 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ index, setPage }) {
-  const { posts, setPosts, updateReact, reportPost, moodToColor, moodToEmoji } =
-    useContext(Variables);
+  const {
+    posts,
+    setPosts,
+    updateReact,
+    reportPost,
+    moodToColor,
+    moodToEmoji,
+    darkenColor,
+    chosenTheme,
+  } = useContext(Variables);
 
   function formatTime(timestamp) {
     const date = new Date(timestamp); // auto handles UTC → local
@@ -56,7 +64,8 @@ export default function Main({ index, setPage }) {
         <View className="flex-row items-center gap-2">
           <Pressable
             onPress={() => setPage("Create")}
-            className="bg-[#c57] p-3 rounded-full active:bg-[#b46]"
+            className="p-3 rounded-full active:bg-[#b46]"
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-sm font-archivo">✍🏻 Post</Text>
           </Pressable>

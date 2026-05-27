@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Image, ScrollView, Pressable } from "react-native";
 import Weekly from "./journal/Weekly";
 import Monthly from "./journal/Monthly";
 import Yearly from "./journal/Yearly";
 import Entries from "./journal/Entries";
+import { Variables } from "../../Variables";
 
 export default function JournalScreen() {
   const [page, setPage] = useState("Weekly");
+  const { darkenColor, chosenTheme } = useContext(Variables);
 
   const content = (
     <>
@@ -29,10 +31,13 @@ export default function JournalScreen() {
           {content.props.children.map((current, index) => (
             <Pressable
               onPress={() => setPage(current.props.name)}
-              className={
-                (current.props.name == page ? "bg-[#d68]" : "bg-[#fff]") +
-                " self-start py-3 flex-1 rounded-full"
-              }
+              className="self-start py-3 flex-1 rounded-full"
+              style={{
+                backgroundColor:
+                  current.props.name == page
+                    ? darkenColor(chosenTheme)
+                    : "#fff",
+              }}
               key={index}
             >
               <Text

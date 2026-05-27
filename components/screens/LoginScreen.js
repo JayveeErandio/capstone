@@ -11,7 +11,8 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const [ID, setID] = useState(0);
   const [password, setPassword] = useState("");
-  const { login, page, setPage } = useContext(Variables);
+  const { login, page, setPage, darkenColor, chosenTheme } =
+    useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -31,7 +32,7 @@ export default function LoginScreen() {
         <View className="bg-[#f5ebf4] flex items-center py-12 gap-2">
           <View
             className="rounded-full h-20 w-20 justify-center"
-            style={{ backgroundColor: "#d16583" }}
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-4xl text-center">🌸</Text>
           </View>
@@ -79,11 +80,10 @@ export default function LoginScreen() {
               }
             }}
             className={
-              "mt-2 bg-[#c6a] rounded-xl p-5  " +
-              (ID && password != ""
-                ? "opacity-100 active:bg-[#b59]"
-                : "opacity-50")
+              "mt-2 rounded-xl p-5  " +
+              (ID && password != "" ? "opacity-100" : "opacity-50")
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white w-full text-center text-lg font-archivo-bold">
               Sign In {"\u27F6"}

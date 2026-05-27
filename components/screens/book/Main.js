@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ show, setPage }) {
-  const { books, currentBook, deleteAppointment } = useContext(Variables);
+  const { books, currentBook, deleteAppointment, darkenColor, chosenTheme } =
+    useContext(Variables);
   function formatAppointment(datetime) {
     const dateObj = new Date(datetime);
 
@@ -40,7 +41,8 @@ export default function Main({ show, setPage }) {
             {/* Back */}
             <Pressable
               onPress={setPage}
-              className="flex-row justify-between bg-[#d69] active:bg-[#c58] p-5 items-center"
+              className="flex-row justify-between p-5 items-center"
+              style={{ backgroundColor: darkenColor(chosenTheme) }}
             >
               <View>
                 <Text className="text-white text-lg font-lora-bold">

@@ -33,6 +33,7 @@ export default function HomeScreen() {
     capitalizeWords,
     moodToEmoji,
     chosenTheme,
+    darkenColor,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
@@ -93,8 +94,11 @@ export default function HomeScreen() {
               ))}
             </View>
             <Pressable
-              onPress={() => navigation.navigate("Entry")}
-              className={"bg-[#c59] rounded-full p-4 active:bg-[#c59]"}
+              onPress={() => {
+                navigation.navigate("Entry");
+              }}
+              className={"rounded-full p-4 active:bg-[#000]"}
+              style={{ backgroundColor: darkenColor(chosenTheme) }}
             >
               <Text className="text-white text-center font-archivo-bold text-lg">
                 {isAnalyzing
@@ -108,14 +112,20 @@ export default function HomeScreen() {
 
           {/* User's Progress */}
           <View className="bg-white mt-6 p-5 rounded-3xl gap-3">
-            <Text className="text-[#c57] font-archivo-bold text-sm">
+            <Text
+              className="font-archivo-bold text-sm"
+              style={{ color: darkenColor(chosenTheme) }}
+            >
               YOUR PROGRESS
             </Text>
             <View className="gap-2">
               <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">
                 <Text className="text-4xl">{curStreak >= 3 ? "🔥" : "⏳"}</Text>
                 <View className="flex-1">
-                  <Text className="text-[#d25e78] font-lora-bold text-3xl">
+                  <Text
+                    className="text-[#d25e78] font-lora-bold text-3xl"
+                    style={{ color: darkenColor(chosenTheme) }}
+                  >
                     {curStreak} day{curStreak > 1 ? "s" : ""}
                   </Text>
                   <Text className="text-sm text-[#555] font-archivo">
@@ -166,10 +176,12 @@ export default function HomeScreen() {
                 {homeWeek.map((current, index) => (
                   <View className="items-center gap-1 flex-1" key={index}>
                     <View
-                      className={
-                        (current.mood ? "bg-[#ca5476]" : "bg-[#ddd]") +
-                        " w-10 h-10  rounded-lg justify-center"
-                      }
+                      className=" w-10 h-10 rounded-lg justify-center"
+                      style={{
+                        backgroundColor: current.mood
+                          ? darkenColor(chosenTheme)
+                          : "#ddd",
+                      }}
                     >
                       <Text className="text-center">
                         {current.mood ? "✓" : ""}
@@ -191,8 +203,12 @@ export default function HomeScreen() {
       {/* AI Chatbot Button */}
       <Pressable
         onPress={() => navigation.navigate("Chatbot")}
-        className="absolute right-7 bg-[#c68] p-4 rounded-full active:bg-[#b57]"
-        style={{ bottom: "15%", boxShadow: "0px 0px 8px rgba(0,0,0,0.2)" }}
+        className="absolute right-7 p-4 rounded-full active:bg-[#b57]"
+        style={{
+          bottom: "15%",
+          boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
+          backgroundColor: darkenColor(chosenTheme),
+        }}
       >
         <Text className="text-3xl">💬</Text>
       </Pressable>

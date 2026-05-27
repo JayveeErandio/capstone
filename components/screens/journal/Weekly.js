@@ -18,6 +18,8 @@ export default function Weekly() {
     moodToEmoji,
     moodToColor,
     generateWeekData,
+    darkenColor,
+    chosenTheme,
   } = useContext(Variables);
 
   let haveMood = true;
@@ -125,7 +127,12 @@ export default function Weekly() {
 
       {/* Weekly Summary */}
       <View className="bg-white p-4 rounded-xl gap-3">
-        <Text className="text-[#a57] font-archivo">WEEKLY SUMMARY</Text>
+        <Text
+          className="font-archivo-bold text-sm"
+          style={{ color: darkenColor(chosenTheme) }}
+        >
+          WEEKLY SUMMARY
+        </Text>
 
         {/* Days */}
         <View className="flex-row gap-2">
@@ -167,7 +174,12 @@ export default function Weekly() {
 
       {/* Mood Trends */}
       <View className="p-4 bg-white rounded-xl gap-1 ">
-        <Text className="text-[#a57] font-archivo">MOOD TREND</Text>
+        <Text
+          className="font-archivo-bold text-sm"
+          style={{ color: darkenColor(chosenTheme) }}
+        >
+          MOOD TREND
+        </Text>
         <Text className="text-[#999] text-sm font-archivo">
           {journWeek[0].day} — {journWeek[6].day} • this week
         </Text>

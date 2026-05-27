@@ -3,7 +3,8 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Yearly() {
-  const { journYear, capitalizeWords, moodToEmoji } = useContext(Variables);
+  const { journYear, capitalizeWords, moodToEmoji, darkenColor, chosenTheme } =
+    useContext(Variables);
 
   return (
     <View className="px-6 gap-6 py-3">
@@ -50,7 +51,10 @@ export default function Yearly() {
       </View>
 
       <View className="bg-white p-4 rounded-xl gap-4">
-        <Text className="text-sm text-[#935] font-archivo">
+        <Text
+          className="font-archivo-bold text-sm"
+          style={{ color: darkenColor(chosenTheme) }}
+        >
           YEARLY MOOD HEATMAP
         </Text>
         <View className="flex-row flex-wrap px-2">

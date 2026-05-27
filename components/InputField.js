@@ -23,7 +23,7 @@ export default function InputField({
           setContent(value);
           if (onChangeText) onChangeText(value);
         }}
-        className="flex-1 px-0 py-0 font-archivo"
+        className="flex-1 px-0 py-0 font-archivo text-[#555]"
         inputMode={numeric && "numeric"}
         maxLength={maxLength}
         secureTextEntry={password ? !showPass : false}
@@ -43,7 +43,7 @@ export default function InputField({
   ) : (
     <TextInput
       onChangeText={setContent}
-      className={boxStyle + "px-3 py-3 font-archivo"}
+      className={boxStyle + "px-3 py-3 font-archivo text-[#555]"}
       inputMode={numeric && "numeric"}
       maxLength={maxLength}
       placeholder={placeholder}

@@ -17,6 +17,7 @@ export default function ProfileScreen() {
     changePassword,
     moodToColor,
     moodToEmoji,
+    darkenColor,
     chosenTheme,
     changeTheme,
   } = useContext(Variables);
@@ -74,7 +75,8 @@ export default function ProfileScreen() {
                 logout();
                 setUser(null);
               }}
-              className="bg-[#c59] p-2 px-5 rounded-xl"
+              className="p-2 px-5 rounded-xl"
+              style={{ backgroundColor: darkenColor(chosenTheme) }}
             >
               <Text className="text-white font-archivo-bold">Log Out</Text>
             </Pressable>
@@ -125,7 +127,12 @@ export default function ProfileScreen() {
 
           {/* Theme Color */}
           <View className="bg-white p-4 rounded-xl gap-1">
-            <Text className="text-[#a57] font-archivo">THEME COLOR</Text>
+            <Text
+              className="font-archivo-bold text-sm"
+              style={{ color: darkenColor(chosenTheme) }}
+            >
+              THEME COLOR
+            </Text>
             <View className="flex-row flex-wrap justify-center">
               {["Excited", "Content", "Drained", "Stressed", "Default"].map(
                 (current) => (
@@ -202,8 +209,9 @@ export default function ProfileScreen() {
               field2 == "" &&
               chosenTheme == theme
                 ? "opacity-50"
-                : "active:bg-[#b48]") + " bg-[#c59] p-4 rounded-full my-6 "
+                : "") + " p-4 rounded-full my-6 "
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-center font-archivo-bold text-lg">
               Save

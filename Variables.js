@@ -86,6 +86,7 @@ export const Provider = ({ children }) => {
     } else setDailyStatus(null);
 
     let temp = await backend.getSchedules();
+
     const grouped = Object.values(
       temp.reduce((acc, datetime) => {
         const dateObj = new Date(datetime);
@@ -759,6 +760,34 @@ export const Provider = ({ children }) => {
     }
   };
 
+  const darkenColor = (hex, percent = 25) => {
+    if (hex == null) return "#c59";
+    // Remove #
+    hex = hex.replace(/^#/, "");
+
+    // Convert shorthand (#ca0) to full (#ccaa00)
+    if (hex.length === 3) {
+      hex = hex
+        .split("")
+        .map((c) => c + c)
+        .join("");
+    }
+
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    // Darken each channel
+    r = Math.max(0, Math.floor(r * (1 - percent / 100)));
+    g = Math.max(0, Math.floor(g * (1 - percent / 100)));
+    b = Math.max(0, Math.floor(b * (1 - percent / 100)));
+
+    // Convert back to hex
+    const toHex = (v) => v.toString(16).padStart(2, "0");
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  };
+
   function capitalizeWords(sentence) {
     if (sentence == null) return null;
     return sentence
@@ -877,6 +906,7 @@ export const Provider = ({ children }) => {
         formatTime,
         chosenTheme,
         changeTheme,
+        darkenColor,
       }}
     >
       {children}

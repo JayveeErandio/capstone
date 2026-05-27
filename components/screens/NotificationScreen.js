@@ -3,7 +3,13 @@ import { useContext } from "react";
 import { Variables } from "../../Variables";
 
 export default function NotificationScreen() {
-  const { notifications, readNotification, formatTime } = useContext(Variables);
+  const {
+    notifications,
+    readNotification,
+    formatTime,
+    darkenColor,
+    chosenTheme,
+  } = useContext(Variables);
   const read = notifications.filter((current) => current.is_seen);
   const unread = notifications.filter((current) => !current.is_seen);
 
@@ -61,8 +67,9 @@ export default function NotificationScreen() {
         <Text
           className={
             (unread.length == 0 ? "hidden" : "") +
-            " text-[#c59] font-archivo-bold text-sm mb-2"
+            " font-archivo-bold text-sm mb-2"
           }
+          style={{ color: darkenColor(chosenTheme) }}
         >
           UNREAD
         </Text>
@@ -71,7 +78,11 @@ export default function NotificationScreen() {
             onPress={async () => {
               readNotification(current.id);
             }}
-            className="bg-[#ffe] p-4 rounded-2xl active:bg-[#eed] mb-3 border border-[#bb7]"
+            className="p-4 rounded-2xl mb-3 border"
+            style={{
+              backgroundColor: chosenTheme + "50",
+              borderColor: chosenTheme,
+            }}
             key={current.id}
           >
             <View className="flex-row gap-3 ">
@@ -100,8 +111,9 @@ export default function NotificationScreen() {
         <Text
           className={
             (read.length == 0 ? "hidden" : "") +
-            " text-[#c59] font-archivo-bold text-sm mb-2"
+            " font-archivo-bold text-sm mb-2"
           }
+          style={{ color: darkenColor(chosenTheme) }}
         >
           EARLIER
         </Text>

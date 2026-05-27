@@ -3,7 +3,8 @@ import { Pressable, Text, View, ScrollView, TextInput } from "react-native";
 import { Variables } from "../../../Variables";
 
 export default function Create({ show, setPage }) {
-  const { availableSchedules, setCurrentBook } = useContext(Variables);
+  const { availableSchedules, setCurrentBook, darkenColor, chosenTheme } =
+    useContext(Variables);
   const [context, setContext] = useState();
   const [text, setText] = useState("");
   const maxText = 120;
@@ -153,9 +154,9 @@ export default function Create({ show, setPage }) {
               }
             }}
             className={
-              (context && day && time ? "active:bg-[#b57]" : "opacity-50") +
-              " bg-[#c68] p-4 rounded-full"
+              (context && day && time ? "" : "opacity-50") + " p-4 rounded-full"
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-center font-bold">
               Review Appointment ➞
