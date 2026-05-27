@@ -237,59 +237,66 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    const result = await backend.verifyPost(text);
+    const { data, error } = await supabase.putPost({
+      mood: mood,
+      content: text,
+      student_id: user.id,
+    });
+    data.myreact = null;
+    data.reactions = {};
+    data.students = { anonymous_name: user.anonymous_name };
+    storage.putPosts([data, ...posts]);
+    storage.putMyPosts([data, ...myposts]);
+    setPosts([data, ...posts]);
+    setMyposts([data, ...myposts]);
 
-    if (result.isAllowed) {
-      await supabase.putNotification({
-        title: "Post Approved",
-        content:
-          'Your post "' +
-          text.slice(0, 50) +
-          '..." does not show any violated rules. You can now check it out in space feed!',
-        student_id: user.id,
-        type: "post_approved",
-      });
-      const { data, error } = await supabase.putPost({
-        mood: mood,
-        content: text,
-        student_id: user.id,
-      });
-      delete data[0].student_id;
-      delete data[0].status;
+    const onpostID = data.id;
 
-      data[0].myreact = null;
-      data[0].reactions = {};
-      data[0].students = { anonymous_name: user.anonymous_name };
+    async function temp() {
+      const result = await backend.verifyPost(text);
 
-      await storage.putPosts([data[0], ...posts]);
-      await storage.putMyPosts([data[0], ...myposts]);
+      if (result.isAllowed) {
+        // Notify lang or confirmation na pasado or malinis
+        supabase.putNotification({
+          title: "Post Approved",
+          content:
+            'Your post "' +
+            text.slice(0, 50) +
+            '..." does not show any violated rules. You can now check it out in space feed!',
+          student_id: user.id,
+          type: "post_approved",
+        });
+      } else {
+        // Delete ulit sa public
+        supabase.deletePost(onpostID);
+        storage.putPosts(posts);
+        storage.putMyPosts(myposts);
+        setPosts(posts);
+        setMyposts(myposts);
 
-      setPosts([data[0], ...posts]);
-      setMyposts([data[0], ...myposts]);
-    } else {
-      await supabase.putNotification({
-        title: "Suspicious Post",
-        content:
-          'Your post, "' +
-          text.slice(0, 50) +
-          '", has been marked as suspicious. For the meantime, your post will remain on pending status while GCU reviews it before approval.',
-        student_id: user.id,
-        type: "gcu_review",
-      });
+        // Ilalagay or ililipat naman sa pending posts
+        const { data, error } = await supabase.putPendingPost({
+          student_id: user.id,
+          mood: mood,
+          content: text,
+          ai_say: result.reason,
+        });
+        storage.putPendingPost([data, ...pendingPosts]);
+        setPendingPosts([data, ...pendingPosts]);
 
-      const { data, error } = await supabase.putPendingPost({
-        student_id: user.id,
-        mood: mood,
-        content: text,
-        ai_say: result.reason,
-      });
-      delete data[0].student_id;
-      delete data[0].ai_say;
-
-      const temp = [data[0], ...pendingPosts];
-      setPendingPosts(temp);
-      await storage.putPendingPost(temp);
+        // Notify naman na hindi pasado o bawal
+        supabase.putNotification({
+          title: "Suspicious Post",
+          content:
+            'Your post, "' +
+            text.slice(0, 50) +
+            '", has been marked as suspicious. For the meantime, your post will remain on pending status while GCU reviews it before approval.',
+          student_id: user.id,
+          type: "gcu_review",
+        });
+      }
     }
+    temp();
   };
 
   const deletePost = async (data, isPosted) => {

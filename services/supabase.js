@@ -41,13 +41,16 @@ export async function putPendingPost(value) {
   const { data, error } = await supabase
     .from("pending_posts")
     .insert([value])
-    .select();
-  return { data: data, error: error };
+    .select("id, mood, content");
+  return { data: data[0], error };
 }
 
 export async function putPost(value) {
-  const { data, error } = await supabase.from("posts").insert([value]).select();
-  return { data: data, error: error };
+  const { data, error } = await supabase
+    .from("posts")
+    .insert([value])
+    .select("id, mood, content, datetime");
+  return { data: data[0], error };
 }
 
 export async function deletePendingPost(post_id) {
