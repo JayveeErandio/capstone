@@ -38,14 +38,18 @@ export default function Create({ show, setPage }) {
           <Text className="text-2xl font-bold text-center ">‹</Text>
         </Pressable>
         <View>
-          <Text className="font-bold font-serif text-lg">Book a Session</Text>
-          <Text className="text-sm text-[#888]">Fill in the details below</Text>
+          <Text className="font-lora-bold text-lg">Book a Session</Text>
+          <Text className="text-sm text-[#888] font-archivo">
+            Fill in the details below
+          </Text>
         </View>
       </View>
 
       <ScrollView>
         <View className="p-6 gap-5">
-          <Text className="text-md text-[#333]">1 · WHAT'S ON YOUR MIND?</Text>
+          <Text className="text-md text-[#333] font-archivo">
+            1 · WHAT'S ON YOUR MIND?
+          </Text>
           <View className="flex-row flex-wrap gap-2">
             {[
               "📚 Academic Stress",
@@ -64,11 +68,11 @@ export default function Create({ show, setPage }) {
                 }
                 key={index}
               >
-                <Text className="text-[#333]">{current}</Text>
+                <Text className="text-[#333] font-archivo">{current}</Text>
               </Pressable>
             ))}
           </View>
-          <Text className="text-md text-[#333]">
+          <Text className="text-md text-[#333] font-archivo">
             ADDITIONAL NOTE (optional)
           </Text>
           <TextInput
@@ -76,7 +80,7 @@ export default function Create({ show, setPage }) {
               if (value.length <= maxText) setText(value);
             }}
             multiline
-            className="bg-white rounded-xl p-4 h-32 text-[#555] -mt-3"
+            className="bg-white rounded-xl p-4 h-32 text-[#555] -mt-3 font-archivo"
             textAlignVertical="top"
             placeholder="Briefly describe what you'd like to talk about..."
             value={text}
@@ -86,7 +90,9 @@ export default function Create({ show, setPage }) {
           </Text>
 
           {/* Set Date */}
-          <Text className="text-md text-[#333]">2 · PICK A DATE</Text>
+          <Text className="text-md text-[#333] font-archivo">
+            2 · PICK A DATE
+          </Text>
           <View className="flex-row flex-wrap gap-3">
             {availableSchedules.map((current, index) => (
               <Pressable
@@ -101,10 +107,12 @@ export default function Create({ show, setPage }) {
                     : "") + " bg-white self-start items-center p-4 rounded-xl"
                 }
               >
-                <Text className="text-xs font-bold text-[#aaa]">
+                <Text className="text-xs font-archivo-bold text-[#aaa]">
                   {current.day}
                 </Text>
-                <Text className="font-bold">{current.date.slice(-2)}</Text>
+                <Text className="font-archivo-bold">
+                  {current.date.slice(-2)}
+                </Text>
               </Pressable>
             ))}
           </View>
@@ -158,7 +166,7 @@ export default function Create({ show, setPage }) {
             }
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
-            <Text className="text-white text-center font-bold">
+            <Text className="text-white text-center font-archivo-bold">
               Review Appointment ➞
             </Text>
           </Pressable>

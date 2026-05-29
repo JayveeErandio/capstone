@@ -9,8 +9,6 @@ import InputField from "../InputField";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const [ID, setID] = useState(0);
-  const [password, setPassword] = useState("");
   const {
     login,
     page,
@@ -19,6 +17,10 @@ export default function LoginScreen() {
     chosenTheme,
     freeTrial,
     setOnDemo,
+    loginField1,
+    setLoginField1,
+    loginField2,
+    setLoginField2,
   } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -56,15 +58,17 @@ export default function LoginScreen() {
         <View className="p-7 flex gap-1">
           <Text className="font-archivo-bold text-[#333]">STUDENT ID</Text>
           <InputField
-            onChangeText={setID}
+            onChangeText={setLoginField1}
             placeholder="e.g. 202310097"
             numeric
+            value={loginField1}
           />
           <Text className="font-archivo-bold text-[#333] mt-4">PASSWORD</Text>
           <InputField
             password
             placeholder="Enter your password"
-            onChangeText={setPassword}
+            onChangeText={setLoginField2}
+            value={loginField2}
           />
 
           <Text
@@ -77,23 +81,25 @@ export default function LoginScreen() {
           </Text>
           <Pressable
             onPress={async () => {
-              if (ID && password) {
+              if (loginField1 && loginField2) {
                 setLoading(true);
-                setID();
-                setPassword();
-                const data = await login(ID, password);
+                const data = await login(loginField1, loginField2);
                 setLoading(false);
                 setValid(data);
+                if (data) {
+                  setLoginField1("");
+                  setLoginField2("");
+                }
               }
             }}
             className={
               "mt-2 rounded-xl p-5  " +
-              (ID && password != "" ? "opacity-100" : "opacity-50")
+              (loginField1 && loginField2 != "" ? "opacity-100" : "opacity-50")
             }
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white w-full text-center text-lg font-archivo-bold">
-              Sign In {"\u27F6"}
+              Log In ➞
             </Text>
           </Pressable>
         </View>

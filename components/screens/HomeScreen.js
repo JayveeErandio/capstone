@@ -104,7 +104,7 @@ export default function HomeScreen() {
                 {isAnalyzing
                   ? "Analyzing..."
                   : dailyStatus == null
-                    ? "Start Check-In \u27F6"
+                    ? "Start Check-In ➞"
                     : "See Result"}
               </Text>
             </Pressable>

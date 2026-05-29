@@ -38,42 +38,42 @@ export default function Finalize({ show, setPage }) {
         >
           <Text className="text-2xl font-bold text-center ">‹</Text>
         </Pressable>
-        <Text className="font-bold font-serif text-lg">
-          Confirm Appointment
-        </Text>
+        <Text className="font-lora-bold text-lg">Confirm Appointment</Text>
       </View>
 
       <ScrollView>
         <View className="p-6 gap-5">
-          <Text className="font-bold font-serif text-lg">
-            Appointment Summary
-          </Text>
+          <Text className="font-lora-bold text-lg">Appointment Summary</Text>
           <View className="gap-0.5">
             <View className="flex-row justify-between bg-white p-4 items-center">
-              <Text className="text-sm text-[#777]">Concern</Text>
-              <Text className="text-sm">{currentBook.context}</Text>
+              <Text className="text-sm text-[#777] font-archivo">Concern</Text>
+              <Text className="text-sm font-archivo">
+                {currentBook.context}
+              </Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
-              <Text className="text-sm text-[#777]">Date</Text>
-              <Text className="text-sm">
+              <Text className="text-sm text-[#777] font-archivo">Date</Text>
+              <Text className="text-sm font-archivo">
                 {"📆 " + formatReadableDate(currentBook.date)}
               </Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
-              <Text className="text-sm text-[#777]">Time</Text>
-              <Text className="text-sm">
+              <Text className="text-sm text-[#777] font-archivo">Time</Text>
+              <Text className="text-sm font-archivo">
                 {"🕐 " + formatTime12Hour(currentBook.time ?? "00:00")}
               </Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
-              <Text className="text-sm text-[#777]">Counselor</Text>
-              <Text className="text-sm">
+              <Text className="text-sm text-[#777] font-archivo">
+                Counselor
+              </Text>
+              <Text className="text-sm font-archivo">
                 {"GCU Counselor (assigned by GCU)"}
               </Text>
             </View>
             <View className="flex-row justify-between bg-white p-4 items-center">
-              <Text className="text-sm text-[#777]">Mode</Text>
-              <Text className="text-sm">
+              <Text className="text-sm text-[#777] font-archivo">Mode</Text>
+              <Text className="text-sm font-archivo">
                 {"In-person · GCU Office, Room 201"}
               </Text>
             </View>
@@ -96,7 +96,7 @@ export default function Finalize({ show, setPage }) {
             className="p-4 rounded-full"
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
-            <Text className="text-white text-center font-bold">
+            <Text className="text-white text-center font-archivo-bold">
               Submit Appointment Request ✓
             </Text>
           </Pressable>
@@ -106,7 +106,7 @@ export default function Finalize({ show, setPage }) {
             }}
             className={"p-4 rounded-full active:bg-[#ddd] border border-[#aaa]"}
           >
-            <Text className="text-[#555] text-center font-bold">
+            <Text className="text-[#555] text-center font-archivo-bold">
               Go Back & Edit
             </Text>
           </Pressable>

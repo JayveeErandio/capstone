@@ -1,6 +1,6 @@
 import { TextInput, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function InputField({
   placeholder,
@@ -11,7 +11,9 @@ export default function InputField({
   value,
 }) {
   const [content, setContent] = useState("");
-
+  useEffect(() => {
+    if (value != null) setContent(value);
+  }, [value]);
   const [showPass, setShowPass] = useState(false);
 
   const boxStyle = " border border-[#ccc] rounded-lg text-[#555] ";
@@ -19,9 +21,9 @@ export default function InputField({
   return password ? (
     <View className={"flex-row items-center px-3 py-3 gap-3" + boxStyle}>
       <TextInput
-        onChangeText={(value) => {
-          setContent(value);
-          if (onChangeText) onChangeText(value);
+        onChangeText={(e) => {
+          setContent(e);
+          if (onChangeText) onChangeText(e);
         }}
         className="flex-1 px-0 py-0 font-archivo text-[#555]"
         inputMode={numeric && "numeric"}
@@ -30,6 +32,7 @@ export default function InputField({
         placeholder={placeholder}
         placeholderTextColor="#aaa"
         autoCapitalize="none"
+        value={value}
       />
       <Pressable
         onPress={() => {
@@ -42,13 +45,15 @@ export default function InputField({
     </View>
   ) : (
     <TextInput
-      onChangeText={setContent}
+      onChangeText={(e) => {
+        setContent(e);
+        if (onChangeText) onChangeText(e);
+      }}
       className={boxStyle + "px-3 py-3 font-archivo text-[#555]"}
       inputMode={numeric && "numeric"}
       maxLength={maxLength}
       placeholder={placeholder}
       placeholderTextColor="#aaa"
-      onChangeText={onChangeText}
       value={value}
     />
   );

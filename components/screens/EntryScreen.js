@@ -125,7 +125,7 @@ function Door({ order, label, question, flex, children }) {
           style={{ backgroundColor: darkenColor(chosenTheme) }}
         >
           <Text className="text-center text-white text-lg font-archivo-bold">
-            {(order < 4 ? "Next" : "See my mood") + " \u27F6"}
+            {(order < 4 ? "Next" : "See my mood") + " ➞"}
           </Text>
         </Pressable>
       </View>

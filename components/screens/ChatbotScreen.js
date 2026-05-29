@@ -6,7 +6,8 @@ import { useState, useRef, useContext, useEffect } from "react";
 import { Variables } from "../../Variables";
 
 export default function ChatbotScreen() {
-  const { chats, canSend, send } = useContext(Variables);
+  const { chats, canSend, send, darkenColor, chosenTheme } =
+    useContext(Variables);
   const navigation = useNavigation();
   const scrollViewRef = useRef();
   const [message, setMessage] = useState("");
@@ -122,7 +123,10 @@ export default function ChatbotScreen() {
                     🌸
                   </Text>
                   <View className="flex-row flex-1 ">
-                    <Text className="max-w-72 text-sm p-3 bg-pink-500 text-white rounded-xl rounded-br-none ml-auto font-archivo">
+                    <Text
+                      className="max-w-72 text-sm p-3 text-white rounded-xl rounded-br-none ml-auto font-archivo"
+                      style={{ backgroundColor: darkenColor(chosenTheme) }}
+                    >
                       {current.content}
                     </Text>
                   </View>
@@ -152,9 +156,10 @@ export default function ChatbotScreen() {
               setMessage("");
             }}
             className={
-              (canSend && message != "" ? "active:bg-[#ccc]" : "opacity-50") +
-              " bg-[#d6a] w-12 h-12 rounded-xl justify-center"
+              (canSend && message != "" ? "" : "opacity-50") +
+              " w-12 h-12 rounded-xl justify-center"
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-lg font-bold text-center text-[#777] text-white">
               ➤

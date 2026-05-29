@@ -44,6 +44,10 @@ export const Provider = ({ children }) => {
   const [freeTrial, setFreeTrial] = useState(true);
   const [onDemo, setOnDemo] = useState(false);
   const [goGCU, setGoGCU] = useState(false);
+  // For LoginPage, para di nawawala yung mga nasa input field para di na mapagod
+  // yung user kakatype paulit ulit
+  const [loginField1, setLoginField1] = useState("");
+  const [loginField2, setLoginField2] = useState("");
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
@@ -963,6 +967,10 @@ export const Provider = ({ children }) => {
         removeFree,
         goGCU,
         setGoGCU,
+        loginField1,
+        setLoginField1,
+        loginField2,
+        setLoginField2,
       }}
     >
       {children}
