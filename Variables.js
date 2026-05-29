@@ -40,8 +40,10 @@ export const Provider = ({ children }) => {
   const [journMonth, setJournMonth] = useState([]);
   const [journYear, setJournYear] = useState([]);
   const [journEntry, setJournEntry] = useState([]);
+  // Ginagamit para dun sa Free Demo sa mga hindi pa nakakapaglogin
   const [freeTrial, setFreeTrial] = useState(true);
   const [onDemo, setOnDemo] = useState(false);
+  const [goGCU, setGoGCU] = useState(false);
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
@@ -959,6 +961,8 @@ export const Provider = ({ children }) => {
         setOnDemo,
         setFreeTrial,
         removeFree,
+        goGCU,
+        setGoGCU,
       }}
     >
       {children}

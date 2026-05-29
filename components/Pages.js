@@ -5,11 +5,19 @@ import { Variables } from "../Variables";
 export default function Pages({ children }) {
   const screens = React.Children.toArray(children);
   const [activePage, setActivePage] = useState("home");
-  const { notifications, capitalizeWords, chosenTheme } = useContext(Variables);
+  const { notifications, capitalizeWords, chosenTheme, goGCU, setGoGCU } =
+    useContext(Variables);
   const unread = notifications.reduce(
     (count, current) => (!current.is_seen ? count + 1 : count),
     0,
   );
+
+  useEffect(() => {
+    if (goGCU) {
+      setActivePage("book");
+      setGoGCU(false);
+    }
+  }, [goGCU]);
 
   return (
     <View className="h-full justify-between">

@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator();
 
 function Header({ order }) {
   const navigation = useNavigation();
-  const { setOnDemo } = useContext(Variables);
+  const { setOnDemo, darkenColor, chosenTheme } = useContext(Variables);
 
   return (
     <View className="flex-row justify-between items-center">
@@ -36,7 +36,7 @@ function Header({ order }) {
           className="bg-white rounded-full p-2 px-5"
           style={styles.shadow}
         >
-          <Text>{"\u27F5"} Back</Text>
+          <Text className="font-archivo">{"\u27F5"} Back</Text>
         </Pressable>
       </View>
 
@@ -45,22 +45,31 @@ function Header({ order }) {
           <View
             key={i}
             className={
-              i + 1 === order
-                ? "w-7 h-2 bg-[#cd698f] rounded-full"
-                : "w-2 h-2 bg-[#eab] rounded-full"
+              (i + 1 === order ? "w-7" : "w-2 opacity-50") + " h-2 rounded-full"
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           />
         ))}
       </View>
-      <Text className="text-[#777] text-sm">Step {order} out of 4</Text>
+      <Text className="text-[#777] text-sm font-archivo">
+        Step {order} out of 4
+      </Text>
     </View>
   );
 }
 
 function Door({ order, label, question, flex, children }) {
   const navigation = useNavigation();
-  const { entries, setEntries, isAnalyzing, setIsAnalyzing, analyze } =
-    useContext(Variables);
+  const {
+    entries,
+    setEntries,
+    isAnalyzing,
+    setIsAnalyzing,
+    analyze,
+    darkenColor,
+    chosenTheme,
+    softenColor,
+  } = useContext(Variables);
   const doorItem = useRoute().name.toLowerCase();
 
   return (
@@ -69,19 +78,31 @@ function Door({ order, label, question, flex, children }) {
         <View className="flex gap-4">
           <Header order={order} />
           <View className="flex-row items-center gap-2">
-            <View className="bg-[#ebc] p-2 px-5 rounded-full">
-              <Text className="text-sm text-[#a55] font-bold">
+            <View
+              className="p-2 px-5 rounded-full"
+              style={{
+                backgroundColor: softenColor(darkenColor(chosenTheme, 75)),
+              }}
+            >
+              <Text
+                className="text-sm font-archivo-bold"
+                style={{ color: darkenColor(chosenTheme) }}
+              >
                 DOOR {order}
               </Text>
             </View>
             <View className="flex-1 h-0.5 w-full bg-[#ebc]"></View>
-            <Image
-              source={require("../../assets/square.png")}
-              className="w-10 h-10"
-            />
+            <Text className="text-3xl">📍</Text>
           </View>
-          <Text className="text-[#a55]">{label}</Text>
-          <Text className="text-2xl font-serif font-bold">{question}</Text>
+          <Text
+            className="font-archivo-bold text-sm"
+            style={{ color: darkenColor(chosenTheme) }}
+          >
+            {label}
+          </Text>
+          <Text className="text-3xl font-lora-bold text-[#333]">
+            {question}
+          </Text>
           <View className={"flex-" + flex}>{children}</View>
         </View>
       </ScrollView>
@@ -98,12 +119,13 @@ function Door({ order, label, question, flex, children }) {
               }
           }}
           className={
-            (entries["door" + order] ? "active:bg-[#b69]" : "opacity-50") +
-            " bottom-0 bg-[#c7a] rounded-full p-4"
+            (entries["door" + order] ? "" : "opacity-50") +
+            " bottom-0 rounded-full p-4"
           }
+          style={{ backgroundColor: darkenColor(chosenTheme) }}
         >
-          <Text className="text-center text-white text-lg font-bold">
-            {order < 4 ? "Next \u27F6" : "See my mood \u27F6"}
+          <Text className="text-center text-white text-lg font-archivo-bold">
+            {(order < 4 ? "Next" : "See my mood") + " \u27F6"}
           </Text>
         </Pressable>
       </View>
@@ -128,8 +150,8 @@ function Option({ title, description, icon }) {
         style={styles.shadow}
       >
         <Text className="text-4xl">{icon}</Text>
-        <Text className="text-xl font-bold font-serif">{title}</Text>
-        <Text className="text-[#999] text-sm">{description}</Text>
+        <Text className="text-xl font-lora-bold">{title}</Text>
+        <Text className="text-[#999] text-sm font-archivo">{description}</Text>
       </View>
     </Pressable>
   );
@@ -235,6 +257,9 @@ function Result() {
     onDemo,
     setOnDemo,
     removeFree,
+    setGoGCU,
+    darkenColor,
+    chosenTheme,
   } = useContext(Variables);
 
   // Mood Identification by Decision Tree Algorithm
@@ -257,31 +282,35 @@ function Result() {
     >
       <SafeAreaView>
         <View className="gap-4">
-          <Text className="text-center text-[#978] text-xl">
+          <Text className="text-center text-[#978] text-xl font-archivo">
             You're feeling
           </Text>
-          <Text className="text-center text-[#c93] font-serif font-bold text-5xl">
+          <Text className="text-center text-[#c93] font-lora-bold text-5xl ">
             {mood}
           </Text>
-          <Text className="text-center text-[#777]">{dailyStatus.comment}</Text>
+          <Text className="text-center text-[#777] font-archivo">
+            {dailyStatus.comment}
+          </Text>
 
           {/* Options selected */}
           <View className="flex-row flex-wrap justify-center gap-2">
             <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Text className="text-sm text-[#555]">
+              <Text className="text-sm text-[#555] font-archivo">
                 {entries.door1 == "High" ? "🔥 High" : "🌙 Low"} Energy
               </Text>
             </View>
             <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Text className="text-sm text-[#555]">
+              <Text className="text-sm text-[#555] font-archivo">
                 {entries.door3 == "Light" ? "🍀 Light" : "🌧 Heavy"}
               </Text>
             </View>
             <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Text className="text-sm text-[#555]">📅 {entries.door2}</Text>
+              <Text className="text-sm text-[#555] font-archivo">
+                📅 {entries.door2}
+              </Text>
             </View>
             <View className="self-center p-1 px-3 border border-[#aaa] rounded-full">
-              <Text className="text-sm text-[#555]">
+              <Text className="text-sm text-[#555] font-archivo">
                 {entries.door4 == "Academic"
                   ? "📚"
                   : entries.door4 == "Social"
@@ -294,7 +323,10 @@ function Result() {
 
           {/* Suggestions Section */}
           <View className="gap-4">
-            <Text className="text-[#c79] font-bold">
+            <Text
+              className="text-sm font-archivo-bold"
+              style={{ color: darkenColor(chosenTheme) }}
+            >
               {"\u{1F4A1} "} SUGGESTIONS FOR YOU
             </Text>
             <View className="flex gap-4">
@@ -303,14 +335,14 @@ function Result() {
                   className="bg-white flex-row items-center p-4 gap-3 rounded-2xl"
                   key={index}
                 >
-                  <Text className="bg-[#eee] text-2xl p-2 rounded-xl">
+                  <Text className="bg-[#f3f3f3] text-2xl p-2 rounded-xl">
                     {current.icon}
                   </Text>
                   <View className="flex-1">
-                    <Text className="font-bold font-serif text-lg">
+                    <Text className="font-lora-bold text-lg">
                       {current.title}
                     </Text>
-                    <Text className="text-sm text-[#777]">
+                    <Text className="text-sm text-[#777] font-archivo">
                       {current.details}
                     </Text>
                   </View>
@@ -318,12 +350,22 @@ function Result() {
               ))}
             </View>
             <Pressable
-              className={
-                (onDemo ? "hidden" : "") +
-                " bg-[#edd] border border-dashed border-[#a77] p-5 rounded-2xl active:bg-[#ecc]"
-              }
+              onPress={() => {
+                if (onDemo) {
+                  removeFree();
+                  navigation.navigate("Login");
+
+                  setTimeout(function () {
+                    setOnDemo(false);
+                  }, 700);
+                } else {
+                  setGoGCU(true);
+                  navigation.navigate("Main");
+                }
+              }}
+              className="bg-[#edd] border border-dashed border-[#a77] p-5 rounded-2xl active:bg-[#ecc]"
             >
-              <Text className="text-center text-[#b58] font-bold">
+              <Text className="text-center text-[#b58] font-archivo-bold text-sm">
                 Suggestions didn't help? Get GCU Support
               </Text>
             </Pressable>
@@ -378,9 +420,10 @@ function Result() {
                 navigation.navigate("Main");
               }
             }}
-            className="bg-[#c7a] rounded-full p-4 active:bg-[#b69] mb-20"
+            className="rounded-full p-4 mb-20"
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
-            <Text className="text-center text-white text-lg font-bold">
+            <Text className="text-center text-white text-lg font-archivo-bold">
               Done
             </Text>
           </Pressable>

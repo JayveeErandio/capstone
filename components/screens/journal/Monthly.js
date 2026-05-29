@@ -139,7 +139,7 @@ export default function Monthly() {
               <Text className="leading-none text-gray-500">❮</Text>
             </Pressable>
             <Text
-              className="w-36 text-center font-archivo"
+              className="w-36 text-center font-archivo-bold"
               style={{ color: darkenColor(chosenTheme) }}
             >
               {monthName.toUpperCase()} {new Date(chosenMonth).getFullYear()}
