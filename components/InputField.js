@@ -11,8 +11,12 @@ export default function InputField({
   value,
 }) {
   const [content, setContent] = useState("");
+  const [sync, setSync] = useState(false);
   useEffect(() => {
-    if (value != null) setContent(value);
+    if (value != null && !sync) {
+      setContent(value);
+      setSync(true);
+    }
   }, [value]);
   const [showPass, setShowPass] = useState(false);
 
