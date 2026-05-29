@@ -74,6 +74,7 @@ export default function NotificationScreen() {
         >
           UNREAD
         </Text>
+        {console.log(softenColor(chosenTheme))}
         {unread.map((current) => (
           <Pressable
             onPress={async () => {
@@ -82,7 +83,7 @@ export default function NotificationScreen() {
             className="p-4 rounded-2xl mb-3 border"
             style={{
               backgroundColor: softenColor(chosenTheme),
-              borderColor: chosenTheme,
+              borderColor: chosenTheme ?? "#aaa",
             }}
             key={current.id}
           >

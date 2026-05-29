@@ -810,7 +810,7 @@ export const Provider = ({ children }) => {
   };
 
   function softenColor(hex, amount = 0.8) {
-    if (hex == null) return "#fff";
+    if (hex == null) return softenColor("#c59");
     hex = hex.replace("#", "");
 
     // Expand shorthand (#0e0 -> #00ee00)
