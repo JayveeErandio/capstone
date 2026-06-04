@@ -20,6 +20,7 @@ export default function ProfileScreen() {
     darkenColor,
     chosenTheme,
     changeTheme,
+    setDailyStatus,
   } = useContext(Variables);
 
   const firstName = capitalizeWords(user["first_name"]);
@@ -72,7 +73,8 @@ export default function ProfileScreen() {
             </View>
             <Pressable
               onPress={async () => {
-                logout();
+                await logout();
+                setDailyStatus();
                 setUser(null);
               }}
               className="p-2 px-5 rounded-xl"

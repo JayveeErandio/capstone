@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { Variables } from "../../Variables";
-import { View, Text, TextInput, Image, Pressable } from "react-native";
+import { View, Text, TextInput, Image, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -85,11 +85,24 @@ export default function LoginScreen() {
                 setLoading(true);
                 const data = await login(loginField1, loginField2);
                 setLoading(false);
-                setValid(data);
-                if (data) {
+                if (data.success) {
                   setLoginField1("");
                   setLoginField2("");
+                } else if (data.reason == "deactivated") {
+                  Alert.alert(
+                    "Account banned",
+                    "Your account has been deactivated by the administrators due to possible unwanted or inappropriate activities. You can contact them through any available channel regarding this concern.",
+                    [
+                      {
+                        text: "OK",
+                      },
+                    ],
+                    { cancelable: true },
+                  );
+                  return;
                 }
+
+                setValid(data.success);
               }
             }}
             className={

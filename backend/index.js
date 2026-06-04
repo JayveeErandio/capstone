@@ -178,59 +178,72 @@ app.post("/login", async (req, res) => {
     password: password,
   });
 
-  if (data.session) {
-    // Student
-    const { data: student } = await supabase
-      .from("students")
-      .select("*")
-      .eq("student_number", studentNumber)
-      .single();
+  //If no account exists
+  if (!data.session) {
+    res.json({ success: false });
+    return;
+  }
 
-    // Status Days
-    const { data: statusDays } = await supabase
-      .from("status_days")
-      .select("date, id, journal, mood")
-      .eq("account_id", student.id);
+  //If exists, following command proceed below
 
-    // Pending Posts
-    const { data: pendingPosts } = await supabase
-      .from("pending_posts")
-      .select("id, mood, content")
-      .eq("student_id", student.id)
-      .order("id", { ascending: false });
+  // Student
+  const { data: student } = await supabase
+    .from("students")
+    .select("*")
+    .eq("student_number", studentNumber)
+    .single();
 
-    // Just a special function for posts and myposts
-    function groupReactions(posts, currentUserId) {
-      return posts.map((post) => {
-        const counts = {};
-        let myreact = null;
+  //Ichechek muna kung hindi deactivated or hindi banned yung account nya
+  if (student.status == "suspended" || student.status == "deactivated") {
+    res.json({ success: false, reason: "deactivated" });
+    return;
+  }
 
-        post.reactions?.forEach((r) => {
-          if (!r?.type) return;
+  // Status Days
+  const { data: statusDays } = await supabase
+    .from("status_days")
+    .select("date, id, journal, mood")
+    .eq("account_id", student.id);
 
-          // detect your reaction
-          if (r.student_id === currentUserId) {
-            myreact = r.type;
-            return; // 👈 skip counting your own reaction
-          }
+  // Pending Posts
+  const { data: pendingPosts } = await supabase
+    .from("pending_posts")
+    .select("id, mood, content")
+    .eq("student_id", student.id)
+    .order("id", { ascending: false });
 
-          // count others' reactions only
-          counts[r.type] = (counts[r.type] || 0) + 1;
-        });
+  // Just a special function for posts and myposts
+  function groupReactions(posts, currentUserId) {
+    return posts.map((post) => {
+      const counts = {};
+      let myreact = null;
 
-        return {
-          ...post,
-          reactions: counts,
-          myreact,
-        };
+      post.reactions?.forEach((r) => {
+        if (!r?.type) return;
+
+        // detect your reaction
+        if (r.student_id === currentUserId) {
+          myreact = r.type;
+          return; // 👈 skip counting your own reaction
+        }
+
+        // count others' reactions only
+        counts[r.type] = (counts[r.type] || 0) + 1;
       });
-    }
 
-    // Posts
-    const { data: posts } = await supabase
-      .from("posts")
-      .select(
-        `
+      return {
+        ...post,
+        reactions: counts,
+        myreact,
+      };
+    });
+  }
+
+  // Posts
+  const { data: posts } = await supabase
+    .from("posts")
+    .select(
+      `
             id, 
             mood,
             content,
@@ -244,14 +257,14 @@ app.post("/login", async (req, res) => {
                     student_id
             )
             `,
-      )
-      .order("id", { ascending: false })
-      .limit(7);
+    )
+    .order("id", { ascending: false })
+    .limit(7);
 
-    const { data: myPosts } = await supabase
-      .from("posts")
-      .select(
-        `
+  const { data: myPosts } = await supabase
+    .from("posts")
+    .select(
+      `
               id, 
               mood,
               content,
@@ -261,39 +274,38 @@ app.post("/login", async (req, res) => {
                       student_id
               )
               `,
-      )
-      .eq("student_id", student.id)
-      .order("id", { ascending: false });
+    )
+    .eq("student_id", student.id)
+    .order("id", { ascending: false });
 
-    const { data: notifications } = await supabase
-      .from("notifications")
-      .select("id, type, title, content, is_seen, datetime")
-      .eq("student_id", student.id)
-      .order("id", { ascending: false });
+  const { data: notifications } = await supabase
+    .from("notifications")
+    .select("id, type, title, content, is_seen, datetime")
+    .eq("student_id", student.id)
+    .order("id", { ascending: false });
 
-    const { data: appointments } = await supabase
-      .from("appointments")
-      .select("*")
-      .eq("student_id", student.id)
-      .order("id", { ascending: false });
+  const { data: appointments } = await supabase
+    .from("appointments")
+    .select("*")
+    .eq("student_id", student.id)
+    .order("id", { ascending: false });
 
-    const { data: chats } = await supabase
-      .from("chats")
-      .select("*")
-      .eq("student_id", student.id);
+  const { data: chats } = await supabase
+    .from("chats")
+    .select("*")
+    .eq("student_id", student.id);
 
-    res.json({
-      user: { ...student, success: true },
-      statusDays: statusDays,
-      pendingPosts: pendingPosts,
-      posts: groupReactions(posts, student.id),
-      myPosts: groupReactions(myPosts, student.id),
-      notifications: notifications,
-      appointments: appointments,
-      chats: chats,
-      success: true,
-    });
-  } else res.json({ success: false });
+  res.json({
+    user: { ...student, success: true },
+    statusDays: statusDays,
+    pendingPosts: pendingPosts,
+    posts: groupReactions(posts, student.id),
+    myPosts: groupReactions(myPosts, student.id),
+    notifications: notifications,
+    appointments: appointments,
+    chats: chats,
+    success: true,
+  });
 });
 
 app.post("/signup", async (req, res) => {
