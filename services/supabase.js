@@ -170,7 +170,10 @@ export async function updateJournal(journal, user_id) {
 }
 
 export async function updateFlagged(post_id) {
-  await supabase.from("posts").update({ isReported: true }).eq("id", post_id);
+  await supabase
+    .from("posts")
+    .update({ isReported: true, status: "flagged" })
+    .eq("id", post_id);
 }
 
 export async function getStudent(user_id) {

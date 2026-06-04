@@ -160,7 +160,6 @@ export const Provider = ({ children }) => {
     const result = await backend.login(studentID, password);
 
     if (result.success) {
-      console.log(result.chats);
       await storage.putUser(result.user);
       await storage.putStatusDays(result.statusDays);
       await storage.putPendingPost(result.pendingPosts);

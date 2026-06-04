@@ -114,12 +114,12 @@ export default function Main({ index, setPage }) {
                           [
                             {
                               text: "Yes",
-                              onPress: () => resolve(true), // User cancelled
+                              onPress: () => resolve(true), // User confirmed
                               style: "cancel",
                             },
                             {
                               text: "No",
-                              onPress: () => resolve(false), // User confirmed
+                              onPress: () => resolve(false), // User cancelled
                             },
                           ],
                           { cancelable: false },
