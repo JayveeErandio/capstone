@@ -380,6 +380,7 @@ export const Provider = ({ children }) => {
 
     setCurrentBook(newForm);
     await supabase.putAppointment({ ...newForm, student_id: user.id });
+    await supabase.takeSchedule(newForm.datetime);
     await supabase.putNotification({
       title: "Appointment Request",
       content:

@@ -136,12 +136,28 @@ export async function putAppointment(args) {
   await supabase.from("appointments").insert([args]);
 }
 
-export async function deleteAppointment(user_id) {
+export async function takeSchedule(args) {
   await supabase
+    .from("available_schedules")
+    .update({ isTaken: true })
+    .eq("datetime", args);
+}
+
+export async function deleteAppointment(user_id) {
+  const { data, error } = await supabase
     .from("appointments")
-    .delete()
+    .select("id, datetime")
     .eq("student_id", user_id)
     .eq("status", "Pending");
+
+  //Deletion
+  await supabase.from("appointments").delete().eq("id", data[0].id);
+
+  //Vacanting the schedule again
+  await supabase
+    .from("available_schedules")
+    .update({ isTaken: false })
+    .eq("datetime", data[0].datetime);
 }
 
 export async function updateDailyResult(result, user_id) {
