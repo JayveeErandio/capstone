@@ -62,3 +62,7 @@ export async function putStatusDay(statusDay, dailyResult, userID) {
     userID: userID,
   });
 }
+
+export async function getMorePosts(postID, userID) {
+  return await call("/getMorePosts", { postID: postID, userID: userID });
+}

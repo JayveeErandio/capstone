@@ -1,5 +1,12 @@
-import { View, Text, ScrollView, Pressable, Alert } from "react-native";
-import { useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { useContext, useEffect, useState } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ index, setPage }) {
@@ -12,44 +19,10 @@ export default function Main({ index, setPage }) {
     moodToEmoji,
     darkenColor,
     chosenTheme,
+    reloadMorePosts,
   } = useContext(Variables);
 
-  function formatTime(timestamp) {
-    const date = new Date(timestamp); // auto handles UTC → local
-    const now = new Date();
-
-    const diffMs = now - date;
-    const seconds = Math.floor(diffMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    // 🕒 Just now / seconds
-    if (seconds < 60) return "just now";
-
-    // ⏱ Minutes
-    if (minutes < 60) return `${minutes}m ago`;
-
-    // 🕐 Hours
-    if (hours < 24) return `${hours}h ago`;
-
-    // 📅 Yesterday
-    if (days === 1) return "yesterday";
-
-    // 📆 Days ago
-    if (days < 7) return `${days}d ago`;
-
-    // 🗓 Fallback to full date (e.g., Jan 18 | 6:38 PM)
-    return date
-      .toLocaleString("en-PH", {
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      })
-      .replace(",", " |");
-  }
+  const [reloading, setReloading] = useState(false);
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
@@ -229,9 +202,69 @@ export default function Main({ index, setPage }) {
           ) : (
             ""
           )}
-          <View className="h-28"></View>
+          <Pressable
+            onPress={async () => {
+              if (reloading) return;
+              setReloading(true);
+              await reloadMorePosts();
+              setReloading(false);
+            }}
+            className={" bottom-0 rounded-full p-4 items-center justify-center"}
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
+          >
+            <ActivityIndicator
+              color="white"
+              className={(reloading ? "" : "opacity-0") + " absolute"}
+            />
+            <Text
+              className={
+                (!reloading ? "" : "opacity-0") +
+                " text-center text-white text-lg font-archivo-bold"
+              }
+            >
+              Reload More
+            </Text>
+          </Pressable>
+          <View className="h-36"></View>
         </ScrollView>
       </View>
     </View>
   );
+}
+
+function formatTime(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const diffMs = now - date;
+  const seconds = Math.floor(diffMs / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  // 🕒 Just now / seconds
+  if (seconds < 60) return "just now";
+
+  // ⏱ Minutes
+  if (minutes < 60) return `${minutes}m ago`;
+
+  // 🕐 Hours
+  if (hours < 24) return `${hours}h ago`;
+
+  // 📅 Yesterday
+  if (days === 1) return "yesterday";
+
+  // 📆 Days ago
+  if (days < 7) return `${days}d ago`;
+
+  // 🗓 Fallback to full date (e.g., Jan 18 | 6:38 PM)
+  return date
+    .toLocaleString("en-PH", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .replace(",", " |");
 }

@@ -232,6 +232,16 @@ export async function updatePassword(password) {
   return { data, error };
 }
 
+export async function getMorePosts(id) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .lt("id", id)
+    .order("id", { ascending: false })
+    .limit(7);
+  return data;
+}
+
 export async function tae() {
   const token = await registerForPushNotificationsAsync();
 

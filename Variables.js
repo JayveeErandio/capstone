@@ -353,6 +353,14 @@ export const Provider = ({ children }) => {
     });
   };
 
+  const reloadMorePosts = async () => {
+    const newPosts = await backend.getMorePosts(
+      posts[posts.length - 1].id,
+      user.id,
+    );
+    setPosts([...posts, ...newPosts]);
+  };
+
   const readNotification = async (notif_id) => {
     const newNotifs = notifications.map((current) => {
       if (notif_id != null)
@@ -973,6 +981,7 @@ export const Provider = ({ children }) => {
         setLoginField1,
         loginField2,
         setLoginField2,
+        reloadMorePosts,
       }}
     >
       {children}

@@ -437,6 +437,60 @@ app.post("/getSchedules", async (req, res) => {
   );
 });
 
+app.post("/getMorePosts", async (req, res) => {
+  const { postID, userID } = req.body;
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `
+            id, 
+            mood,
+            content,
+            datetime,
+            student_id,
+            students (
+                    anonymous_name
+            ),
+            reactions (
+                    type,
+                    student_id
+            )
+            `,
+    )
+    .lt("id", postID)
+    .order("id", { ascending: false })
+    .limit(7);
+
+  function groupReactions(posts, currentUserId) {
+    return posts.map((post) => {
+      const counts = {};
+      let myreact = null;
+
+      post.reactions?.forEach((r) => {
+        if (!r?.type) return;
+
+        // detect your reaction
+        if (r.student_id === currentUserId) {
+          myreact = r.type;
+          return; // 👈 skip counting your own reaction
+        }
+
+        // count others' reactions only
+        counts[r.type] = (counts[r.type] || 0) + 1;
+      });
+
+      return {
+        ...post,
+        reactions: counts,
+        myreact,
+      };
+    });
+  }
+
+  res.json(groupReactions(data, userID));
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
