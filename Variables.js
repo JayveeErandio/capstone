@@ -157,6 +157,8 @@ export const Provider = ({ children }) => {
   };
 
   const login = async (studentID, password) => {
+    if (!(await supabase.login(studentID, password))) return { success: false };
+
     const result = await backend.login(studentID, password);
 
     if (result.success) {
@@ -172,8 +174,6 @@ export const Provider = ({ children }) => {
 
       return result;
     }
-
-    return result;
   };
 
   const logout = async () => {

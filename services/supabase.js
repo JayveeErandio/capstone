@@ -242,6 +242,14 @@ export async function getMorePosts(id) {
   return data;
 }
 
+export async function login(studentNumber, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: `${studentNumber}@moodlink.com`,
+    password: password,
+  });
+  if (data.session) return true;
+}
+
 export async function tae() {
   const token = await registerForPushNotificationsAsync();
 
