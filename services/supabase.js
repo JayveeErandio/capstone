@@ -1,5 +1,6 @@
 import { supabase } from "../lib/supabase";
 import * as Notifications from "expo-notifications";
+import * as backend from "./backend";
 
 let channel;
 export async function realtime(setter, user_id) {
@@ -27,6 +28,8 @@ export async function removeRealtimeNotification() {
 }
 
 export async function logout() {
+  console.log(83745);
+  backend.consolelog("The user's session is being logged out");
   await supabase.auth.signOut();
 
   if ((await Notifications.requestPermissionsAsync()).status == "granted") {
@@ -226,6 +229,7 @@ export async function putStudent(record) {
 }
 
 export async function updatePassword(password) {
+  backend.consolelog("Auth session changing its password");
   const { data, error } = await supabase.auth.updateUser({
     password: password,
   });

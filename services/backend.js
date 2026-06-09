@@ -2,6 +2,7 @@ async function call(url, args) {
   const response = await fetch(
     "http://192.168.0.101:3000" + url,
     //"https://capstone-xuwy.onrender.com" + url,
+    //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
       headers: {
@@ -39,7 +40,7 @@ export async function assessFree(entries) {
 }
 
 export async function login(studentNumber, password) {
-  console.log(studentNumber, password);
+  console.log(3432);
   return await call("/login", {
     studentNumber: studentNumber,
     password: password,
@@ -66,4 +67,8 @@ export async function putStatusDay(statusDay, dailyResult, userID) {
 
 export async function getMorePosts(postID, userID) {
   return await call("/getMorePosts", { postID: postID, userID: userID });
+}
+
+export async function consolelog(value) {
+  await call("/console", { value: value });
 }

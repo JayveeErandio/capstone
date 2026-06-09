@@ -171,6 +171,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  console.log(232323);
   const { studentNumber, password } = req.body;
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -489,6 +490,10 @@ app.post("/getMorePosts", async (req, res) => {
   }
 
   res.json(groupReactions(data, userID));
+});
+
+app.post("/console", async (req, res) => {
+  console.log(req.body.value);
 });
 
 const PORT = process.env.PORT || 3000;

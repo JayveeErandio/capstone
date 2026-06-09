@@ -73,11 +73,9 @@ export default function ProfileScreen() {
             </View>
             <Pressable
               onPress={async () => {
-                await logout();
-                setDailyStatus();
-                setUser(null);
+                logout();
               }}
-              className="p-2 px-5 rounded-xl"
+              className="p-2 px-5 rounded-xl opacity-90 active:opacity-100"
               style={{ backgroundColor: darkenColor(chosenTheme) }}
             >
               <Text className="text-white font-archivo-bold">Log Out</Text>

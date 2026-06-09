@@ -157,10 +157,11 @@ export const Provider = ({ children }) => {
   };
 
   const login = async (studentID, password) => {
-    if (!(await supabase.login(studentID, password))) return { success: false };
+    const session = await supabase.login(studentID, password);
+    if (!session) return { success: false };
 
     const result = await backend.login(studentID, password);
-
+    console.log(34567890);
     if (result.success) {
       await storage.putUser(result.user);
       await storage.putStatusDays(result.statusDays);
@@ -175,16 +176,13 @@ export const Provider = ({ children }) => {
       return result;
     }
   };
-  /*console.log(
-    posts.map((current) => {
-      console.log(current.student_id == user.id);
-      return current;
-    }),
-  );*/
+
   const logout = async () => {
+    backend.consolelog("User " + user.id + " is logging out");
+    setUser(null);
     setDailyStatus();
     setCanSend(true);
-    await supabase.logout();
+    supabase.logout();
     await storage.deleteAll();
     deleteAll();
     await supabase.removeRealtimeNotification();
@@ -469,6 +467,7 @@ export const Provider = ({ children }) => {
   };
 
   const changePassword = async (password) => {
+    backend.consolelog("User " + user.id + " is changing his password");
     return await supabase.updatePassword(password);
   };
 
