@@ -20,6 +20,7 @@ export default function Main({ index, setPage }) {
     darkenColor,
     chosenTheme,
     reloadMorePosts,
+    user,
   } = useContext(Variables);
 
   const [reloading, setReloading] = useState(false);
@@ -70,7 +71,9 @@ export default function Main({ index, setPage }) {
                   </Text>
                   <View>
                     <Text className="text-[#773] font-archivo-bold">
-                      {current.students.anonymous_name}
+                      {current.student_id == user.id
+                        ? user.anonymous_name
+                        : current.students.anonymous_name}
                     </Text>
                     <Text className="text-sm text-[#777] font-archivo">
                       {current.mood} • {formatTime(current.datetime)}

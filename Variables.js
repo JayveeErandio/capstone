@@ -175,7 +175,12 @@ export const Provider = ({ children }) => {
       return result;
     }
   };
-
+  /*console.log(
+    posts.map((current) => {
+      console.log(current.student_id == user.id);
+      return current;
+    }),
+  );*/
   const logout = async () => {
     setDailyStatus();
     setCanSend(true);
