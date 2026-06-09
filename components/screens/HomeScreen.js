@@ -11,7 +11,7 @@ async function sendTestNotification() {
       title: "Test",
       body: "Hello",
     },
-    trigger: null, // immediate
+    trigger: null,
   });
 }
 
@@ -38,6 +38,14 @@ export default function HomeScreen() {
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
 
+  const greetTime = function () {
+    const hour = new Date().getHours();
+    if (hour < 6) return "midnight";
+    else if (hour < 12) return "morning";
+    else if (hour < 18) return "afternoon";
+    else return "evening";
+  };
+
   return (
     <View className="">
       <ScrollView>
@@ -46,7 +54,7 @@ export default function HomeScreen() {
           <View className="flex-row gap-7 pb-5">
             <View className="flex-1 gap-2">
               <Text className="text-[#777] font-archivo">
-                Good morning {"\u2728"}
+                Good {greetTime()} ✨
               </Text>
               <Text className="text-3xl font-lora-bold text-[#333]">
                 How are you feeling today?

@@ -1,14 +1,6 @@
 import { View, Text, Dimensions, Pressable } from "react-native";
 import { Variables } from "../../../Variables";
 import { useState, useContext } from "react";
-import {
-  BarChart,
-  LineChart,
-  PieChart,
-  PopulationPyramid,
-  RadarChart,
-  BubbleChart,
-} from "react-native-gifted-charts";
 import Graph from "../../Graph";
 
 export default function Weekly() {

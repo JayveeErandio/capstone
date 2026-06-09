@@ -1,6 +1,5 @@
 import { View, Text, FlatList, Pressable } from "react-native";
 import { useState, useContext, useEffect } from "react";
-import { LineChart } from "react-native-chart-kit";
 import { Variables } from "../../../Variables";
 import Graph from "../../Graph";
 
