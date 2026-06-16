@@ -142,8 +142,8 @@ export async function putAppointment(args) {
 export async function takeSchedule(args) {
   await supabase
     .from("available_schedules")
-    .update({ isTaken: true })
-    .eq("datetime", args);
+    .update({ takenBy: args.id })
+    .eq("datetime", args.value);
 }
 
 export async function deleteAppointment(user_id) {
@@ -159,7 +159,7 @@ export async function deleteAppointment(user_id) {
   //Vacanting the schedule again
   await supabase
     .from("available_schedules")
-    .update({ isTaken: false })
+    .update({ takenBy: null })
     .eq("datetime", data[0].datetime);
 }
 

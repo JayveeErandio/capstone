@@ -171,7 +171,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log(232323);
   const { studentNumber, password } = req.body;
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -428,7 +427,7 @@ app.post("/getSchedules", async (req, res) => {
   const { data } = await supabase
     .from("available_schedules")
     .select("datetime")
-    .eq("takenBy", null)
+    .is("takenBy", null)
     .order("datetime", { ascending: true });
 
   res.json(

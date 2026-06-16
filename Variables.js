@@ -161,7 +161,7 @@ export const Provider = ({ children }) => {
     if (!session) return { success: false };
 
     const result = await backend.login(studentID, password);
-    console.log(34567890);
+
     if (result.success) {
       await storage.putUser(result.user);
       await storage.putStatusDays(result.statusDays);
@@ -391,7 +391,7 @@ export const Provider = ({ children }) => {
 
     setCurrentBook(newForm);
     await supabase.putAppointment({ ...newForm, student_id: user.id });
-    await supabase.takeSchedule(newForm.datetime);
+    await supabase.takeSchedule({ value: newForm.datetime, id: user.id });
     await supabase.putNotification({
       title: "Appointment Request",
       content:
