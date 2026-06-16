@@ -428,7 +428,7 @@ app.post("/getSchedules", async (req, res) => {
   const { data } = await supabase
     .from("available_schedules")
     .select("datetime")
-    .eq("isTaken", false)
+    .eq("takenBy", null)
     .order("datetime", { ascending: true });
 
   res.json(
