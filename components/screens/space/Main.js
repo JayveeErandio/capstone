@@ -74,7 +74,9 @@ export default function Main({ index, setPage }) {
               className="bg-white rounded-2xl p-5 border gap-2 mb-5 overflow-hidden"
               style={{
                 borderColor:
-                  current.student_id == user.id ? chosenTheme : "white",
+                  current.student_id == user.id
+                    ? (chosenTheme ?? "#c59")
+                    : "white",
               }}
               key={index}
             >

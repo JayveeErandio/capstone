@@ -12,8 +12,8 @@ export default function ChatbotScreen() {
     send,
     darkenColor,
     chosenTheme,
-    availPost,
-    setAvailPost,
+    availChat,
+    setAvailChat,
   } = useContext(Variables);
   const navigation = useNavigation();
   const scrollViewRef = useRef();
@@ -160,7 +160,7 @@ export default function ChatbotScreen() {
             ></TextInput>
             <View className="flex-row justify-between">
               <Text className="text-[#aaa] text-xs">
-                Available Post: {availPost}
+                Available Post: {availChat}
               </Text>
               <Text
                 className={
@@ -175,14 +175,14 @@ export default function ChatbotScreen() {
           </View>
           <Pressable
             onPress={() => {
-              if (!(canSend && message != "" && availPost > 0)) return;
+              if (!(canSend && message != "" && availChat > 0)) return;
 
-              setAvailPost(availPost - 1);
+              setAvailChat(availChat - 1);
               send(message);
               setMessage("");
             }}
             className={
-              (canSend && message != "" && availPost > 0 ? "" : "opacity-50") +
+              (canSend && message != "" && availChat > 0 ? "" : "opacity-50") +
               " w-12 h-max rounded-xl justify-center"
             }
             style={{ backgroundColor: darkenColor(chosenTheme) }}

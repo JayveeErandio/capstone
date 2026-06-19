@@ -11,11 +11,12 @@ import { Variables } from "../../../Variables";
 import { useContext } from "react";
 
 export default function Create({ index, setPage }) {
-  const { putPost, darkenColor, chosenTheme } = useContext(Variables);
+  const { putPost, darkenColor, chosenTheme, availPost, setAvailPost } =
+    useContext(Variables);
   const [collapse, setCollapse] = useState(true);
   const [mood, setMood] = useState();
   const [text, setText] = useState("");
-  const maxChar = 75;
+  const maxChar = 150;
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
@@ -31,7 +32,7 @@ export default function Create({ index, setPage }) {
       </View>
 
       <ScrollView className="bg-[#eee]">
-        <View className="gap-5 pb-5">
+        <View className="gap-5 mb-5">
           {/* Anonymity Notice */}
           <View className="flex-row bg-[#ffd] border border-[#cc8] rounded-xl p-4 gap-3">
             <Text className="text-xl">⚠️</Text>
@@ -112,20 +113,25 @@ export default function Create({ index, setPage }) {
           <Text className="text-[#c57] text-sm font-archivo-bold">
             YOUR POST
           </Text>
-          <View>
+          <View className="bg-white rounded-xl p-4 -mt-3 ">
             <TextInput
               onChangeText={setText}
               multiline
-              className="bg-white rounded-xl p-4 h-24 text-[#555] -mt-3 font-archivo"
+              className="text-[#555] font-archivo h-20 pt-0"
               textAlignVertical="top"
               placeholder="Share what's on your mind... this is your space"
               value={text}
               placeholderTextColor="#aaa"
               maxLength={maxChar}
             ></TextInput>
-            <Text className="absolute bottom-0 right-0 m-2 text-sm font-archivo opacity-50">
-              {text.length}/{maxChar}
-            </Text>
+            <View className="flex-row justify-between">
+              <Text className="text-xs font-archivo opacity-50">
+                Available Post: {availPost}
+              </Text>
+              <Text className="text-xs font-archivo opacity-50">
+                {text.length}/{maxChar}
+              </Text>
+            </View>
           </View>
 
           {/* AI Check Reminder */}
@@ -140,8 +146,10 @@ export default function Create({ index, setPage }) {
           {/* Post Submit Button */}
           <Pressable
             onPress={async () => {
+              if (!(mood && text)) return;
               putPost(mood, text);
               setPage();
+              setAvailPost(availPost - 1);
               await new Promise((resolve) => {
                 Alert.alert(
                   "Verifying your post",
@@ -156,9 +164,7 @@ export default function Create({ index, setPage }) {
                 );
               });
             }}
-            className={
-              (mood && text ? "" : "opacity-50") + " p-4 rounded-full "
-            }
+            className={(mood && text ? "" : "opacity-50") + " p-4 rounded-full"}
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-center font-archivo-bold text-lg">
