@@ -24,6 +24,8 @@ export default function NotificationScreen() {
         return "🚀";
       case "gcu_review":
         return "🔎";
+      case "set_appointment":
+        return "📅";
     }
   };
 
