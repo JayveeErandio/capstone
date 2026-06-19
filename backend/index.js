@@ -171,6 +171,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  console.log("hereayy");
   const { studentNumber, password } = req.body;
 
   const { data, error } = await supabase.auth.signInWithPassword({

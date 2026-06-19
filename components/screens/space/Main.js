@@ -5,9 +5,17 @@ import {
   Pressable,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { Variables } from "../../../Variables";
+import Svg, {
+  Defs,
+  Rect,
+  LinearGradient,
+  Stop,
+  RadialGradient,
+} from "react-native-svg";
 
 export default function Main({ index, setPage }) {
   const {
@@ -18,12 +26,17 @@ export default function Main({ index, setPage }) {
     moodToColor,
     moodToEmoji,
     darkenColor,
+    softenColor,
     chosenTheme,
     reloadMorePosts,
     user,
   } = useContext(Variables);
 
   const [reloading, setReloading] = useState(false);
+  const gradientUniqueId = "grad${'red'}+${'yellow'}".replace(
+    /[^a-zA-Z0-9 ]/g,
+    "",
+  );
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
@@ -57,7 +70,14 @@ export default function Main({ index, setPage }) {
       <View className="flex-1 bg-[#eee]">
         <ScrollView className="flex-1">
           {posts.map((current, index) => (
-            <View className="bg-white p-5 rounded-2xl gap-2 mb-5" key={index}>
+            <View
+              className="bg-white rounded-2xl p-5 border gap-2 mb-5 overflow-hidden"
+              style={{
+                borderColor:
+                  current.student_id == user.id ? chosenTheme : "white",
+              }}
+              key={index}
+            >
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
                   <Text
@@ -71,9 +91,14 @@ export default function Main({ index, setPage }) {
                   </Text>
                   <View>
                     <Text className="text-[#773] font-archivo-bold">
-                      {current.student_id == user.id
-                        ? user.anonymous_name
-                        : current.students.anonymous_name}
+                      {current.student_id == user.id ? (
+                        <>
+                          <Text>{user.anonymous_name}</Text>
+                          <Text className="text-[#444]"> • You</Text>
+                        </>
+                      ) : (
+                        current.students.anonymous_name
+                      )}
                     </Text>
                     <Text className="text-sm text-[#777] font-archivo">
                       {current.mood} • {formatTime(current.datetime)}

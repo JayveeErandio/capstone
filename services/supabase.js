@@ -28,7 +28,6 @@ export async function removeRealtimeNotification() {
 }
 
 export async function logout() {
-  console.log(83745);
   backend.consolelog("The user's session is being logged out");
   await supabase.auth.signOut();
 

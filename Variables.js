@@ -27,6 +27,7 @@ export const Provider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [canSend, setCanSend] = useState(true);
   const [chosenTheme, setChosenTheme] = useState();
+  const [availPost, setAvailPost] = useState(4);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -986,6 +987,8 @@ export const Provider = ({ children }) => {
         loginField2,
         setLoginField2,
         reloadMorePosts,
+        availPost,
+        setAvailPost,
       }}
     >
       {children}

@@ -6,12 +6,19 @@ import { useState, useRef, useContext, useEffect } from "react";
 import { Variables } from "../../Variables";
 
 export default function ChatbotScreen() {
-  const { chats, canSend, send, darkenColor, chosenTheme } =
-    useContext(Variables);
+  const {
+    chats,
+    canSend,
+    send,
+    darkenColor,
+    chosenTheme,
+    availPost,
+    setAvailPost,
+  } = useContext(Variables);
   const navigation = useNavigation();
   const scrollViewRef = useRef();
   const [message, setMessage] = useState("");
-
+  const maxLength = 120;
   const [time, setTime] = useState(7);
 
   useEffect(() => {
@@ -140,24 +147,43 @@ export default function ChatbotScreen() {
 
         {/* Chat Input */}
         <View className="bg-white flex-row p-3 gap-2">
-          <TextInput
-            onChangeText={setMessage}
-            className="flex-1 bg-[#eee] rounded-xl px-3 font-archivo"
-            placeholder="Type a message..."
-            placeholderTextColor="#aaa"
-            style={{ color: "#333" }}
-            value={message}
-          ></TextInput>
+          <View className="flex-1 bg-[#eee] rounded-xl overflow-hidden px-3">
+            <TextInput
+              onChangeText={setMessage}
+              className="font-archivo"
+              placeholder="Type a message..."
+              placeholderTextColor="#aaa"
+              style={{ color: "#333" }}
+              value={message}
+              multiline
+              maxLength={maxLength}
+            ></TextInput>
+            <View className="flex-row justify-between">
+              <Text className="text-[#aaa] text-xs">
+                Available Post: {availPost}
+              </Text>
+              <Text
+                className={
+                  (message.length >= maxLength
+                    ? "text-[#c00]"
+                    : "text-[#aaa]") + " text-right pb-1 text-xs"
+                }
+              >
+                {message.length}/{maxLength}
+              </Text>
+            </View>
+          </View>
           <Pressable
             onPress={() => {
-              if (!(canSend && message != "")) return;
+              if (!(canSend && message != "" && availPost > 0)) return;
 
+              setAvailPost(availPost - 1);
               send(message);
               setMessage("");
             }}
             className={
-              (canSend && message != "" ? "" : "opacity-50") +
-              " w-12 h-12 rounded-xl justify-center"
+              (canSend && message != "" && availPost > 0 ? "" : "opacity-50") +
+              " w-12 h-max rounded-xl justify-center"
             }
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
