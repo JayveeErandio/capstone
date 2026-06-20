@@ -14,7 +14,7 @@ export default function SignupScreen() {
   const [yearLevel, setYearLevel] = useState("");
   const [section, setSection] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
-  const [password, setPassword] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
   const [anonymous, setAnonymous] = useState("newbie");
   const [invalid, setInvalid] = useState(false);
 
@@ -92,11 +92,13 @@ export default function SignupScreen() {
             />
           </View>
           <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">PASSWORD</Text>
+            <Text className="font-archivo-bold text-[#333]">
+              CONTACT NUMBER
+            </Text>
             <InputField
-              onChangeText={setPassword}
-              password
-              placeholder="Enter your password"
+              onChangeText={setContactNumber}
+              numeric
+              placeholder="e.g. 09123456789"
             />
           </View>
           <Text
@@ -116,7 +118,7 @@ export default function SignupScreen() {
                 section != "" &&
                 anonymous != "" &&
                 studentNumber != "" &&
-                password != ""
+                contactNumber != ""
               ) {
                 const result = await signup({
                   last_name: lastName,
@@ -124,7 +126,7 @@ export default function SignupScreen() {
                   year_level: yearLevel,
                   section: section,
                   student_number: studentNumber,
-                  daily_result: password,
+                  contact_number: contactNumber,
                   anonymous_name: anonymous,
                 });
 
@@ -151,7 +153,7 @@ export default function SignupScreen() {
               section != "" &&
               anonymous != "" &&
               studentNumber != "" &&
-              password != ""
+              contactNumber != ""
                 ? "active:bg-[#b59]"
                 : "opacity-50")
             }
