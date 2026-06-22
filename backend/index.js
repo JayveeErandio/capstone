@@ -343,9 +343,9 @@ app.post("/signup", async (req, res) => {
 
 app.post("/ai/assess", async (req, res) => {
   const { entries, relatedDates, userID } = req.body;
-  const result = JSON.parse(
-    (await assess(entries, relatedDates)).slice(8).slice(0, -4),
-  );
+  let feedback = await assess(entries, relatedDates);
+  if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
+  const result = JSON.parse(feedback);
 
   await supabase
     .from("students")
@@ -375,13 +375,18 @@ app.post("/ai/assess", async (req, res) => {
 
 app.post("/ai/assessFree", async (req, res) => {
   const { entries } = req.body;
-  const result = JSON.parse((await assess(entries, [])).slice(8).slice(0, -4));
+  let feedback = await assess(entries, []);
+  if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
+  const result = JSON.parse(feedback);
   res.json({ result: result });
 });
 
 app.post("/ai/verifypost", async (req, res) => {
   const { text } = req.body;
-  const result = JSON.parse((await verifyPost(text)).slice(8).slice(0, -4));
+  let feedback = await verifyPost(text);
+  if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
+  const result = JSON.parse(feedback);
+  console.log(result);
   res.json(result);
 });
 
