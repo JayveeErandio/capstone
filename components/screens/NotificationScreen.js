@@ -20,7 +20,7 @@ export default function NotificationScreen() {
   } = useContext(Variables);
   const read = notifications.filter((current) => current.is_seen);
   const unread = notifications.filter((current) => !current.is_seen);
-  console.log(notifications);
+
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {

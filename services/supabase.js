@@ -139,6 +139,57 @@ export async function reloadNotification(latest_id, user_id) {
   return 12;
 }
 
+export async function getLatestPosts(latest_id, user_id) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `
+            id, 
+            mood,
+            content,
+            datetime,
+            student_id,
+            students (
+                    anonymous_name
+            ),
+            reactions (
+                    type,
+                    student_id
+            )
+            `,
+    )
+    .gt("id", latest_id)
+    .order("id", { ascending: false });
+
+  function groupReactions(posts, currentUserId) {
+    return posts.map((post) => {
+      const counts = {};
+      let myreact = null;
+
+      post.reactions?.forEach((r) => {
+        if (!r?.type) return;
+
+        // detect your reaction
+        if (r.student_id === currentUserId) {
+          myreact = r.type;
+          return; // 👈 skip counting your own reaction
+        }
+
+        // count others' reactions only
+        counts[r.type] = (counts[r.type] || 0) + 1;
+      });
+
+      return {
+        ...post,
+        reactions: counts,
+        myreact,
+      };
+    });
+  }
+
+  return groupReactions(data, user_id);
+}
+
 export async function putAppointment(args) {
   await supabase.from("appointments").insert([args]);
 }

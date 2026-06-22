@@ -366,6 +366,15 @@ export const Provider = ({ children }) => {
     setPosts([...posts, ...newPosts]);
   };
 
+  const getLatestPosts = async (latest_id) => {
+    const newValue = [
+      ...(await supabase.getLatestPosts(latest_id, user.id)),
+      ...posts,
+    ];
+    setPosts(newValue);
+    storage.putPosts(newValue);
+  };
+
   const readNotification = async (notif_id) => {
     const newNotifs = notifications.map((current) => {
       if (notif_id != null)
@@ -949,6 +958,7 @@ export const Provider = ({ children }) => {
         deletePost,
         updateReact,
         putPost,
+        getLatestPosts,
         notifications,
         readNotification,
         reloadNotification,

@@ -6,16 +6,10 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { Variables } from "../../../Variables";
-import Svg, {
-  Defs,
-  Rect,
-  LinearGradient,
-  Stop,
-  RadialGradient,
-} from "react-native-svg";
 
 export default function Main({ index, setPage }) {
   const {
@@ -29,14 +23,24 @@ export default function Main({ index, setPage }) {
     softenColor,
     chosenTheme,
     reloadMorePosts,
+    getLatestPosts,
     user,
   } = useContext(Variables);
 
   const [reloading, setReloading] = useState(false);
-  const gradientUniqueId = "grad${'red'}+${'yellow'}".replace(
-    /[^a-zA-Z0-9 ]/g,
-    "",
-  );
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+
+    // Simulate fetching data
+    await getLatestPosts(
+      posts.reduce((max, current) => (current.id > max.id ? current : max)).id,
+    );
+
+    setRefreshing(false);
+  };
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
@@ -68,7 +72,12 @@ export default function Main({ index, setPage }) {
 
       {/* Newsfeed Posts */}
       <View className="flex-1 bg-[#eee]">
-        <ScrollView className="flex-1">
+        <ScrollView
+          className="flex-1"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {posts.map((current, index) => (
             <View
               className="bg-white rounded-2xl p-5 border gap-2 mb-5 overflow-hidden"
