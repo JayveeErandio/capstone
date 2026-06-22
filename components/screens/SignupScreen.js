@@ -15,6 +15,7 @@ export default function SignupScreen() {
   const [section, setSection] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
   const [anonymous, setAnonymous] = useState("newbie");
   const [invalid, setInvalid] = useState(false);
 
@@ -101,6 +102,13 @@ export default function SignupScreen() {
               placeholder="e.g. 09123456789"
             />
           </View>
+          <View className="gap-1">
+            <Text className="font-archivo-bold text-[#333]">EMAIL ADDRESS</Text>
+            <InputField
+              onChangeText={setEmailAddress}
+              placeholder="e.g. juandelacruz@gmail.com"
+            />
+          </View>
           <Text
             className={
               "text-center -my-2 text-red-700 text-sm opacity-" +
@@ -118,7 +126,8 @@ export default function SignupScreen() {
                 section != "" &&
                 anonymous != "" &&
                 studentNumber != "" &&
-                contactNumber != ""
+                contactNumber != "" &&
+                emailAddress != ""
               ) {
                 const result = await signup({
                   last_name: lastName,
@@ -128,6 +137,7 @@ export default function SignupScreen() {
                   student_number: studentNumber,
                   contact_number: contactNumber,
                   anonymous_name: anonymous,
+                  personal_email: emailAddress,
                 });
 
                 if (result.success) {
@@ -153,7 +163,8 @@ export default function SignupScreen() {
               section != "" &&
               anonymous != "" &&
               studentNumber != "" &&
-              contactNumber != ""
+              contactNumber != "" &&
+              emailAddress != ""
                 ? "active:bg-[#b59]"
                 : "opacity-50")
             }

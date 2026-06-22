@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    "http://192.168.0.100:3000" + url,
-    //"https://capstone-xuwy.onrender.com" + url,
+    //"http://192.168.0.100:3000" + url,
+    "https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
@@ -51,6 +51,7 @@ export async function getSchedules() {
 }
 
 export async function putStudent(record) {
+  console.log(record);
   return await call("/signup", {
     record: JSON.stringify(record),
   });
