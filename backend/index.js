@@ -259,6 +259,7 @@ app.post("/login", async (req, res) => {
             )
             `,
     )
+    .neq("status", "flagged")
     .order("id", { ascending: false })
     .limit(7);
 
@@ -459,6 +460,7 @@ app.post("/getMorePosts", async (req, res) => {
             )
             `,
     )
+    .neq("status", "flagged")
     .lt("id", postID)
     .order("id", { ascending: false })
     .limit(7);
