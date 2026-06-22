@@ -171,7 +171,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log("hereayy");
   const { studentNumber, password } = req.body;
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -503,3 +502,16 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+//Backend's automated actions
+
+// Deletion of Notifications older than 30 days
+setInterval(async function () {
+  let today = new Date();
+  today.setDate(today.getDate() - 30);
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .delete("*")
+    .lte("datetime", today.toISOString());
+}, 43200000);

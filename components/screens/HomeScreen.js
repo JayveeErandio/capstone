@@ -34,6 +34,7 @@ export default function HomeScreen() {
     moodToEmoji,
     chosenTheme,
     darkenColor,
+    softenColor,
   } = useContext(Variables);
   const prof_initialname =
     user["first_name"][0].toUpperCase() + user["last_name"][0].toUpperCase();
@@ -73,7 +74,10 @@ export default function HomeScreen() {
           </View>
 
           {/* Mood CheckIn */}
-          <View className="bg-[#f1e6f4] p-4 gap-4 rounded-lg">
+          <View
+            className=" p-4 gap-4 rounded-lg"
+            style={{ backgroundColor: softenColor(chosenTheme, 0.6) }}
+          >
             <View className="flex-row gap-2 items-center">
               <Text className="text-4xl">🚪</Text>
               <View className="flex-1 gap-1">
@@ -119,7 +123,10 @@ export default function HomeScreen() {
           </View>
 
           {/* User's Progress */}
-          <View className="bg-white mt-6 p-5 rounded-3xl gap-3">
+          <View
+            className=" mt-6 p-5 rounded-3xl gap-3"
+            style={{ backgroundColor: softenColor(chosenTheme, 0.9) }}
+          >
             <Text
               className="font-archivo-bold text-sm"
               style={{ color: darkenColor(chosenTheme) }}
@@ -127,7 +134,10 @@ export default function HomeScreen() {
               YOUR PROGRESS
             </Text>
             <View className="gap-2">
-              <View className="bg-[#f5e0ef] flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center">
+              <View
+                className="flex-row gap-3 p-4 rounded-2xl border border-[#e0cbd2] items-center"
+                style={{ backgroundColor: softenColor(chosenTheme, 0.6) }}
+              >
                 <Text className="text-4xl">{curStreak >= 3 ? "🔥" : "⏳"}</Text>
                 <View className="flex-1">
                   <Text

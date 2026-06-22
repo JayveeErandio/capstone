@@ -203,6 +203,16 @@ export const Provider = ({ children }) => {
     });
   };
 
+  const changeUserColumn = async (record) => {
+    await supabase.changeUserColumn(record, user.id);
+    setUser({
+      ...user,
+      anonymous_name: record.anonymous_name,
+      section: record.section,
+      year_level: record.year_level,
+    });
+  };
+
   const signup = async (record) => {
     return await backend.putStudent(record);
   };
@@ -387,7 +397,7 @@ export const Provider = ({ children }) => {
     await supabase.readNotification(notif_id, user.id);
     await storage.putNotifications(newNotifs);
   };
-
+  12;
   const reloadNotification = async (latest_id) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     console.log(await supabase.reloadNotification(latest_id, user.id));
@@ -482,9 +492,10 @@ export const Provider = ({ children }) => {
     storage.putUser(newData);
   };
 
-  const changePassword = async (password) => {
-    backend.consolelog("User " + user.id + " is changing his password");
-    return await supabase.updatePassword(password);
+  const changePassword = async (oldPassword, newPassword) => {
+    if (await supabase.login(user.student_number, oldPassword)) {
+      return await supabase.updatePassword(newPassword);
+    }
   };
 
   const changeTheme = async (theme) => {
@@ -799,13 +810,13 @@ export const Provider = ({ children }) => {
     const value = mood?.toLowerCase();
     switch (value) {
       case "excited":
-        return "#eecc00";
+        return "#F2C94C";
       case "content":
-        return "#00ee99";
+        return "#6FCF97";
       case "drained":
-        return "#cc99ee";
+        return "#8DA9C4";
       case "stressed":
-        return "#bb0000";
+        return "#EB5757";
       default:
         return null;
     }
@@ -985,6 +996,7 @@ export const Provider = ({ children }) => {
         mostMood,
         journYear,
         changeAnonymousName,
+        changeUserColumn,
         changePassword,
         isLoaded,
         formatTime,

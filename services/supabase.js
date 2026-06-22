@@ -27,6 +27,10 @@ export async function removeRealtimeNotification() {
   supabase.removeChannel(channel);
 }
 
+export async function changeUserColumn(record, user_id) {
+  await supabase.from("students").update(record).eq("id", user_id);
+}
+
 export async function logout() {
   backend.consolelog("The user's session is being logged out");
   await supabase.auth.signOut();

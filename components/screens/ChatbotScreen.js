@@ -14,6 +14,7 @@ export default function ChatbotScreen() {
     chosenTheme,
     availChat,
     setAvailChat,
+    softenColor,
   } = useContext(Variables);
   const navigation = useNavigation();
   const scrollViewRef = useRef();
@@ -58,7 +59,7 @@ export default function ChatbotScreen() {
               🌸
             </Text>
             <View>
-              <Text className="font-lora-bold text-lg">MoLi 🌸</Text>
+              <Text className="font-lora-bold text-lg">MoLi</Text>
               <View className="flex-row">
                 <Text className="text-6xl leading-4 text-[#0c0]">·</Text>
                 <Text className="text-xs text-[#888] font-archivo">
@@ -67,13 +68,19 @@ export default function ChatbotScreen() {
               </View>
             </View>
           </View>
-          <Text className="text-xs text-[#777] bg-[#fef] border p-1 rounded-full px-2 border-[#a7a]">
+          <Text
+            className="text-xs text-[#777] border p-1 rounded-full px-2 border-[#a7a]"
+            style={{ backgroundColor: softenColor(chosenTheme) }}
+          >
             Not a therapist
           </Text>
         </View>
 
         {/* Info Warning */}
-        <View className="flex-row bg-purple-100 p-4 gap-3 border border-[#995] border-[0.5px]">
+        <View
+          className="flex-row p-4 gap-3 border border-[#995] border-[0.5px]"
+          style={{ backgroundColor: softenColor(chosenTheme) }}
+        >
           <Text>ℹ️</Text>
           <Text className="flex-1 text-xs leading-4 text-[#774] font-archivo">
             MoLi offers emotional support only. For urgent concerns, please

@@ -200,7 +200,7 @@ export default function Main({ index, setPage }) {
                         : "text-[#888]") + "  font-bold"
                     }
                   >
-                    😂{" "}
+                    🤗{" "}
                     {(current.reactions.funny ?? 0) +
                       (current.myreact == "funny" ? 1 : 0)}
                   </Text>

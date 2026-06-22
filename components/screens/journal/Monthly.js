@@ -40,6 +40,7 @@ export default function Monthly() {
     moodToColor,
     darkenColor,
     chosenTheme,
+    softenColor,
   } = useContext(Variables);
   const [chosenDay, setChosenDay] = useState(new Date().getDate());
   const [chosenMonth, setChosenMonth] = useState(
@@ -188,9 +189,14 @@ export default function Monthly() {
                   onPress={() => setChosenDay(item.day)}
                   className={
                     (item.day == new Date().getDate() ? " border " : " ") +
-                    (item.day == chosenDay ? " bg-[#099] " : " bg-[#fef] ") +
                     " h-12 rounded-xl items-center justify-center active:bg-[#ddd]"
                   }
+                  style={{
+                    backgroundColor:
+                      item.day == chosenDay
+                        ? darkenColor(chosenTheme)
+                        : softenColor(chosenTheme),
+                  }}
                 >
                   <Text
                     className={

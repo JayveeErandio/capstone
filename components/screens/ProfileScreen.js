@@ -2,9 +2,11 @@ import { Text, View, TextInput, Pressable, ScrollView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Variables } from "../../Variables";
 import InputField from "../InputField";
+import { Ionicons } from "@expo/vector-icons";
+import Button from "../Button";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
@@ -20,6 +22,7 @@ export default function ProfileScreen() {
     darkenColor,
     chosenTheme,
     changeTheme,
+    changeUserColumn,
     setDailyStatus,
   } = useContext(Variables);
 
@@ -32,6 +35,15 @@ export default function ProfileScreen() {
   const [field1, setField1] = useState(user["anonymous_name"]);
   const [field2, setField2] = useState("");
   const [theme, setTheme] = useState(chosenTheme);
+  const [anonyField, setAnonyField] = useState(user.anonymous_name);
+  const [levelField, setLevelField] = useState(user.year_level);
+  useEffect(() => {
+    if (levelField > 4) setLevelField(4);
+  }, [levelField]);
+  const [sectionField, setSectionField] = useState(user.section);
+  const [fieldCurrent, setFieldCurrent] = useState("");
+  const [fieldNew, setFieldNew] = useState("");
+  const [fieldConfirm, setFieldConfirm] = useState("");
 
   const [invalid, setInvalid] = useState(false);
 
@@ -49,6 +61,18 @@ export default function ProfileScreen() {
         return "Default";
     }
   };
+
+  const [pop1, setPop1] = useState(false);
+  const [button1, setButton1] = useState("Save");
+  const [pop2, setPop2] = useState(false);
+  const [button2, setButton2] = useState("Save");
+  const [showMatch, setShowMatch] = useState(false);
+  const [showOld, setShowOld] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [pop3, setPop3] = useState(false);
+  const [button3, setButton3] = useState("Save");
+
+  const minPass = 8;
 
   return (
     <SafeAreaView>
@@ -71,15 +95,6 @@ export default function ProfileScreen() {
               </Pressable>
               <Text className="text-lg font-lora-bold">Profile & Settings</Text>
             </View>
-            <Pressable
-              onPress={async () => {
-                logout();
-              }}
-              className="p-2 px-5 rounded-xl opacity-90 active:opacity-100"
-              style={{ backgroundColor: darkenColor(chosenTheme) }}
-            >
-              <Text className="text-white font-archivo-bold">Log Out</Text>
-            </Pressable>
           </View>
           <View
             className={
@@ -98,123 +113,322 @@ export default function ProfileScreen() {
           </Text>
         </View>
 
-        <ScrollView className="px-5">
-          <Text className="mt-5 font-archivo-bold">ANONYMOUS NAME</Text>
-          <Text className="text-[#555] text-xs font-archivo">
-            (Your screen name in Mood Space)
-          </Text>
-          <InputField
-            onChangeText={setField1}
-            value={field1}
-            placeholder="e.g. moodlinkerist"
-          />
-
-          {/* Password */}
-          <Text className="mt-5 font-archivo-bold">NEW PASSWORD</Text>
-          <InputField
-            onChangeText={setField2}
-            password
-            value={field2}
-            placeholder="Enter your new password"
-          />
-          <Text
-            className={
-              "text-red-700 text-sm opacity-" + (invalid ? "100" : "0")
-            }
-          >
-            The password is either weak or not allowed.
-          </Text>
-
-          {/* Theme Color */}
-          <View className="bg-white p-4 rounded-xl gap-1">
-            <Text
-              className="font-archivo-bold text-sm"
-              style={{ color: darkenColor(chosenTheme) }}
-            >
-              THEME COLOR
-            </Text>
-            <View className="flex-row flex-wrap justify-center">
-              {["Excited", "Content", "Drained", "Stressed", "Default"].map(
-                (current) => (
-                  <Pressable
-                    key={current}
-                    onPress={() => setTheme(moodToColor(current))}
-                    className={
-                      (theme == moodToColor(current) ? "bg-gray-100" : "") +
-                      " rounded-lg w-1/3 p-3 justify-center items-center gap-1"
-                    }
-                  >
-                    <View
-                      className="rounded-full w-9 aspect-square border border-[#888]"
-                      style={{
-                        backgroundColor: moodToColor(current) ?? "#c59",
-                      }}
-                    ></View>
-                    <Text>
-                      {moodToEmoji(current) == "⦸"
-                        ? "🌸"
-                        : moodToEmoji(current)}
-                    </Text>
-                    <Text className="font-archivo text-xs text-[#555]">
-                      {current}
-                    </Text>
-                  </Pressable>
-                ),
-              )}
-            </View>
-            <View
-              className="flex-row p-3 border rounded-xl gap-2 items-center"
-              style={{
-                backgroundColor: theme ? theme + "20" : "#cc559920",
-                borderColor: theme,
+        <ScrollView className="px-5 py-5">
+          {/* Account Information */}
+          <View className="gap-1 mb-3">
+            <Pressable
+              onPress={() => {
+                setPop1((prev) => !prev);
+                setPop2(false);
+                setPop3(false);
               }}
+              className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
             >
-              <View
-                className="rounded-full w-8 aspect-square border"
-                style={{ backgroundColor: theme ?? "#c59" }}
-              ></View>
+              <Text
+                className="font-archivo-bold text-sm"
+                style={{ color: darkenColor(chosenTheme) }}
+              >
+                ACCOUNT INFORMATION
+              </Text>
+              <Text style={{ color: darkenColor(chosenTheme) }}>
+                {pop1 ? "▲" : "▼"}
+              </Text>
+            </Pressable>
+            <View
+              className={
+                (pop1 ? "" : "hidden") + " bg-white p-5 rounded-md gap-6"
+              }
+            >
               <View>
-                <Text className="font-archivo text-sm">
-                  {colorToMood(theme)} theme selected
+                <Text className="font-archivo-bold text-sm text-[#333]">
+                  ANONYMOUS NAME
                 </Text>
-                <Text className="font-archivo text-xs">
-                  This will apply across the whole app
+
+                <InputField
+                  onChangeText={setAnonyField}
+                  value={anonyField}
+                  placeholder="e.g. moodlinkerist"
+                />
+                <Text className="text-xs font-archivo text-gray-400">
+                  Reminder: Anonymous names must not contain troll, offensive,
+                  or foul content. All posts appear in the public newsfeed and
+                  are monitored by GCU admins. Please keep your identity
+                  appropriate.
                 </Text>
               </View>
+              <View>
+                <Text className="font-archivo-bold text-sm text-[#333]">
+                  YEAR LEVEL
+                </Text>
+
+                <InputField
+                  onChangeText={setLevelField}
+                  value={levelField ? String(levelField) : ""}
+                  placeholder="e.g. 3"
+                  maxLength={1}
+                  numeric
+                />
+              </View>
+              <View>
+                <Text className="font-archivo-bold text-sm text-[#333]">
+                  SECTION
+                </Text>
+                <InputField
+                  onChangeText={setSectionField}
+                  value={sectionField}
+                  placeholder="e.g. DW31"
+                />
+              </View>
+              <Button
+                onPress={async () => {
+                  if (
+                    user.anonymous_name != anonyField ||
+                    user.year_level != levelField ||
+                    user.section != sectionField
+                  ) {
+                    await changeUserColumn({
+                      anonymous_name: anonyField,
+                      year_level: levelField,
+                      section: sectionField,
+                    });
+                    setButton1("Saved Changes");
+                    setTimeout(() => {
+                      setButton1("Save");
+                    }, 1500);
+                  }
+                }}
+                disabled={
+                  user.anonymous_name == anonyField &&
+                  user.year_level == levelField &&
+                  user.section == sectionField
+                }
+                value={button1}
+              />
+            </View>
+          </View>
+
+          {/* Password */}
+          <View className="gap-1 mb-3">
+            <Pressable
+              onPress={() => {
+                setPop2((prev) => !prev);
+                setPop1(false);
+                setPop3(false);
+              }}
+              className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
+            >
+              <Text
+                className="font-archivo-bold text-sm"
+                style={{ color: darkenColor(chosenTheme) }}
+              >
+                PASSWORD
+              </Text>
+              <Text style={{ color: darkenColor(chosenTheme) }}>
+                {pop2 ? "▲" : "▼"}
+              </Text>
+            </Pressable>
+            <View
+              className={
+                (pop2 ? "" : "hidden") + " bg-white p-5 rounded-md gap-6"
+              }
+            >
+              <View>
+                <Text className="font-archivo-bold text-sm text-[#333]">
+                  CURRENT PASSWORD
+                </Text>
+                <InputField
+                  onChangeText={setFieldCurrent}
+                  password
+                  value={fieldCurrent}
+                />
+                <Text
+                  className={
+                    (showOld ? "opacity-100" : "opacity-0") +
+                    " text-xs font-archivo"
+                  }
+                  style={{ color: "#c00" }}
+                >
+                  Wrong old password.
+                </Text>
+              </View>
+              <View>
+                <Text className="font-archivo-bold text-sm text-[#333]">
+                  NEW PASSWORD
+                </Text>
+                <InputField
+                  onChangeText={setFieldNew}
+                  password
+                  value={fieldNew}
+                />
+                <Text className="text-xs font-archivo text-gray-400">
+                  Reminder: Minimum 8 characters
+                </Text>
+              </View>
+              <View>
+                <Text className="font-archivo-bold text-sm text-[#333]">
+                  CONFIRM PASSWORD
+                </Text>
+                <InputField
+                  onChangeText={setFieldConfirm}
+                  password
+                  value={fieldConfirm}
+                />
+                <Text
+                  className={
+                    (showMatch ? "opacity-100" : "opacity-0") +
+                    " text-xs font-archivo"
+                  }
+                  style={{ color: "#c00" }}
+                >
+                  {errorMessage}
+                </Text>
+              </View>
+
+              <Button
+                onPress={async () => {
+                  if (fieldNew != fieldConfirm) {
+                    setErrorMessage("New and current password do not match.");
+                    setShowMatch(true);
+                    setTimeout(() => {
+                      setShowMatch(false);
+                    }, 2000);
+                    return;
+                  }
+                  const sameOld = await changePassword(fieldCurrent, fieldNew);
+                  if (!sameOld) {
+                    setShowOld(true);
+                    setTimeout(() => {
+                      setShowOld(false);
+                    }, 2000);
+                  } else {
+                    if (sameOld.error == null) {
+                      //SAVED CHANGES
+                      setButton2("Saved Changes");
+                      setFieldCurrent("");
+                      setFieldNew("");
+                      setFieldConfirm("");
+                      setTimeout(() => {
+                        setButton2("Save");
+                      }, 2000);
+                    } else {
+                      setErrorMessage(
+                        "Old password cannot be same as new password.",
+                      );
+                      setShowMatch(true);
+                      setTimeout(() => {
+                        setShowMatch(false);
+                      }, 1500);
+                    }
+                  }
+                }}
+                disabled={
+                  fieldCurrent == "" ||
+                  fieldNew.length < 8 ||
+                  fieldConfirm.length < 8
+                }
+                value={button2}
+              />
+            </View>
+          </View>
+
+          {/* Theme Color */}
+          <View className="gap-1 mb-3">
+            <Pressable
+              onPress={() => {
+                setPop3((prev) => !prev);
+                setPop1(false);
+                setPop2(false);
+              }}
+              className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
+            >
+              <Text
+                className="font-archivo-bold text-sm"
+                style={{ color: darkenColor(chosenTheme) }}
+              >
+                THEME COLOR
+              </Text>
+              <Text style={{ color: darkenColor(chosenTheme) }}>
+                {pop3 ? "▲" : "▼"}
+              </Text>
+            </Pressable>
+            <View
+              className={
+                (pop3 ? "" : "hidden") + " bg-white p-4 rounded-xl gap-3"
+              }
+            >
+              <View className={" flex-row flex-wrap justify-center"}>
+                {["Excited", "Content", "Drained", "Stressed", "Default"].map(
+                  (current) => (
+                    <Pressable
+                      key={current}
+                      onPress={() => setTheme(moodToColor(current))}
+                      className={
+                        (theme == moodToColor(current) ? "bg-gray-100" : "") +
+                        " rounded-lg w-1/3 p-3 justify-center items-center gap-1"
+                      }
+                    >
+                      <View
+                        className="rounded-full w-9 aspect-square border border-[#888]"
+                        style={{
+                          backgroundColor: moodToColor(current) ?? "#c59",
+                        }}
+                      ></View>
+                      <Text>
+                        {moodToEmoji(current) == "⦸"
+                          ? "🌸"
+                          : moodToEmoji(current)}
+                      </Text>
+                      <Text className="font-archivo text-xs text-[#555]">
+                        {current}
+                      </Text>
+                    </Pressable>
+                  ),
+                )}
+              </View>
+              <View
+                className="flex-row p-3 border rounded-xl gap-2 items-center"
+                style={{
+                  backgroundColor: theme ? theme + "20" : "#cc559920",
+                  borderColor: theme,
+                }}
+              >
+                <View
+                  className="rounded-full w-8 aspect-square border"
+                  style={{ backgroundColor: theme ?? "#c59" }}
+                ></View>
+                <View>
+                  <Text className="font-archivo text-sm">
+                    {colorToMood(theme)} theme selected
+                  </Text>
+                  <Text className="font-archivo text-xs">
+                    This will apply across the whole app
+                  </Text>
+                </View>
+              </View>
+
+              <Button
+                onPress={async () => {
+                  if (chosenTheme != theme) {
+                    changeTheme(theme);
+                    setButton3("Theme Changed");
+                    setTimeout(() => {
+                      setButton3("Save");
+                    }, 1500);
+                  }
+                }}
+                disabled={chosenTheme == theme}
+                value={button3}
+              />
             </View>
           </View>
 
           <Pressable
-            onPress={async () => {
-              if (oldAnon != field1) {
-                changeAnonymousName(field1);
-                navigation.goBack();
-              }
-              if (field2 != "") {
-                const result = await changePassword(field2);
-                if (result.error) {
-                  setInvalid(true);
-                  setTimeout(() => {
-                    setInvalid(false);
-                  }, 2000);
-                } else navigation.goBack();
-              }
-              if (chosenTheme != theme) {
-                changeTheme(theme);
-                navigation.goBack();
-              }
-            }}
-            className={
-              (user["anonymous_name"] == field1 &&
-              field2 == "" &&
-              chosenTheme == theme
-                ? "opacity-50"
-                : "") + " p-4 rounded-full my-6 "
-            }
+            onPress={logout}
+            className={"p-4 rounded-full my-6"}
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="text-white text-center font-archivo-bold text-lg">
-              Save
+              Log Out
             </Text>
           </Pressable>
         </ScrollView>

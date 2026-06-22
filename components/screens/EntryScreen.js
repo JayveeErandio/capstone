@@ -260,6 +260,7 @@ function Result() {
     setGoGCU,
     darkenColor,
     chosenTheme,
+    softenColor,
   } = useContext(Variables);
 
   // Mood Identification by Decision Tree Algorithm
@@ -363,7 +364,8 @@ function Result() {
                   navigation.navigate("Main");
                 }
               }}
-              className="bg-[#edd] border border-dashed border-[#a77] p-5 rounded-2xl active:bg-[#ecc]"
+              className="border border-dashed border-[#a77] p-5 rounded-2xl active:bg-[#ecc]"
+              style={{ backgroundColor: softenColor(chosenTheme) }}
             >
               <Text className="text-center text-[#b58] font-archivo-bold text-sm">
                 Suggestions didn't help? Get GCU Support
@@ -382,9 +384,6 @@ function Result() {
               <View>
                 <Text className="text-lg font-bold font-serif">
                   Journal your thoughts
-                </Text>
-                <Text className="text-sm text-[#777]">
-                  Private — only you can see this
                 </Text>
               </View>
             </View>

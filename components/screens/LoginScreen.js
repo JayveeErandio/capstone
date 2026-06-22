@@ -33,7 +33,7 @@ export default function LoginScreen() {
   }, [valid]);
 
   return loading ? (
-    <LoadingScreen message="Signing you in" />
+    <LoadingScreen message="Logging you in" />
   ) : (
     <SafeAreaView>
       <View className="bg-[#fff] h-full">
@@ -153,7 +153,7 @@ export default function LoginScreen() {
             <Text className="flex-1 text-[#555] text-sm font-archivo">
               MoodLink is an official FEU Diliman GCU app. Use your{" "}
               <Text className="font-archivo-bold">FEU student credentials</Text>{" "}
-              to sign in.
+              to Log in.
             </Text>
           </View>
         </View>
