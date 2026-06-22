@@ -134,6 +134,11 @@ export async function putNotification(args) {
   ]);
 }
 
+export async function reloadNotification(latest_id, user_id) {
+  //const {data, error} = await supabase.from("notifications").sele
+  return 12;
+}
+
 export async function putAppointment(args) {
   await supabase.from("appointments").insert([args]);
 }

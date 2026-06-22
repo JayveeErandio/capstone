@@ -1,11 +1,18 @@
-import { View, Text, Pressable, ScrollView } from "react-native";
-import { useContext } from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
+import { useContext, useState } from "react";
 import { Variables } from "../../Variables";
 
 export default function NotificationScreen() {
   const {
     notifications,
     readNotification,
+    reloadNotification,
     formatTime,
     darkenColor,
     chosenTheme,
@@ -13,6 +20,21 @@ export default function NotificationScreen() {
   } = useContext(Variables);
   const read = notifications.filter((current) => current.is_seen);
   const unread = notifications.filter((current) => !current.is_seen);
+  console.log(notifications);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+
+    // Simulate fetching data
+    await reloadNotification(
+      notifications.reduce((max, current) =>
+        current.id > max.id ? current : max,
+      ).id,
+    );
+
+    setRefreshing(false);
+  };
 
   const typetoemoji = function (type) {
     switch (type) {
@@ -26,6 +48,8 @@ export default function NotificationScreen() {
         return "🔎";
       case "set_appointment":
         return "📅";
+      default:
+        return "🔔";
     }
   };
 
@@ -55,7 +79,11 @@ export default function NotificationScreen() {
       </View>
 
       {/* Main Notification */}
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View className="flex-row gap-3 bg-[#fef] p-3 rounded-2xl mb-3 border border-[#cac] items-center">
           <Text className="bg-[#ddf] text-center text-[#99c] text-3xl rounded-lg font-bold">
             ℹ️
@@ -76,7 +104,6 @@ export default function NotificationScreen() {
         >
           UNREAD
         </Text>
-        {console.log(softenColor(chosenTheme))}
         {unread.map((current) => (
           <Pressable
             onPress={async () => {

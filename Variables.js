@@ -379,6 +379,11 @@ export const Provider = ({ children }) => {
     await storage.putNotifications(newNotifs);
   };
 
+  const reloadNotification = async (latest_id) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log(await supabase.reloadNotification(latest_id, user.id));
+  };
+
   const bookAppointment = async () => {
     function toUTCDateTime(date, time) {
       return new Date(`${date}T${time}:00`)
@@ -888,7 +893,7 @@ export const Provider = ({ children }) => {
     if (hours < 24) return `${hours}h ago`;
 
     // 📅 Yesterday
-    if (days === 1) return "yesterday";
+    if (days === 1) return "Yesterday";
 
     // 📆 Days ago
     if (days < 7) return `${days}d ago`;
@@ -946,6 +951,7 @@ export const Provider = ({ children }) => {
         putPost,
         notifications,
         readNotification,
+        reloadNotification,
         availableSchedules,
         setCurrentBook,
         currentBook,
