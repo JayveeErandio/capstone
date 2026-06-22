@@ -28,7 +28,7 @@ export const Provider = ({ children }) => {
   const [canSend, setCanSend] = useState(true);
   const [chosenTheme, setChosenTheme] = useState();
   const [availPost, setAvailPost] = useState(4);
-  const [availChat, setAvailChat] = useState(5);
+  const [availChat, setAvailChat] = useState(12);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -216,7 +216,7 @@ export const Provider = ({ children }) => {
   const signup = async (record) => {
     return await backend.putStudent(record);
   };
-
+  12;
   const analyze = async () => {
     if (user?.student_number) {
       const relatePrevDays = 5;
@@ -448,14 +448,14 @@ export const Provider = ({ children }) => {
       is_student: true,
       content: message,
     });
-
+    12;
     // AI's Prompt
     const relatedDates = [...statusDays]
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, relatePrevDays);
-
+    console.log(123);
     const result = await backend.chat(message, relatedDates);
-
+    console.log(456);
     oldChats.push({ id: 0, is_student: false, content: result.answer });
     setChats(oldChats);
     supabase.putChats({

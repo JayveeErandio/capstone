@@ -167,7 +167,7 @@ export default function ChatbotScreen() {
             ></TextInput>
             <View className="flex-row justify-between">
               <Text className="text-[#aaa] text-xs">
-                Available Post: {availChat}
+                Available Chat: {availChat}
               </Text>
               <Text
                 className={

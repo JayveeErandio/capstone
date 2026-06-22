@@ -3,8 +3,14 @@ import { useContext } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ show, setPage }) {
-  const { books, currentBook, deleteAppointment, darkenColor, chosenTheme } =
-    useContext(Variables);
+  const {
+    books,
+    currentBook,
+    deleteAppointment,
+    darkenColor,
+    chosenTheme,
+    softenColor,
+  } = useContext(Variables);
   function formatAppointment(datetime) {
     const dateObj = new Date(datetime);
 
@@ -69,7 +75,13 @@ export default function Main({ show, setPage }) {
               </Text>
             </View>
           </View>
-          <View className="flex-row gap-3 bg-[#fef] p-3 rounded-2xl mb-3 border border-[#cac]">
+          <View
+            className="flex-row gap-3 p-3 rounded-2xl mb-3 border "
+            style={{
+              backgroundColor: softenColor(chosenTheme),
+              borderColor: darkenColor(chosenTheme),
+            }}
+          >
             <Text className="text-center text-[#99c] text-3xl rounded-lg font-bold">
               ℹ️
             </Text>

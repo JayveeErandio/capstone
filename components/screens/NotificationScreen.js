@@ -84,7 +84,13 @@ export default function NotificationScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View className="flex-row gap-3 bg-[#fef] p-3 rounded-2xl mb-3 border border-[#cac] items-center">
+        <View
+          className="flex-row gap-3 p-3 rounded-2xl mb-3 border  items-center"
+          style={{
+            backgroundColor: softenColor(chosenTheme),
+            borderColor: darkenColor(chosenTheme),
+          }}
+        >
           <Text className="bg-[#ddf] text-center text-[#99c] text-3xl rounded-lg font-bold">
             ℹ️
           </Text>

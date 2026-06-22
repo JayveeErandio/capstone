@@ -1,6 +1,7 @@
 // INITIALIZATION
 import express from "express";
 import dotenv from "dotenv";
+import OpenAI from "openai";
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -27,25 +28,36 @@ const supabase = createClient(
 
 // CHATBOT
 async function askAI(question, retries = 5, delay = 2000) {
+  const client = new OpenAI({
+    apiKey: process.env.OPENAI_KEY,
+  });
+
+  //const models = await client.models.list();
+
+  //console.log(models);
+
+  const response = await client.responses.create({
+    model: "gpt-4.1-mini",
+    input: question,
+  });
+
+  return response.output_text;
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const response = await fetch(
-        "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" +
-          process.env.GOOGLEAI_KEY,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: question }],
-              },
-            ],
-          }),
+      const response = await fetch(process.env.GOOGLEAI_KEY, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: question }],
+            },
+          ],
+        }),
+      });
 
       const data = await response.json();
 
@@ -375,12 +387,12 @@ app.post("/ai/verifypost", async (req, res) => {
 
 app.post("/ai/chat", async (req, res) => {
   const { message, relatedDates } = req.body;
-  const result = JSON.parse(
-    (await reply(message, relatedDates)).slice(8).slice(0, -4),
-  );
+  let feedback = await reply(message, relatedDates);
+  if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
+  const result = JSON.parse(feedback);
   res.json(result);
 });
-
+12;
 app.post("/react", async (req, res) => {
   const { reactorId, postId, type } = req.body;
 

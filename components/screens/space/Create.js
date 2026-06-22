@@ -11,8 +11,14 @@ import { Variables } from "../../../Variables";
 import { useContext } from "react";
 
 export default function Create({ index, setPage }) {
-  const { putPost, darkenColor, chosenTheme, availPost, setAvailPost } =
-    useContext(Variables);
+  const {
+    putPost,
+    darkenColor,
+    chosenTheme,
+    availPost,
+    setAvailPost,
+    softenColor,
+  } = useContext(Variables);
   const [collapse, setCollapse] = useState(true);
   const [mood, setMood] = useState();
   const [text, setText] = useState("");
@@ -110,7 +116,10 @@ export default function Create({ index, setPage }) {
           </View>
 
           {/* Text Post */}
-          <Text className="text-[#c57] text-sm font-archivo-bold">
+          <Text
+            className="text-sm font-archivo-bold"
+            style={{ color: darkenColor(chosenTheme) }}
+          >
             YOUR POST
           </Text>
           <View className="bg-white rounded-xl p-4 -mt-3 ">
@@ -135,7 +144,13 @@ export default function Create({ index, setPage }) {
           </View>
 
           {/* AI Check Reminder */}
-          <View className="flex-row items-center bg-[#fef] gap-3 p-3 border border-[#eae] rounded-2xl">
+          <View
+            className="flex-row items-center gap-3 p-3 border rounded-2xl"
+            style={{
+              backgroundColor: softenColor(chosenTheme),
+              borderColor: darkenColor(chosenTheme),
+            }}
+          >
             <Text className="text-2xl">🤖</Text>
             <Text className="flex-1 text-sm leading-tight text-[#888] font-archivo">
               Your post will be scanned by AI before publishing. Posts that may
