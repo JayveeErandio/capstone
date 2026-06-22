@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { View, Text, TextInput, Pressable, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Variables } from "../../Variables";
@@ -8,10 +8,14 @@ import InputField from "../InputField";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
-  const { setPage, signup } = useContext(Variables);
+  const { setPage, signup, softenColor, chosenTheme, darkenColor } =
+    useContext(Variables);
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [yearLevel, setYearLevel] = useState("");
+  useEffect(() => {
+    if (yearLevel > 4) setYearLevel("4");
+  }, [yearLevel]);
   const [section, setSection] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
@@ -28,7 +32,10 @@ export default function SignupScreen() {
     >
       <SafeAreaView>
         {/* ==== Headline Top ==== */}
-        <View className="bg-[#fef] flex items-center py-8 gap-2">
+        <View
+          className="flex items-center py-8 gap-2"
+          style={{ backgroundColor: softenColor(chosenTheme) }}
+        >
           <Image
             source={require("../../assets/square.png")}
             className="rounded-full w-20 h-20 my-3"
@@ -63,6 +70,7 @@ export default function SignupScreen() {
               maxLength={1}
               placeholder="e.g. 4"
               numeric
+              value={yearLevel}
             />
           </View>
           <View className="gap-1">
@@ -89,6 +97,7 @@ export default function SignupScreen() {
             <InputField
               onChangeText={setStudentNumber}
               numeric
+              maxLength={9}
               placeholder="e.g. 202310097"
             />
           </View>
@@ -156,7 +165,7 @@ export default function SignupScreen() {
               }
             }}
             className={
-              "bg-[#c6a] rounded-xl p-5 " +
+              "rounded-xl p-5 " +
               (lastName != "" &&
               firstName != "" &&
               yearLevel != "" &&
@@ -165,9 +174,10 @@ export default function SignupScreen() {
               studentNumber != "" &&
               contactNumber != "" &&
               emailAddress != ""
-                ? "active:bg-[#b59]"
+                ? ""
                 : "opacity-50")
             }
+            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
             <Text className="font-archivo-bold text-white w-full text-center text-lg">
               Request to GCU {"\u27F6"}

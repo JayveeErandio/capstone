@@ -1,5 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text, View, Pressable, TextInput, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  ScrollView,
+  Image,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useRef, useContext, useEffect } from "react";
@@ -55,9 +62,11 @@ export default function ChatbotScreen() {
             <Text className="text-2xl font-bold text-center ">‹</Text>
           </Pressable>
           <View className="flex-row items-center flex-1 gap-2">
-            <Text className="bg-[#c9c] text-lg p-1 w-9 text-center rounded-full">
-              🌸
-            </Text>
+            <Image
+              className="rounded-full"
+              source={require("../../assets/logo_plain.jpg")}
+              style={{ width: 50, height: 50 }}
+            />
             <View>
               <Text className="font-lora-bold text-lg">MoLi</Text>
               <View className="flex-row">

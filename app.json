@@ -1,18 +1,15 @@
 {
   "expo": {
-    "plugins": [
-      "expo-notifications",
-      "expo-font"
-    ],
+    "plugins": ["expo-notifications", "expo-font"],
     "name": "MoodLink",
     "slug": "capstone1",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo_plain.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo-plain.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -26,14 +23,14 @@
     "android": {
       "useNextNotificationsApi": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/logo_plain.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.jayveeerandio.capstone"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/logo_plain.png",
       "bundler": "metro"
     },
     "owner": "jperandio",

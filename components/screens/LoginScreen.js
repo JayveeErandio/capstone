@@ -21,6 +21,7 @@ export default function LoginScreen() {
     setLoginField1,
     loginField2,
     setLoginField2,
+    softenColor,
   } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -38,13 +39,15 @@ export default function LoginScreen() {
     <SafeAreaView>
       <View className="bg-[#fff] h-full">
         {/* ==== Headline Top ==== */}
-        <View className="bg-[#f5ebf4] flex items-center py-12 gap-2">
-          <View
-            className="rounded-full h-20 w-20 justify-center"
-            style={{ backgroundColor: darkenColor(chosenTheme) }}
-          >
-            <Text className="text-4xl text-center">🌸</Text>
-          </View>
+        <View
+          className=" flex items-center py-12 gap-2"
+          style={{ backgroundColor: softenColor(chosenTheme) }}
+        >
+          <Image
+            className="rounded-full"
+            source={require("../../assets/logo_plain.jpg")}
+            style={{ width: 80, height: 80 }}
+          />
 
           <Text className="font-lora-bold text-3xl text-[#333]">
             Welcome back
@@ -143,12 +146,19 @@ export default function LoginScreen() {
               onPress={() => {
                 navigation.navigate("Signup");
               }}
-              className="font-archivo-bold text-[#c6a] self-start"
+              className="font-archivo-bold self-start"
+              style={{ color: darkenColor(chosenTheme) }}
             >
               Sign up
             </Text>
           </View>
-          <View className="flex-row border border-[#ccc] rounded-lg gap-3 p-4 items-center bg-[#fff0ff]">
+          <View
+            className="flex-row border rounded-lg gap-3 p-4 items-center "
+            style={{
+              backgroundColor: softenColor(chosenTheme),
+              borderColor: darkenColor(chosenTheme),
+            }}
+          >
             <Text className="text-xl">🏫</Text>
             <Text className="flex-1 text-[#555] text-sm font-archivo">
               MoodLink is an official FEU Diliman GCU app. Use your{" "}
