@@ -45,7 +45,7 @@ export default function LoginScreen() {
         >
           <Image
             className="rounded-full"
-            source={require("../../assets/logo_plain.jpg")}
+            source={require("../../assets/logo_plain.png")}
             style={{ width: 80, height: 80 }}
           />
 

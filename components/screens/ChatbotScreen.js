@@ -64,8 +64,12 @@ export default function ChatbotScreen() {
           <View className="flex-row items-center flex-1 gap-2">
             <Image
               className="rounded-full"
-              source={require("../../assets/logo_plain.jpg")}
-              style={{ width: 50, height: 50 }}
+              source={require("../../assets/logo_transparent.png")}
+              style={{
+                width: 35,
+                height: 35,
+                backgroundColor: softenColor(chosenTheme),
+              }}
             />
             <View>
               <Text className="font-lora-bold text-lg">MoLi</Text>

@@ -37,8 +37,9 @@ export default function SignupScreen() {
           style={{ backgroundColor: softenColor(chosenTheme) }}
         >
           <Image
-            source={require("../../assets/square.png")}
-            className="rounded-full w-20 h-20 my-3"
+            className="rounded-full"
+            source={require("../../assets/logo_plain.png")}
+            style={{ width: 80, height: 80 }}
           />
           <Text className="font-lora-bold text-3xl text-[#333] text-center">
             Student Registration Verification
