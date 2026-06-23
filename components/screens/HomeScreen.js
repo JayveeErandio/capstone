@@ -65,7 +65,8 @@ export default function HomeScreen() {
               onPress={async () => {
                 navigation.navigate("Profile");
               }}
-              className={"bg-cyan-600 w-14 h-14 rounded-full justify-center"}
+              className={" w-14 h-14 rounded-full justify-center"}
+              style={{ backgroundColor: darkenColor(chosenTheme) }}
             >
               <Text className="text-center text-white text-2xl">
                 {prof_initialname}
