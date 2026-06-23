@@ -1,5 +1,12 @@
-import { View, Text, ScrollView, Pressable, Alert } from "react-native";
-import { useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  Alert,
+  RefreshControl,
+} from "react-native";
+import { useContext, useState } from "react";
 import { Variables } from "../../../Variables";
 
 export default function Main({ show, setPage }) {
@@ -10,6 +17,7 @@ export default function Main({ show, setPage }) {
     darkenColor,
     chosenTheme,
     softenColor,
+    getUpdatedBooks,
   } = useContext(Variables);
 
   function formatAppointment(datetime) {
@@ -30,6 +38,17 @@ export default function Main({ show, setPage }) {
     return `📆 ${date} · 🕐 ${time}`;
   }
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+
+    // Simulate fetching data
+    await getUpdatedBooks();
+
+    setRefreshing(false);
+  };
+
   return (
     <View
       className={(show ? "z-50" : "") + " absolute w-full h-full bg-[#eee]"}
@@ -42,7 +61,12 @@ export default function Main({ show, setPage }) {
           Book a session with a GCU counselor
         </Text>
       </View>
-      <ScrollView className="px-5">
+      <ScrollView
+        className="px-5"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View className="gap-3 py-6">
           <View className="rounded-2xl overflow-hidden">
             {/* Back */}

@@ -53,7 +53,6 @@ export async function getSchedules() {
 }
 
 export async function putStudent(record) {
-  console.log(56, record);
   return await call("/signup", {
     record: JSON.stringify(record),
   });

@@ -32,10 +32,6 @@ async function askAI(question, retries = 5, delay = 2000) {
     apiKey: process.env.OPENAI_KEY,
   });
 
-  //const models = await client.models.list();
-
-  //console.log(models);
-
   const response = await client.responses.create({
     model: "gpt-4.1-mini",
     input: question,
@@ -204,7 +200,6 @@ app.post("/login", async (req, res) => {
     .select("*")
     .eq("student_number", studentNumber)
     .single();
-  console.log(student);
 
   //Ichechek muna kung hindi deactivated or hindi banned yung account nya
   if (student.status == "suspended" || student.status == "deactivated") {
@@ -528,7 +523,6 @@ app.post("/forgotPassword", async (req, res) => {
   }
   await supabase.auth.resetPasswordForEmail(email);
 
-  console.log(data, error);
   res.json({ baho: "hahaha" });
 });
 

@@ -186,7 +186,6 @@ export async function takeSchedule(args) {
     .from("available_schedules")
     .update({ takenBy: args.id })
     .eq("datetime", args.value);
-  console.log(7676, data, error);
 }
 
 export async function deleteAppointment(user_id) {
@@ -277,6 +276,14 @@ export async function updatePassword(password) {
     password: password,
   });
   return { data, error };
+}
+
+export async function getUpdatedBooks(user_id) {
+  const { data, error } = await supabase
+    .from("appointments")
+    .select()
+    .eq("student_id", user_id);
+  return data;
 }
 
 export async function getMorePosts(id) {

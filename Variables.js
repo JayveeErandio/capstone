@@ -448,9 +448,9 @@ export const Provider = ({ children }) => {
     const relatedDates = [...statusDays]
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, relatePrevDays);
-    console.log(123);
+
     const result = await backend.chat(message, relatedDates);
-    console.log(456);
+
     oldChats.push({ id: 0, is_student: false, content: result.answer });
     setChats(oldChats);
     supabase.putChats({
@@ -500,6 +500,21 @@ export const Provider = ({ children }) => {
 
   const forgotPassword = async (student_number) => {
     console.log(await backend.forgotPassword(student_number));
+  };
+
+  const getUpdatedBooks = async () => {
+    const data = await supabase.getUpdatedBooks(user.id);
+    let cur = {};
+
+    const olds = data.filter((current) => {
+      if (current.status == "Pending" || current.status == "Scheduled") {
+        cur = current;
+        return false;
+      } else return true;
+    });
+
+    setCurrentBook(cur);
+    setBooks(olds);
   };
 
   const computeStatus = async (basis) => {
@@ -1009,6 +1024,7 @@ export const Provider = ({ children }) => {
         setFreeTrial,
         removeFree,
         goGCU,
+        getUpdatedBooks,
         setGoGCU,
         loginField1,
         setLoginField1,
