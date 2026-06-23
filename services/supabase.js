@@ -2,41 +2,6 @@ import { supabase } from "../lib/supabase";
 import * as Notifications from "expo-notifications";
 import * as backend from "./backend";
 
-let channel;
-export async function realtime(setter, user_id) {
-  channel = supabase
-    .channel("realtime-" + user_id)
-    .on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "notifications",
-        filter: `student_id=eq.${user_id}`,
-      },
-      (payload) => {
-        const data = payload.new;
-        delete data.student_id;
-        setter({ table: "notifications", data: data });
-      },
-    )
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "appointments",
-        filter: `student_id=eq.${user_id}`,
-      },
-      (payload) => {
-        const data = payload.new;
-        delete data.student_id;
-        setter({ table: "appointments", data: data });
-      },
-    )
-    .subscribe();
-}
-
 export async function removeRealtimeNotification() {
   supabase.removeChannel(channel);
 }
@@ -153,8 +118,12 @@ export async function putNotification(args) {
 }
 
 export async function reloadNotification(latest_id, user_id) {
-  //const {data, error} = await supabase.from("notifications").sele
-  return 12;
+  const { data, error } = await supabase
+    .from("notifications")
+    .select()
+    .gt("id", latest_id)
+    .eq("student_id", user_id);
+  return data;
 }
 
 export async function getLatestPosts(latest_id, user_id) {
@@ -213,10 +182,11 @@ export async function putAppointment(args) {
 }
 
 export async function takeSchedule(args) {
-  await supabase
+  const { data, error } = await supabase
     .from("available_schedules")
     .update({ takenBy: args.id })
     .eq("datetime", args.value);
+  console.log(7676, data, error);
 }
 
 export async function deleteAppointment(user_id) {

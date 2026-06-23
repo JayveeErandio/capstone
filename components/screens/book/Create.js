@@ -5,6 +5,7 @@ import { Variables } from "../../../Variables";
 export default function Create({ show, setPage }) {
   const { availableSchedules, setCurrentBook, darkenColor, chosenTheme } =
     useContext(Variables);
+
   const [context, setContext] = useState();
   const [text, setText] = useState("");
   const maxText = 120;

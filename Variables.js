@@ -149,34 +149,9 @@ export const Provider = ({ children }) => {
     computeStatus(data.statusDays);
     setUser(data.user);
 
-    const realtimePerformer = async (newData) => {
-      if (newData.table == "notifications") {
-        setNotifications((prev) => [newData.data, ...prev]);
-        await storage.putNotifications([newData.data, ...notifications]);
-      } else if (newData.table == "appointments") {
-        setBooks(
-          books.filter((current) => {
-            if (current.id == newData.data.id) return false;
-            else return true;
-          }),
-        );
-        if (currentBook.id == newData.data.id) setCurrentBook({});
-
-        if (
-          newData.data.status == "Pending" ||
-          newData.data.status == "Scheduled"
-        ) {
-          setCurrentBook(newData.data);
-        } else if (newData.data.status == "Completed") {
-          setBooks([newData.data, ...books]);
-        }
-      }
-    };
-
-    supabase.realtime(realtimePerformer, data.user.id);
     setIsLoaded(true);
   };
-  12;
+
   const login = async (studentID, password) => {
     const session = await supabase.login(studentID, password);
     if (!session) return { success: false };
@@ -416,10 +391,11 @@ export const Provider = ({ children }) => {
     await supabase.readNotification(notif_id, user.id);
     await storage.putNotifications(newNotifs);
   };
-  12;
+
   const reloadNotification = async (latest_id) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(await supabase.reloadNotification(latest_id, user.id));
+    const newData = await supabase.reloadNotification(latest_id, user.id);
+    setNotifications([...newData, ...notifications]);
+    await storage.putNotifications([...newData, ...notifications]);
   };
 
   const bookAppointment = async () => {
