@@ -1,10 +1,22 @@
 import { useState, useContext } from "react";
-import { Pressable, Text, View, ScrollView, TextInput } from "react-native";
+import {
+  Pressable,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  RefreshControl,
+} from "react-native";
 import { Variables } from "../../../Variables";
 
 export default function Create({ show, setPage }) {
-  const { availableSchedules, setCurrentBook, darkenColor, chosenTheme } =
-    useContext(Variables);
+  const {
+    availableSchedules,
+    setCurrentBook,
+    darkenColor,
+    chosenTheme,
+    getUpdatedScheds,
+  } = useContext(Variables);
 
   const [context, setContext] = useState();
   const [text, setText] = useState("");
@@ -26,6 +38,17 @@ export default function Create({ show, setPage }) {
     return new Date(`${date}T${time}:00`).toISOString().replace("Z", "+00:00");
   }
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+
+    // Simulate fetching data
+    await getUpdatedScheds();
+
+    setRefreshing(false);
+  };
+
   return (
     <View
       className={(show ? "z-50" : "") + " absolute h-full w-full bg-[#eee]"}
@@ -46,7 +69,11 @@ export default function Create({ show, setPage }) {
         </View>
       </View>
 
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View className="p-6 gap-5">
           <Text className="text-md text-[#333] font-archivo">
             1 · WHAT'S ON YOUR MIND?

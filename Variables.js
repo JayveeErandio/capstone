@@ -517,6 +517,43 @@ export const Provider = ({ children }) => {
     setBooks(olds);
   };
 
+  const getUpdatedScheds = async () => {
+    const temp = (await supabase.getUpdatedScheds()).map(
+      (current) => current.datetime,
+    );
+    const data = Object.values(
+      temp.reduce((acc, datetime) => {
+        const dateObj = new Date(datetime);
+
+        const date = dateObj.toLocaleDateString("en-CA");
+
+        const time = dateObj.toLocaleTimeString("en-PH", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+
+        const day = dateObj
+          .toLocaleDateString("en-US", { weekday: "short" })
+          .toUpperCase();
+
+        if (!acc[date]) {
+          acc[date] = {
+            date,
+            day,
+            times: [],
+          };
+        }
+
+        acc[date].times.push(time);
+
+        return acc;
+      }, {}),
+    );
+
+    setAvailableSchedules(data);
+  };
+
   const computeStatus = async (basis) => {
     let oldestDay, oldestDate, newestDate;
     oldestDate = new Date().toISOString().split("T")[0];
@@ -1036,6 +1073,7 @@ export const Provider = ({ children }) => {
         availChat,
         setAvailChat,
         forgotPassword,
+        getUpdatedScheds,
       }}
     >
       {children}

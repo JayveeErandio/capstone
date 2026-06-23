@@ -286,6 +286,15 @@ export async function getUpdatedBooks(user_id) {
   return data;
 }
 
+export async function getUpdatedScheds() {
+  const { data, error } = await supabase
+    .from("available_schedules")
+    .select()
+    .is("takenBy", null)
+    .order("datetime", { ascending: true });
+  return data;
+}
+
 export async function getMorePosts(id) {
   const { data, error } = await supabase
     .from("posts")
