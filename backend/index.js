@@ -515,6 +515,23 @@ app.post("/console", async (req, res) => {
   console.log(req.body.value);
 });
 
+app.post("/forgotPassword", async (req, res) => {
+  const { data, error } = await supabase
+    .from("students")
+    .select()
+    .eq("student_number", req.body.student_number)
+    .single();
+
+  if (!data) {
+    res.json({ message: "The account has not yet existed." });
+    return;
+  }
+  await supabase.auth.resetPasswordForEmail(email);
+
+  console.log(data, error);
+  res.json({ baho: "hahaha" });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

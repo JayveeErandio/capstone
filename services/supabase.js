@@ -5,7 +5,7 @@ import * as backend from "./backend";
 let channel;
 export async function realtime(setter, user_id) {
   channel = supabase
-    .channel("notifications-" + user_id)
+    .channel("realtime-" + user_id)
     .on(
       "postgres_changes",
       {
@@ -17,7 +17,21 @@ export async function realtime(setter, user_id) {
       (payload) => {
         const data = payload.new;
         delete data.student_id;
-        setter(data);
+        setter({ table: "notifications", data: data });
+      },
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "appointments",
+        filter: `student_id=eq.${user_id}`,
+      },
+      (payload) => {
+        const data = payload.new;
+        delete data.student_id;
+        setter({ table: "appointments", data: data });
       },
     )
     .subscribe();

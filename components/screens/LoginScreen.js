@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import LoadingScreen from "./LoadingScreen";
 import InputField from "../InputField";
 import Button from "../Button";
+import { Resend } from "resend";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ export default function LoginScreen() {
     loginField2,
     setLoginField2,
     softenColor,
+    forgotPassword,
   } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -115,9 +117,16 @@ export default function LoginScreen() {
             value={"Log In ➞"}
           />
           <Pressable
-            onPress={() => {
+            onPress={async () => {
               if (!showForgot) return;
-              console.log(67);
+              //const resend = new Resend("re_2WRpYfzu_LWvKMDq4ptyPvuremVd2nGdB");
+              /*await resend.emails.send({
+                from: "noreply@feumoodlink.com",
+                to: "ayahuascadump@gmail.com",
+                subject: "Hello!",
+                html: "<p>This is a test email</p>",
+              });*/
+              forgotPassword(loginField1);
             }}
             className={
               (showForgot ? "" : "opacity-0") +

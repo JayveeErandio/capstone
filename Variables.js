@@ -150,14 +150,33 @@ export const Provider = ({ children }) => {
     setUser(data.user);
 
     const realtimePerformer = async (newData) => {
-      setNotifications((prev) => [newData, ...prev]);
-      await storage.putNotifications([newData, ...notifications]);
+      if (newData.table == "notifications") {
+        setNotifications((prev) => [newData.data, ...prev]);
+        await storage.putNotifications([newData.data, ...notifications]);
+      } else if (newData.table == "appointments") {
+        setBooks(
+          books.filter((current) => {
+            if (current.id == newData.data.id) return false;
+            else return true;
+          }),
+        );
+        if (currentBook.id == newData.data.id) setCurrentBook({});
+
+        if (
+          newData.data.status == "Pending" ||
+          newData.data.status == "Scheduled"
+        ) {
+          setCurrentBook(newData.data);
+        } else if (newData.data.status == "Completed") {
+          setBooks([newData.data, ...books]);
+        }
+      }
     };
 
     supabase.realtime(realtimePerformer, data.user.id);
     setIsLoaded(true);
   };
-
+  12;
   const login = async (studentID, password) => {
     const session = await supabase.login(studentID, password);
     if (!session) return { success: false };
@@ -501,6 +520,10 @@ export const Provider = ({ children }) => {
   const changeTheme = async (theme) => {
     setChosenTheme(theme);
     storage.setChosenTheme(theme);
+  };
+
+  const forgotPassword = async (student_number) => {
+    console.log(await backend.forgotPassword(student_number));
   };
 
   const computeStatus = async (basis) => {
@@ -1020,6 +1043,7 @@ export const Provider = ({ children }) => {
         setAvailPost,
         availChat,
         setAvailChat,
+        forgotPassword,
       }}
     >
       {children}

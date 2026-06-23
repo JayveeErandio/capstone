@@ -1,12 +1,19 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  Image,
+  Alert,
+  Modal,
+  ScrollView,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import InputField from "../InputField";
-import { Ionicons } from "@expo/vector-icons";
-import Button from "../Button";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -24,7 +31,8 @@ export default function SignupScreen() {
   const [emailAddress, setEmailAddress] = useState("");
   const [anonymous, setAnonymous] = useState("newbie");
   const [invalid, setInvalid] = useState(false);
-  const [agreed, setAgreed] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   return (
     <KeyboardAwareScrollView
@@ -122,6 +130,127 @@ export default function SignupScreen() {
               placeholder="e.g. juandelacruz@gmail.com"
             />
           </View>
+          {/* ==== Terms Modal ==== */}
+          <Modal
+            visible={showTerms}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setShowTerms(false)}
+          >
+            <View
+              className="flex-1 justify-end"
+              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            >
+              <View
+                className="bg-white rounded-t-3xl p-6"
+                style={{ maxHeight: "80%" }}
+              >
+                <Text className="font-lora-bold text-xl text-[#333] mb-4 text-center">
+                  Terms & Conditions
+                </Text>
+                <ScrollView
+                  className="mb-4"
+                  showsVerticalScrollIndicator={true}
+                >
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    By registering with Jaybot, you agree to the following terms
+                    and conditions:
+                  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    1. Data Collection & Use
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    We collect your personal information (name, student number,
+                    contact details, and email address) solely for the purpose
+                    of verifying your student status and creating your account.
+                    This information is stored securely and will not be shared
+                    with third parties without your consent.
+                  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    2. Mental Health Data
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Any journal entries, mood logs, or interactions with the
+                    chatbot are treated as confidential. This data may be
+                    reviewed in aggregate, anonymized form by authorized GCU
+                    counselors for the purpose of improving student wellness
+                    services.
+                  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    3. Anonymous Identity
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Your chosen anonymous name is your public identity within
+                    the app. You are responsible for maintaining appropriate
+                    conduct when interacting in shared spaces.
+                  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    4. Account Approval
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Account creation is subject to GCU verification. Providing
+                    false or misleading information may result in rejection or
+                    revocation of your account.
+                  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    5. Privacy Policy
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Your data is protected in accordance with applicable data
+                    privacy laws. You have the right to request access to,
+                    correction of, or deletion of your personal data by
+                    contacting the GCU directly.
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6">
+                    By checking the acceptance box, you confirm that you have
+                    read, understood, and agree to these terms.
+                  </Text>
+                </ScrollView>
+                <Pressable
+                  onPress={() => setShowTerms(false)}
+                  className="rounded-xl p-4"
+                  style={{ backgroundColor: darkenColor(chosenTheme) }}
+                >
+                  <Text className="font-archivo-bold text-white text-center">
+                    Close
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+
+          {/* ==== User Acceptance ==== */}
+          <Pressable
+            onPress={() => setAccepted(!accepted)}
+            className="flex-row items-start gap-3"
+          >
+            <View
+              className="w-5 h-5 rounded border-2 items-center justify-center mt-0.5 flex-shrink-0"
+              style={{
+                borderColor: darkenColor(chosenTheme),
+                backgroundColor: accepted
+                  ? darkenColor(chosenTheme)
+                  : "transparent",
+              }}
+            >
+              {accepted && (
+                <Text className="text-white text-xs font-archivo-bold leading-none">
+                  ✓
+                </Text>
+              )}
+            </View>
+            <Text className="font-archivo text-sm text-[#555] flex-1">
+              I have read and agree to the{" "}
+              <Text
+                className="font-archivo-bold underline"
+                style={{ color: darkenColor(chosenTheme) }}
+                onPress={() => setShowTerms(true)}
+              >
+                Terms & Conditions and Privacy Policy
+              </Text>
+            </Text>
+          </Pressable>
+
           <Text
             className={
               "text-center -my-2 text-red-700 text-sm opacity-" +
@@ -130,7 +259,6 @@ export default function SignupScreen() {
           >
             An account associated with this student number already exists.
           </Text>
-
           <Pressable
             onPress={async () => {
               if (
@@ -141,7 +269,8 @@ export default function SignupScreen() {
                 anonymous != "" &&
                 studentNumber != "" &&
                 contactNumber != "" &&
-                emailAddress != ""
+                emailAddress != "" &&
+                accepted
               ) {
                 const result = await signup({
                   last_name: lastName,
@@ -153,6 +282,7 @@ export default function SignupScreen() {
                   anonymous_name: anonymous,
                   personal_email: emailAddress,
                 });
+
                 if (result.success) {
                   navigation.goBack();
                   Alert.alert(
@@ -177,7 +307,8 @@ export default function SignupScreen() {
               anonymous != "" &&
               studentNumber != "" &&
               contactNumber != "" &&
-              emailAddress != ""
+              emailAddress != "" &&
+              accepted
                 ? ""
                 : "opacity-50")
             }

@@ -11,6 +11,7 @@ export default function Main({ show, setPage }) {
     chosenTheme,
     softenColor,
   } = useContext(Variables);
+  console.log(78, books, currentBook);
   function formatAppointment(datetime) {
     const dateObj = new Date(datetime);
 
