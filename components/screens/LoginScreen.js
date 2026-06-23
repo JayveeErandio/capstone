@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import LoadingScreen from "./LoadingScreen";
 import InputField from "../InputField";
+import Button from "../Button";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -26,11 +27,14 @@ export default function LoginScreen() {
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
   useEffect(() => {
-    if (valid == false)
+    if (valid == false) {
       setTimeout(() => {
         setValid(null);
       }, 1200);
+      setShowForgot(true);
+    }
   }, [valid]);
 
   return loading ? (
@@ -40,7 +44,7 @@ export default function LoginScreen() {
       <View className="bg-[#fff] h-full">
         {/* ==== Headline Top ==== */}
         <View
-          className=" flex items-center py-12 gap-2"
+          className=" flex items-center py-8 gap-2"
           style={{ backgroundColor: softenColor(chosenTheme) }}
         >
           <Image
@@ -58,7 +62,7 @@ export default function LoginScreen() {
         </View>
 
         {/* ==== Forms ==== */}
-        <View className="p-7 flex gap-1">
+        <View className="p-7 flex gap-0 pb-4">
           <Text className="font-archivo-bold text-[#333]">STUDENT ID</Text>
           <InputField
             onChangeText={setLoginField1}
@@ -77,12 +81,12 @@ export default function LoginScreen() {
           <Text
             className={
               (valid == false ? "" : "opacity-0") +
-              " text-center text-[#f00] m-2"
+              " text-center text-[#f00] m-2 font-archivo text-sm"
             }
           >
             Invalid Student ID or Password
           </Text>
-          <Pressable
+          <Button
             onPress={async () => {
               if (loginField1 && loginField2) {
                 setLoading(true);
@@ -108,14 +112,23 @@ export default function LoginScreen() {
                 setValid(data.success);
               }
             }}
+            value={"Log In ➞"}
+          />
+          <Pressable
+            onPress={() => {
+              if (!showForgot) return;
+              console.log(67);
+            }}
             className={
-              "mt-2 rounded-xl p-5  " +
-              (loginField1 && loginField2 != "" ? "opacity-100" : "opacity-50")
+              (showForgot ? "" : "opacity-0") +
+              " self-start p-3 py-1 mx-auto mt-3 "
             }
-            style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
-            <Text className="text-white w-full text-center text-lg font-archivo-bold">
-              Log In ➞
+            <Text
+              className="font-archivo text-center text-sm"
+              style={{ color: darkenColor(chosenTheme) }}
+            >
+              Forgot Password?
             </Text>
           </Pressable>
         </View>

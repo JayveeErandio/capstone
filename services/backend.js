@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    //"http://192.168.0.100:3000" + url,
-    "https://capstone-xuwy.onrender.com" + url,
+    "http://192.168.0.100:3000" + url,
+    //"https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
@@ -15,12 +15,11 @@ async function call(url, args) {
 }
 
 export async function chat(message, relatedDates) {
-  console.log(84);
   const data = await call("/ai/chat", {
     message: message,
     relatedDates: relatedDates,
   });
-  console.log(67, data);
+
   return data;
 }
 

@@ -448,7 +448,7 @@ export const Provider = ({ children }) => {
       is_student: true,
       content: message,
     });
-    12;
+
     // AI's Prompt
     const relatedDates = [...statusDays]
       .sort((a, b) => new Date(b.date) - new Date(a.date))

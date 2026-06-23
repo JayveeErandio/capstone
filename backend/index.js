@@ -179,7 +179,7 @@ NOTE: Return only the plain text in a format of JSON stringified object or expec
 
 // URL APIs
 app.get("/", (req, res) => {
-  res.json({ message: "Hello from backend JAJAJA" });
+  res.json({ message: "" });
 });
 
 app.post("/login", async (req, res) => {
@@ -204,6 +204,7 @@ app.post("/login", async (req, res) => {
     .select("*")
     .eq("student_number", studentNumber)
     .single();
+  console.log(student);
 
   //Ichechek muna kung hindi deactivated or hindi banned yung account nya
   if (student.status == "suspended" || student.status == "deactivated") {
@@ -523,12 +524,18 @@ app.listen(PORT, () => {
 //Backend's automated actions
 
 // Deletion of Notifications older than 30 days
-setInterval(async function () {
+async function autoDelNotif() {
   let today = new Date();
-  today.setDate(today.getDate() - 30);
+  today.setDate(today.getDate() - 28);
 
   const { data, error } = await supabase
     .from("notifications")
     .delete("*")
     .lte("datetime", today.toISOString());
+  console.log("Old notifications deleted");
+}
+
+autoDelNotif();
+setInterval(async function () {
+  autoDelNotif();
 }, 43200000);
