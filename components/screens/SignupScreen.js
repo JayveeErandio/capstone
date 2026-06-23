@@ -5,6 +5,8 @@ import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import InputField from "../InputField";
+import { Ionicons } from "@expo/vector-icons";
+import Button from "../Button";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -22,6 +24,7 @@ export default function SignupScreen() {
   const [emailAddress, setEmailAddress] = useState("");
   const [anonymous, setAnonymous] = useState("newbie");
   const [invalid, setInvalid] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   return (
     <KeyboardAwareScrollView
@@ -127,6 +130,7 @@ export default function SignupScreen() {
           >
             An account associated with this student number already exists.
           </Text>
+
           <Pressable
             onPress={async () => {
               if (
@@ -149,7 +153,6 @@ export default function SignupScreen() {
                   anonymous_name: anonymous,
                   personal_email: emailAddress,
                 });
-
                 if (result.success) {
                   navigation.goBack();
                   Alert.alert(

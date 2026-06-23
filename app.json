@@ -5,11 +5,11 @@
     "slug": "capstone1",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo_plain.png",
+    "icon": "./assets/logo_icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/logo_plain.png",
+      "image": "./assets/logo_icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,14 +23,14 @@
     "android": {
       "useNextNotificationsApi": true,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo_plain.png",
+        "foregroundImage": "./assets/logo_icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.jayveeerandio.capstone"
     },
     "web": {
-      "favicon": "./assets/logo_plain.png",
+      "favicon": "./assets/logo_icon.png",
       "bundler": "metro"
     },
     "owner": "jperandio",

@@ -216,7 +216,7 @@ export const Provider = ({ children }) => {
   const signup = async (record) => {
     return await backend.putStudent(record);
   };
-  12;
+
   const analyze = async () => {
     if (user?.student_number) {
       const relatePrevDays = 5;
