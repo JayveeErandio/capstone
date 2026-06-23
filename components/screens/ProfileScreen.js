@@ -71,6 +71,7 @@ export default function ProfileScreen() {
   const [errorMessage, setErrorMessage] = useState("");
   const [pop3, setPop3] = useState(false);
   const [button3, setButton3] = useState("Save");
+  const [pop4, setPop4] = useState(false);
 
   const minPass = 8;
 
@@ -120,6 +121,7 @@ export default function ProfileScreen() {
                 setPop1((prev) => !prev);
                 setPop2(false);
                 setPop3(false);
+                setPop4(false);
               }}
               className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
             >
@@ -213,6 +215,7 @@ export default function ProfileScreen() {
                 setPop2((prev) => !prev);
                 setPop1(false);
                 setPop3(false);
+                setPop4(false);
               }}
               className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
             >
@@ -337,6 +340,7 @@ export default function ProfileScreen() {
                 setPop3((prev) => !prev);
                 setPop1(false);
                 setPop2(false);
+                setPop4(false);
               }}
               className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
             >
@@ -418,6 +422,166 @@ export default function ProfileScreen() {
                 disabled={chosenTheme == theme}
                 value={button3}
               />
+            </View>
+          </View>
+
+          {/* Terms and Condition */}
+          <View className="gap-1 mb-3">
+            <Pressable
+              onPress={() => {
+                setPop4((prev) => !prev);
+                setPop1(false);
+                setPop2(false);
+                setPop3(false);
+              }}
+              className="flex-row justify-between bg-white p-3 rounded-md active:bg-[#eff]"
+            >
+              <Text
+                className="font-archivo-bold text-sm"
+                style={{ color: darkenColor(chosenTheme) }}
+              >
+                TERMS & CONDITIONS
+              </Text>
+              <Text style={{ color: darkenColor(chosenTheme) }}>
+                {pop4 ? "▲" : "▼"}
+              </Text>
+            </Pressable>
+
+            <View
+              className={
+                (pop4 ? "" : "hidden") + " bg-white p-4 rounded-xl gap-3"
+              }
+            >
+              <Text className="font-archivo-bold">
+                MoodLink Terms and Conditions
+              </Text>
+              <Text className="font-archivo text-xs">
+                Effective Date: June 2026
+              </Text>
+              <Text className="font-archivo text-xs">
+                Welcome to MoodLink. MoodLink is a student well-being platform
+                developed to support emotional wellness through mood tracking,
+                consultations, appointments, and community engagement. By
+                creating an account and using MoodLink, you agree to the
+                following Terms and Conditions.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                1. Purpose of the Platform
+              </Text>
+              <Text className="font-archivo text-xs">
+                MoodLink is intended to support the emotional well-being of
+                students by providing tools for mood monitoring,
+                counseling-related services, and a moderated community space.
+                The platform serves as a support resource and does not replace
+                professional medical, psychiatric, or emergency services.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                2. User Responsibilities
+              </Text>
+              <Text className="font-archivo text-xs">
+                Users agree to provide accurate and truthful information during
+                registration. Maintain the confidentiality of their account
+                credentials. Use the platform in a respectful and responsible
+                manner. Comply with institutional policies and applicable laws.
+                Users are responsible for all activities conducted through their
+                accounts.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                3. Mood Tracking and Monitoring
+              </Text>
+              <Text className="font-archivo text-xs">
+                MoodLink allows students to record their moods and emotional
+                well-being through mood logs. By using this feature, users
+                acknowledge and agree that: Mood logs may be monitored and
+                reviewed by authorized Guidance and Counseling Unit (GCU)
+                personnel. Mood data may be analyzed to identify trends or
+                indicators of emotional distress. The GCU may contact a student
+                when mood patterns suggest that support, guidance, or
+                intervention may be beneficial. Access to mood records is
+                limited to authorized personnel and will be handled with
+                appropriate confidentiality. Mood monitoring is conducted solely
+                to promote student well-being and provide timely support when
+                necessary.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                4. Appointments and Consultations
+              </Text>
+              <Text className="font-archivo text-xs">
+                MoodLink allows students to request appointments and
+                consultations with the Guidance and Counseling Unit. Users
+                understand that: Appointment and consultation requests are
+                subject to review and approval. Scheduled sessions may be
+                rescheduled or canceled when necessary. Students are encouraged
+                to attend approved appointments and notify the GCU in advance if
+                they cannot attend.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                5. MoodSpace Community Guidelines
+              </Text>
+              <Text className="font-archivo text-xs">
+                MoodSpace is a community space where students may share
+                thoughts, experiences, and well-being-related content. The
+                following content is prohibited: Harassment, bullying, or
+                threats. Hate speech or discriminatory remarks. Offensive,
+                obscene, or inappropriate content. False, misleading, or
+                defamatory information. Content that promotes self-harm,
+                violence, or illegal activities. Any content that violates
+                school policies. Users remain responsible for the content they
+                post.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                6. Reporting and Content Moderation
+              </Text>
+              <Text className="font-archivo text-xs">
+                To maintain a safe environment: Users may report posts that
+                violate community guidelines. Reported content may be reviewed
+                by authorized GCU personnel. Posts receiving multiple reports
+                may be subject to additional review. The GCU may flag, restrict,
+                archive, or remove content found to violate platform policies.
+                Repeated violations may result in disciplinary action or account
+                restrictions.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                7. Privacy and Confidentiality
+              </Text>
+              <Text className="font-archivo text-xs">
+                MoodLink is committed to protecting user information. By using
+                the platform, users consent to the collection, storage, and
+                processing of information necessary for: User authentication and
+                account management. Mood monitoring and wellness support.
+                Appointment and consultation management. Content moderation and
+                system administration. Information will only be accessed by
+                authorized personnel and handled according to institutional
+                privacy policies and applicable data protection regulations.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                8. Account Suspension and Termination
+              </Text>
+              <Text className="font-archivo text-xs">
+                MoodLink reserves the right to restrict, suspend, or terminate
+                accounts that: Violate these Terms and Conditions. Abuse
+                platform services. Engage in harmful, disruptive, or
+                inappropriate behavior.
+              </Text>
+              <Text className="font-archivo-bold text-sm">
+                9. Limitation of Service
+              </Text>
+              <Text className="font-archivo text-xs">
+                While MoodLink aims to support student well-being, the platform:
+                Does not guarantee immediate responses from counselors. Does not
+                provide emergency mental health services. Should not be relied
+                upon during crisis situations requiring immediate professional
+                assistance. Students experiencing emergencies should contact
+                appropriate emergency services or qualified professionals
+                immediately.
+              </Text>
+              <Text className="font-archivo-bold text-sm">10. Amendments</Text>
+              <Text className="font-archivo text-xs">
+                WMoodLink reserves the right to update or modify these Terms and
+                Conditions at any time. Continued use of the platform after
+                changes are made constitutes acceptance of the revised Terms and
+                Conditions.
+              </Text>
             </View>
           </View>
 
