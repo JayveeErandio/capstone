@@ -2,6 +2,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -213,6 +214,11 @@ app.post("/login", async (req, res) => {
     .select("date, id, journal, mood")
     .eq("account_id", student.id);
 
+  const { data: statusWeeks } = await supabase
+    .from("status_weeks")
+    .select()
+    .eq("student_id", student.id);
+
   // Pending Posts
   const { data: pendingPosts } = await supabase
     .from("pending_posts")
@@ -307,6 +313,7 @@ app.post("/login", async (req, res) => {
   res.json({
     user: { ...student, success: true },
     statusDays: statusDays,
+    statusWeeks: statusWeeks,
     pendingPosts: pendingPosts,
     posts: groupReactions(posts, student.id),
     myPosts: groupReactions(myPosts, student.id),

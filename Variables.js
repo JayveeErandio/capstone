@@ -9,6 +9,7 @@ export const Provider = ({ children }) => {
   const [user, setUser] = useState({});
   const [firstDay, setFirstDay] = useState(new Date().getDay());
   const [statusDays, setStatusDays] = useState([]);
+  const [statusWeeks, setStatusWeeks] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [page, setPage] = useState("login");
   const [posts, setPosts] = useState([]);
@@ -67,6 +68,7 @@ export const Provider = ({ children }) => {
   const setupData = async (result) => {
     const data = await storage.getAll();
     setStatusDays(data.statusDays);
+    setStatusWeeks(data.statusWeeks);
     setDailyStatus(data.dailyStatus);
     setPendingPosts(data.pendingPosts);
     setPosts(data.posts);
@@ -161,6 +163,7 @@ export const Provider = ({ children }) => {
     if (result.success) {
       await storage.putUser(result.user);
       await storage.putStatusDays(result.statusDays);
+      await storage.putStatusWeeks(result.statusWeeks);
       await storage.putPendingPost(result.pendingPosts);
       await storage.putPosts(result.posts);
       await storage.putMyPosts(result.myPosts);
@@ -1074,6 +1077,7 @@ export const Provider = ({ children }) => {
         setAvailChat,
         forgotPassword,
         getUpdatedScheds,
+        statusWeeks,
       }}
     >
       {children}

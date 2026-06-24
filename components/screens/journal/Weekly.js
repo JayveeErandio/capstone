@@ -12,7 +12,11 @@ export default function Weekly() {
     generateWeekData,
     darkenColor,
     chosenTheme,
+    statusWeeks,
   } = useContext(Variables);
+  //console.log(statusWeeks.find((current) => {
+  //  if(current.date_start)
+  //}));
 
   let haveMood = true;
 
@@ -57,6 +61,10 @@ export default function Weekly() {
   ];
 
   const firstDate = new Date(journWeek[0].date);
+  const statusContent = statusWeeks.find((current) => {
+    if (current.date_start == firstDate.toISOString().split("T")[0])
+      return true;
+  })?.content;
   const lastDate = new Date(journWeek[6].date);
 
   const sameMonth = firstDate.getMonth() == lastDate.getMonth();
@@ -203,11 +211,22 @@ export default function Weekly() {
       </View>
 
       {/* Weekly Insight */}
-      <View className="bg-white p-4 rounded-xl gap-2 hidden">
-        <Text className="text-[#a57]">WEEKLY INSIGHT</Text>
-        <Text className="text-[#333] font-bold font-serif italic">
-          {"I notice you're riding some natural waves this"}
+      <View className="bg-white p-4 rounded-xl gap-2">
+        <Text
+          className="font-archivo-bold text-sm"
+          style={{ color: darkenColor(chosenTheme) }}
+        >
+          WEEKLY INSIGHT
         </Text>
+        {statusContent ? (
+          <Text className="text-[#555] font-archivo-bold text-sm text-center">
+            {statusContent}
+          </Text>
+        ) : (
+          <Text className="text-[#999] font-archivo text-xs text-center ">
+            Do check-ins until the end of the week to achieve this insight.{" "}
+          </Text>
+        )}
       </View>
     </View>
   );

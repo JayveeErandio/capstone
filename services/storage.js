@@ -35,6 +35,10 @@ export async function putStatusDays(data) {
   await AsyncStorage.setItem("statusDays", JSON.stringify(data));
 }
 
+export async function putStatusWeeks(data) {
+  await AsyncStorage.setItem("statusWeeks", JSON.stringify(data));
+}
+
 export async function putDailyStatus(data) {
   await AsyncStorage.setItem("dailyStatus", JSON.stringify(data));
 }
