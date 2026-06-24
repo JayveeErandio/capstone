@@ -26,20 +26,38 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY,
 );
+try {
+  const response = await fetch("https://api.openai.com/v1/models", {
+    headers: {
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+  });
 
+  console.log(response.status);
+} catch (err) {
+  console.error(err);
+}
 // CHATBOT
 async function askAI(question, retries = 5, delay = 2000) {
   const client = new OpenAI({
     apiKey: process.env.OPENAI_KEY,
   });
 
-  const response = await client.responses.create({
-    model: "gpt-4.1-mini",
-    input: question,
-  });
+  try {
+    const response = await client.responses.create({
+      model: "gpt-4.1-mini",
+      input: question,
+    });
 
-  return response.output_text;
+    return response.output_text;
+  } catch (error) {
+    console.error("FULL ERROR:", error);
+    console.error("MESSAGE:", error.message);
+    console.error("CAUSE:", error.cause);
 
+    throw error;
+  }
+  return;
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await fetch(process.env.GOOGLEAI_KEY, {

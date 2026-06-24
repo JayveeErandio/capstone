@@ -181,6 +181,13 @@ export const Provider = ({ children }) => {
     setUser(null);
     setDailyStatus();
     setCanSend(true);
+    setIsAnalyzing(false);
+    setEntries({
+      door1: null,
+      door2: null,
+      door3: null,
+      door4: null,
+    });
     supabase.logout();
     await storage.deleteAll();
     deleteAll();

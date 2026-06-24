@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    "http://172.16.154.179:3000" + url,
-    //"https://capstone-xuwy.onrender.com" + url,
+    //"http://172.16.154.179:3000" + url,
+    "https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
