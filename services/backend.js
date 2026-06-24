@@ -42,10 +42,12 @@ export async function assessFree(entries) {
 }
 
 export async function login(studentNumber, password) {
+  console.log(12);
   const data = await call("/login", {
     studentNumber: studentNumber,
     password: password,
   });
+  console.log(24);
   return data;
 }
 
