@@ -179,7 +179,11 @@ export default function ChatbotScreen() {
               maxLength={maxLength}
             ></TextInput>
             <View className="flex-row justify-between">
-              <Text className="text-[#aaa] text-xs">
+              <Text
+                className={
+                  (availChat == 0 ? "text-[#c00]" : "text-[#aaa]") + " text-xs"
+                }
+              >
                 Available Chat: {availChat}
               </Text>
               <Text

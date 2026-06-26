@@ -174,6 +174,7 @@ export const Provider = ({ children }) => {
 
       return result;
     }
+    return result;
   };
 
   const logout = async () => {

@@ -46,7 +46,7 @@ export default function LoginScreen() {
       <View className="bg-[#fff] h-full">
         {/* ==== Headline Top ==== */}
         <View
-          className=" flex items-center py-8 gap-2"
+          className=" flex items-center py-12 gap-2"
           style={{ backgroundColor: softenColor(chosenTheme) }}
         >
           <Image
@@ -71,6 +71,7 @@ export default function LoginScreen() {
             placeholder="e.g. 202310097"
             numeric
             value={loginField1}
+            maxLength={9}
           />
           <Text className="font-archivo-bold text-[#333] mt-4">PASSWORD</Text>
           <InputField
@@ -115,6 +116,7 @@ export default function LoginScreen() {
               }
             }}
             value={"Log In ➞"}
+            disabled={loginField1.length != 9 || loginField2.length < 6}
           />
           <Pressable
             onPress={async () => {

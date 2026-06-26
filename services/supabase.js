@@ -310,6 +310,7 @@ export async function login(studentNumber, password) {
     email: `${studentNumber}@moodlink.com`,
     password: password,
   });
+
   if (data.session) return true;
 }
 

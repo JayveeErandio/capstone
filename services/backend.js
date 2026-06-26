@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    //"http://172.16.154.179:3000" + url,
-    "https://capstone-xuwy.onrender.com" + url,
+    "http://192.168.0.105:3000" + url,
+    //"https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
@@ -42,12 +42,10 @@ export async function assessFree(entries) {
 }
 
 export async function login(studentNumber, password) {
-  console.log(12);
   const data = await call("/login", {
     studentNumber: studentNumber,
     password: password,
   });
-  console.log(24);
   return data;
 }
 

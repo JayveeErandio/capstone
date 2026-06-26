@@ -26,17 +26,7 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY,
 );
-try {
-  const response = await fetch("https://api.openai.com/v1/models", {
-    headers: {
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    },
-  });
 
-  console.log(response.status);
-} catch (err) {
-  console.error(err);
-}
 // CHATBOT
 async function askAI(question, retries = 5, delay = 2000) {
   const client = new OpenAI({
