@@ -325,6 +325,7 @@ export const Provider = ({ children }) => {
           content:
             'Your post, "' +
             text.slice(0, 50) +
+            (text.length >= 50 ? "..." : "") +
             '", has been marked as suspicious. For the meantime, your post will remain on pending status while GCU reviews it before approval.',
           student_id: user.id,
           type: "gcu_review",

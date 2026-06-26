@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Variables } from "../../../Variables";
 import { useContext } from "react";
+import Button from "../../Button";
 
 export default function Create({ index, setPage }) {
   const {
@@ -43,7 +44,7 @@ export default function Create({ index, setPage }) {
           <View className="flex-row bg-[#ffd] border border-[#cc8] rounded-xl p-4 gap-3">
             <Text className="text-xl">⚠️</Text>
             <View className="flex-1">
-              <Text className="text-sm text-[#aa0] font-archivo-bold">
+              <Text className="text-xs text-[#aa0] font-archivo-bold">
                 Anonymity Notice
               </Text>
               <Text className="text-xs text-[#995] font-archivo">
@@ -134,10 +135,20 @@ export default function Create({ index, setPage }) {
               maxLength={maxChar}
             ></TextInput>
             <View className="flex-row justify-between">
-              <Text className="text-xs font-archivo opacity-50">
+              <Text
+                className={
+                  (availPost == 0 ? "text-[#b00]" : "text-[#bbb]") +
+                  " text-xs font-archivo"
+                }
+              >
                 Available Post: {availPost}
               </Text>
-              <Text className="text-xs font-archivo opacity-50">
+              <Text
+                className={
+                  (text.length >= maxChar ? "text-[#b00]" : "text-[#bbb]") +
+                  " text-xs font-archivo"
+                }
+              >
                 {text.length}/{maxChar}
               </Text>
             </View>
@@ -152,16 +163,17 @@ export default function Create({ index, setPage }) {
             }}
           >
             <Text className="text-2xl">🤖</Text>
-            <Text className="flex-1 text-sm leading-tight text-[#888] font-archivo">
+            <Text className="flex-1 text-xs leading-tight text-[#888] font-archivo">
               Your post will be scanned by AI before publishing. Posts that may
               violate rules will be held for review.
             </Text>
           </View>
 
           {/* Post Submit Button */}
-          <Pressable
+          <Button
+            value={"Post to MoodSpace 🌸"}
             onPress={async () => {
-              if (!(mood && text)) return;
+              if (!(mood && text) || availPost == 0) return;
               putPost(mood, text);
               setPage();
               setAvailPost(availPost - 1);
@@ -179,13 +191,8 @@ export default function Create({ index, setPage }) {
                 );
               });
             }}
-            className={(mood && text ? "" : "opacity-50") + " p-4 rounded-full"}
-            style={{ backgroundColor: darkenColor(chosenTheme) }}
-          >
-            <Text className="text-white text-center font-archivo-bold text-lg">
-              Post to MoodSpace 🌸
-            </Text>
-          </Pressable>
+            disabled={!(mood && text) || availPost == 0}
+          />
         </View>
       </ScrollView>
     </View>
