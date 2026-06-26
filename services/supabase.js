@@ -1,4 +1,8 @@
-import { supabase } from "../lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+const supabase = createClient(
+  "https://rpeqlerchayltgthzwve.supabase.co",
+  "sb_publishable_LsS2PqcBQ9HxsWKt-nYL5w_62O1qwGi",
+);
 import * as Notifications from "expo-notifications";
 import * as backend from "./backend";
 

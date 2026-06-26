@@ -510,8 +510,9 @@ export const Provider = ({ children }) => {
     storage.setChosenTheme(theme);
   };
 
-  const forgotPassword = async (student_number) => {
-    console.log(await backend.forgotPassword(student_number));
+  const forgotPassword = async (student_number, email) => {
+    const data = await backend.forgotPassword(student_number, email);
+    return data;
   };
 
   const getUpdatedBooks = async () => {

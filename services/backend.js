@@ -75,6 +75,9 @@ export async function consolelog(value) {
   await call("/console", { value: value });
 }
 
-export async function forgotPassword(student_number) {
-  return await call("/forgotPassword", { student_number: student_number });
+export async function forgotPassword(student_number, email) {
+  return await call("/forgotPassword", {
+    student_number: student_number,
+    email: email,
+  });
 }

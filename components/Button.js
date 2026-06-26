@@ -14,7 +14,9 @@ export default function Button(args) {
       onTouchEnd={() => {
         setClick(false);
       }}
-      onPress={args.onPress}
+      onPress={() => {
+        if (!args.disabled) args.onPress();
+      }}
       className="p-4 rounded-full"
       style={{
         backgroundColor: !args.disabled

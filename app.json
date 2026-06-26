@@ -3,6 +3,7 @@
     "plugins": ["expo-notifications", "expo-font"],
     "name": "MoodLink",
     "slug": "capstone1",
+    "scheme": "moodlink",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo_icon.png",

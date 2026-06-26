@@ -2,6 +2,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+import crypto from "crypto";
+import { Resend } from "resend";
 
 dotenv.config();
 const app = express();
@@ -24,7 +26,7 @@ const notify = async (receiverToken, title, body) => {
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY,
+  process.env.SUPABASE_ANON,
 );
 
 // CHATBOT
@@ -513,19 +515,61 @@ app.post("/console", async (req, res) => {
 });
 
 app.post("/forgotPassword", async (req, res) => {
-  const { data, error } = await supabase
+  function generatePassword() {
+    const chars = "abcdefghijklmnopqrstuvwxyz";
+
+    let password = "";
+
+    for (let i = 0; i < 11; i++) {
+      if (i == 3) {
+        password += ".";
+        continue;
+      } else if (i == 7) {
+        password += ",";
+        continue;
+      }
+      const index = crypto.randomInt(0, chars.length);
+      password += chars[index];
+    }
+
+    return password;
+  }
+
+  const { student_number, email } = req.body;
+  const { data } = await supabase
     .from("students")
     .select()
-    .eq("student_number", req.body.student_number)
+    .eq("student_number", student_number)
+    .eq("personal_email", email.trim())
     .single();
 
   if (!data) {
-    res.json({ message: "The account has not yet existed." });
+    res.json({ status: "invalid" });
     return;
   }
-  await supabase.auth.resetPasswordForEmail(email);
 
-  res.json({ baho: "hahaha" });
+  const generated = generatePassword();
+  await supabase.auth.admin.updateUserById(data.uuid, { password: generated });
+
+  const resend = new Resend("re_2WRpYfzu_LWvKMDq4ptyPvuremVd2nGdB");
+  await resend.emails.send({
+    from: "MoodLink <noreply@feumoodlink.com>",
+    to: email.trim(),
+    subject: "Your Temporary MoodLink Password",
+    html:
+      `
+    <p>Hello,</p>
+<p>We received a request to reset the password for your MoodLink account.</p>
+<p>A temporary password has been generated for you:</p>
+<p>Temporary Password: <strong>` +
+      generated +
+      `</strong></p>
+<p>Please use this password to log in to your account. For your security, change your password immediately after signing in.</p>
+<p>If you did not request this password reset, your account may have been accessed by someone else. Please log in as soon as possible using the temporary password above and change your password to one that only you know.</p>
+    `,
+  });
+
+  res.json({ status: "success" });
 });
 
 const PORT = process.env.PORT || 3000;
@@ -534,7 +578,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-//Backend's automated actions
+//Backend's automated actions =========================
 
 // Deletion of Notifications older than 30 days
 async function autoDelNotif() {
@@ -552,3 +596,18 @@ autoDelNotif();
 setInterval(async function () {
   autoDelNotif();
 }, 43200000);
+
+async function tae() {
+  //const { data } = await supabase.auth.signInWithPassword({
+  //  email: `jayveeerandio13@gmail.com`,
+  //   password: "gerygery",
+  // });
+  // console.log(data);
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
+  // console.log(user?.id);
+  // await supabase.auth.admin.deleteUser(user?.id);
+}
+
+//tae();

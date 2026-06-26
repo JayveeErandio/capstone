@@ -1,6 +1,14 @@
 import { useState, useContext, useEffect } from "react";
 import { Variables } from "../../Variables";
-import { View, Text, TextInput, Image, Pressable, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Pressable,
+  Alert,
+  Modal,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,6 +47,14 @@ export default function LoginScreen() {
     }
   }, [valid]);
 
+  const [forgotModalVisible, setForgotModalVisible] = useState(false);
+  const [forgotStudentNo, setForgotStudentNo] = useState("");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(null);
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotButton, setForgotButton] = useState("Send Temporary Password");
+
   return loading ? (
     <LoadingScreen message="Logging you in" />
   ) : (
@@ -65,7 +81,7 @@ export default function LoginScreen() {
 
         {/* ==== Forms ==== */}
         <View className="p-7 flex gap-0 pb-4">
-          <Text className="font-archivo-bold text-[#333]">STUDENT ID</Text>
+          <Text className="font-archivo-bold text-[#333]">STUDENT NUMBER</Text>
           <InputField
             onChangeText={setLoginField1}
             placeholder="e.g. 202310097"
@@ -87,7 +103,7 @@ export default function LoginScreen() {
               " text-center text-[#f00] m-2 font-archivo text-sm"
             }
           >
-            Invalid Student ID or Password
+            Invalid student number or password
           </Text>
           <Button
             onPress={async () => {
@@ -121,14 +137,11 @@ export default function LoginScreen() {
           <Pressable
             onPress={async () => {
               if (!showForgot) return;
-              //const resend = new Resend("re_2WRpYfzu_LWvKMDq4ptyPvuremVd2nGdB");
-              /*await resend.emails.send({
-                from: "noreply@feumoodlink.com",
-                to: "ayahuascadump@gmail.com",
-                subject: "Hello!",
-                html: "<p>This is a test email</p>",
-              });*/
-              forgotPassword(loginField1);
+              setForgotStudentNo(loginField1);
+              setForgotEmail("");
+              setForgotMessage("");
+              setForgotSuccess(null);
+              setForgotModalVisible(true);
             }}
             className={
               (showForgot ? "" : "opacity-0") +
@@ -159,7 +172,7 @@ export default function LoginScreen() {
             }
           >
             <Text className="text-[#777] w-full text-center font-archivo">
-              🚀 Skip — View Demo
+              🚀 Skip — Try a Demo
             </Text>
           </Pressable>
           <View className="flex-row mx-auto">
@@ -192,6 +205,99 @@ export default function LoginScreen() {
           </View>
         </View>
       </View>
+      <Modal visible={forgotModalVisible} transparent animationType="fade">
+        <View
+          className="flex-1 justify-center items-center px-6"
+          style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
+        >
+          <View className="bg-white rounded-2xl w-full p-6">
+            {/* Close */}
+            <Pressable
+              onPress={() => {
+                setForgotModalVisible(false);
+                setForgotButton("Send Temporary Password");
+              }}
+              className="absolute right-4 top-4 z-10"
+            >
+              <Text className="text-xl font-bold text-[#666]">✕</Text>
+            </Pressable>
+
+            <Text className="font-lora-bold text-2xl text-center text-[#333]">
+              Forgot Password
+            </Text>
+
+            <Text className="text-center text-[#777] mt-2 mb-5 font-archivo">
+              Enter your student number and the associated email address.
+            </Text>
+
+            <Text className="font-archivo-bold">STUDENT NUMBER</Text>
+
+            <InputField
+              value={forgotStudentNo}
+              onChangeText={setForgotStudentNo}
+              placeholder="e.g. 202310097"
+              numeric
+              maxLength={9}
+            />
+
+            <Text className="font-archivo-bold mt-4">EMAIL ADDRESS</Text>
+
+            <InputField
+              value={forgotEmail}
+              onChangeText={setForgotEmail}
+              placeholder="example@feu.edu.ph"
+            />
+
+            <View className="mt-5">
+              <Button
+                value={forgotLoading ? "Sending..." : forgotButton}
+                disabled={
+                  forgotLoading ||
+                  forgotStudentNo.length !== 9 ||
+                  forgotEmail.length === 0 ||
+                  forgotButton == "Sent"
+                }
+                onPress={async () => {
+                  setForgotLoading(true);
+                  setForgotMessage("");
+
+                  const result = await forgotPassword(
+                    forgotStudentNo,
+                    forgotEmail,
+                  );
+
+                  setForgotLoading(false);
+
+                  if (result.status == "success") {
+                    setForgotButton("Sent");
+                    setForgotSuccess(true);
+                    setForgotMessage(
+                      "A temporary password has been sent to your registered email.",
+                    );
+                  } else {
+                    setForgotSuccess(false);
+                    setForgotMessage(
+                      result.message ??
+                        "Student Number and email do not match our records.",
+                    );
+                  }
+                }}
+              />
+            </View>
+
+            {forgotMessage !== "" && (
+              <Text
+                className="text-center mt-4 font-archivo"
+                style={{
+                  color: forgotSuccess ? "#16a34a" : "#dc2626",
+                }}
+              >
+                {forgotMessage}
+              </Text>
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
