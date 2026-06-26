@@ -81,9 +81,8 @@ export default function Weekly() {
       const label = item.day?.[0] ?? "";
 
       const mapped = { label };
-
-      if (item.mood && moodValueMap[item.mood] != null) {
-        mapped.value = moodValueMap[item.mood];
+      if (item.mood && moodValueMap[item.mood?.toLowerCase()] != null) {
+        mapped.value = moodValueMap[item.mood?.toLowerCase()];
       }
 
       return mapped;

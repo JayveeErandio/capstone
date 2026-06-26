@@ -92,7 +92,7 @@ export default function Monthly() {
     for (const item of data) {
       const day = new Date(item.date).getDate();
 
-      lookup[day] = moodMap[item.mood];
+      lookup[day] = moodMap[item.mood?.toLowerCase()];
     }
 
     const result = [];
@@ -289,9 +289,11 @@ export default function Monthly() {
         {(function () {
           let moods = [];
           for (let status of statusMonths) {
-            let saved = moods.find((current) => current.mood == status.mood);
+            let saved = moods.find(
+              (current) => current.mood == status.mood?.toLowerCase(),
+            );
             if (saved) saved.count++;
-            else moods.push({ mood: status.mood, count: 1 });
+            else moods.push({ mood: status.mood?.toLowerCase(), count: 1 });
           }
           moods.sort((a, b) => b.count - a.count);
           const total = moods.reduce((prev, next) => prev + next.count, 0);

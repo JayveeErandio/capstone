@@ -18,6 +18,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import LoadingScreen from "./LoadingScreen";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Button from "../Button";
 
 const Stack = createNativeStackNavigator();
 
@@ -405,7 +406,8 @@ function Result() {
           </View>
 
           {/* Done or Submit */}
-          <Pressable
+          <Button
+            value={"Done"}
             onPress={() => {
               if (onDemo) {
                 removeFree();
@@ -419,13 +421,8 @@ function Result() {
                 navigation.navigate("Main");
               }
             }}
-            className="rounded-full p-4 mb-20"
-            style={{ backgroundColor: darkenColor(chosenTheme) }}
-          >
-            <Text className="text-center text-white text-lg font-archivo-bold">
-              Done
-            </Text>
-          </Pressable>
+          />
+          <View className="py-12"></View>
         </View>
       </SafeAreaView>
     </KeyboardAwareScrollView>

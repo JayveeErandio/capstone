@@ -190,19 +190,6 @@ app.get("/", (req, res) => {
 app.post("/login", async (req, res) => {
   const { studentNumber, password } = req.body;
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: `${studentNumber}@moodlink.com`,
-    password: password,
-  });
-
-  //If no account exists
-  if (!data.session) {
-    res.json({ success: false });
-    return;
-  }
-
-  //If exists, following command proceed below
-
   // Student
   const { data: student } = await supabase
     .from("students")

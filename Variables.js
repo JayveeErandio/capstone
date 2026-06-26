@@ -189,7 +189,7 @@ export const Provider = ({ children }) => {
       door3: null,
       door4: null,
     });
-    supabase.logout();
+    await supabase.logout();
     await storage.deleteAll();
     deleteAll();
     await supabase.removeRealtimeNotification();

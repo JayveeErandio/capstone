@@ -13,13 +13,6 @@ export async function changeUserColumn(record, user_id) {
 export async function logout() {
   backend.consolelog("The user's session is being logged out");
   await supabase.auth.signOut();
-
-  if ((await Notifications.requestPermissionsAsync()).status == "granted") {
-    const { data, error } = await supabase
-      .from("token_devices")
-      .delete()
-      .eq("token", (await Notifications.getExpoPushTokenAsync()).data);
-  }
 }
 
 export async function putPendingPost(value) {
@@ -313,28 +306,3 @@ export async function login(studentNumber, password) {
 
   if (data.session) return true;
 }
-
-export async function tae() {
-  const token = await registerForPushNotificationsAsync();
-
-  if (!token) {
-    const { data, error } = await supabase.from("user_push_tokens").upsert({
-      user_id: 2,
-      expo_token: token,
-    });
-  }
-
-  const { data: tokens } = await supabase
-    .from("user_push_tokens")
-    .select("expo_token")
-    .eq("user_id", 2);
-
-  await sendPushNotification({
-    expoTokens: tokens.map((t) => t.expo_token),
-    title: "New message 💬",
-    body: "TALAGA BARNN?",
-    data: { user_id: 2 },
-  });
-}
-
-//if ((await Notifications.requestPermissionsAsync()).status == "granted") {
