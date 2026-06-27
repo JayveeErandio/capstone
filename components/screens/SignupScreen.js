@@ -14,6 +14,7 @@ import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import InputField from "../InputField";
+import Button from "../Button";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -25,7 +26,6 @@ export default function SignupScreen() {
   useEffect(() => {
     if (yearLevel > 4) setYearLevel("4");
   }, [yearLevel]);
-  const [section, setSection] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
@@ -33,6 +33,7 @@ export default function SignupScreen() {
   const [invalid, setInvalid] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [buttonContent, setButtonContent] = useState("Request to GCU ➞");
 
   return (
     <KeyboardAwareScrollView
@@ -86,10 +87,6 @@ export default function SignupScreen() {
             />
           </View>
           <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">SECTION</Text>
-            <InputField onChangeText={setSection} placeholder="e.g. DW31" />
-          </View>
-          <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">
               ANONYMOUS NAME
             </Text>
@@ -125,6 +122,10 @@ export default function SignupScreen() {
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">EMAIL ADDRESS</Text>
+            <Text className="text-xs text-gray-400 font-archivo">
+              (This email address will only be used for password recovery and
+              account-related notifications.)
+            </Text>
             <InputField
               onChangeText={setEmailAddress}
               placeholder="e.g. juandelacruz@gmail.com"
@@ -259,65 +260,47 @@ export default function SignupScreen() {
           >
             An account associated with this student number already exists.
           </Text>
-          <Pressable
+          <Button
+            value={buttonContent}
             onPress={async () => {
-              if (
-                lastName != "" &&
-                firstName != "" &&
-                yearLevel != "" &&
-                section != "" &&
-                anonymous != "" &&
-                studentNumber != "" &&
-                contactNumber != "" &&
-                emailAddress != "" &&
-                accepted
-              ) {
-                const result = await signup({
-                  last_name: lastName,
-                  first_name: firstName,
-                  year_level: yearLevel,
-                  section: section,
-                  student_number: studentNumber,
-                  contact_number: contactNumber,
-                  anonymous_name: anonymous,
-                  personal_email: emailAddress,
-                });
+              setButtonContent("Requesting");
+              const result = await signup({
+                last_name: lastName,
+                first_name: firstName,
+                year_level: yearLevel,
+                student_number: studentNumber,
+                contact_number: contactNumber,
+                anonymous_name: anonymous,
+                personal_email: emailAddress,
+              });
+              setButtonContent("Request to GCU ➞");
 
-                if (result.success) {
-                  navigation.goBack();
-                  Alert.alert(
-                    "Notifying GCU",
-                    "Your password will be provided via your school emails when the GCU has already approved your request.",
-                    [{ text: "OK" }],
-                  );
-                } else {
-                  setInvalid(true);
-                  setTimeout(function () {
-                    setInvalid(false);
-                  }, 2500);
-                }
+              if (result.success) {
+                navigation.goBack();
+                Alert.alert(
+                  "Notifying GCU",
+                  "Your password will be provided via your school emails when the GCU has already approved your request.",
+                  [{ text: "OK" }],
+                );
+              } else {
+                setInvalid(true);
+                setTimeout(function () {
+                  setInvalid(false);
+                }, 2500);
               }
             }}
-            className={
-              "rounded-xl p-5 " +
-              (lastName != "" &&
-              firstName != "" &&
-              yearLevel != "" &&
-              section != "" &&
-              anonymous != "" &&
-              studentNumber != "" &&
-              contactNumber != "" &&
-              emailAddress != "" &&
-              accepted
-                ? ""
-                : "opacity-50")
+            disabled={
+              lastName == "" ||
+              firstName == "" ||
+              yearLevel == "" ||
+              anonymous == "" ||
+              studentNumber == "" ||
+              contactNumber == "" ||
+              emailAddress == "" ||
+              !accepted ||
+              buttonContent == "Requesting"
             }
-            style={{ backgroundColor: darkenColor(chosenTheme) }}
-          >
-            <Text className="font-archivo-bold text-white w-full text-center text-lg">
-              Request to GCU {"\u27F6"}
-            </Text>
-          </Pressable>
+          />
           <Pressable
             onPress={() => navigation.goBack()}
             className="border border-[#ccc] rounded-xl p-4 active:bg-[#eee]"

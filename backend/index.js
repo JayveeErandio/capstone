@@ -324,6 +324,7 @@ app.post("/login", async (req, res) => {
 app.post("/signup", async (req, res) => {
   let { record } = req.body;
   record = JSON.parse(record);
+  console.log("Signing up by", record.student_number);
 
   const { data, error } = await supabase
     .from("students")
@@ -331,7 +332,9 @@ app.post("/signup", async (req, res) => {
     .eq("student_number", record.student_number);
 
   if (data.length == 0) {
-    await supabase.from("students").upsert(record);
+    const { data: datum, error: errum } = await supabase
+      .from("students")
+      .upsert(record);
     res.json({ success: true });
   } else if (data[0].status != "verified") {
     await supabase.from("students").upsert(record, {
