@@ -32,7 +32,6 @@ export async function putPost(value) {
     .from("posts")
     .insert([value])
     .select("id, mood, content, datetime");
-  console.log(74, data, error);
   return { data: data[0], error };
 }
 

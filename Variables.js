@@ -29,7 +29,7 @@ export const Provider = ({ children }) => {
   const [canSend, setCanSend] = useState(true);
   const [chosenTheme, setChosenTheme] = useState();
   const [availPost, setAvailPost] = useState(4);
-  const [availChat, setAvailChat] = useState(12);
+  const [availChat, setAvailChat] = useState(7);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -184,6 +184,8 @@ export const Provider = ({ children }) => {
     setDailyStatus();
     setCanSend(true);
     setIsAnalyzing(false);
+    setAvailChat(7);
+    setAvailPost(4);
     setEntries({
       door1: null,
       door2: null,
@@ -279,6 +281,7 @@ export const Provider = ({ children }) => {
       content: text,
       student_id: user.id,
     });
+    data.student_id = user.id;
     data.myreact = null;
     data.reactions = {};
     data.students = { anonymous_name: user.anonymous_name };

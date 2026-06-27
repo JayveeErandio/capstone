@@ -513,7 +513,10 @@ app.post("/forgotPassword", async (req, res) => {
   }
 
   const generated = generatePassword();
-  await supabase.auth.admin.updateUserById(data.uuid, { password: generated });
+  const { data: aso, error: pusa } = await supabase.auth.admin.updateUserById(
+    data.uuid,
+    { password: generated },
+  );
 
   const resend = new Resend("re_2WRpYfzu_LWvKMDq4ptyPvuremVd2nGdB");
   await resend.emails.send({

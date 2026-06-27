@@ -89,6 +89,7 @@ export default function Main({ index, setPage }) {
               }}
               key={index}
             >
+              {console.log(67, current.student_id)}
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
                   <Text
