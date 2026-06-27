@@ -40,7 +40,7 @@ async function askAI(question, retries = 5, delay = 2000) {
       model: "gpt-4.1-mini",
       input: question,
     });
-
+    console.log(response.output_text);
     return response.output_text;
   } catch (error) {
     console.error("FULL ERROR:", error);
@@ -50,46 +50,6 @@ async function askAI(question, retries = 5, delay = 2000) {
     throw error;
   }
   return;
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      const response = await fetch(process.env.GOOGLEAI_KEY, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: question }],
-            },
-          ],
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.error) {
-        console.log(`Attempt ${attempt} failed:`, data.error.message);
-
-        if (attempt === retries) {
-          return "AI is busy right now. Please try again later.";
-        }
-
-        await new Promise((res) => setTimeout(res, delay));
-        continue;
-      }
-
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
-    } catch (error) {
-      console.error(`Attempt ${attempt} error:`, error);
-
-      if (attempt === retries) {
-        return "Network error. Please try again.";
-      }
-
-      await new Promise((res) => setTimeout(res, delay));
-    }
-  }
 }
 async function assess(entries, relates) {
   return await askAI(
@@ -390,7 +350,7 @@ app.post("/ai/verifypost", async (req, res) => {
   let feedback = await verifyPost(text);
   if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
   const result = JSON.parse(feedback);
-  console.log(result);
+
   res.json(result);
 });
 

@@ -230,6 +230,7 @@ export const Provider = ({ children }) => {
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, relatePrevDays);
       const result = await backend.assess(entries, relatedDates, user.id);
+
       setDailyStatus(result.result);
 
       await storage.putDailyStatus(result.result);

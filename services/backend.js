@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    //"http://192.168.0.105:3000" + url,
-    "https://capstone-xuwy.onrender.com" + url,
+    "http://192.168.0.105:3000" + url,
+    //"https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
@@ -28,11 +28,12 @@ export async function verifyPost(text) {
 }
 
 export async function assess(entries, relatedDates, userID) {
-  return await call("/ai/assess", {
+  const data = await call("/ai/assess", {
     entries: entries,
     relatedDates: relatedDates,
     userID: userID,
   });
+  return data;
 }
 
 export async function assessFree(entries) {
