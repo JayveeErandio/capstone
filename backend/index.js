@@ -171,6 +171,7 @@ app.post("/login", async (req, res) => {
     .from("status_days")
     .select("date, id, journal, mood")
     .eq("account_id", student.id);
+  console.log(statusDays);
 
   const { data: statusWeeks } = await supabase
     .from("status_weeks")
