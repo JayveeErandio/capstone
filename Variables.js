@@ -156,6 +156,7 @@ export const Provider = ({ children }) => {
 
   const login = async (studentID, password) => {
     const session = await supabase.login(studentID, password);
+
     if (!session) return { success: false };
 
     const result = await backend.login(studentID, password);
@@ -876,7 +877,7 @@ export const Provider = ({ children }) => {
       case "excited":
         return "#F2C94C";
       case "content":
-        return "#6FCF97";
+        return "#6FCF88";
       case "drained":
         return "#8DA9C4";
       case "stressed":
@@ -885,7 +886,7 @@ export const Provider = ({ children }) => {
         return null;
     }
   };
-
+  12;
   const darkenColor = (hex, percent = 25) => {
     if (hex == null) return "#c59";
     // Remove #

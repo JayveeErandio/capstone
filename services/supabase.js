@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(
-  "https://rpeqlerchayltgthzwve.supabase.co",
-  "sb_publishable_LsS2PqcBQ9HxsWKt-nYL5w_62O1qwGi",
+  "https://xyxjbqmvxtopeemdxjnq.supabase.co",
+  "sb_publishable_D0Me3y_3bodfwFLJU-d5Ug_lNHG_4RG",
 );
 import * as Notifications from "expo-notifications";
 import * as backend from "./backend";

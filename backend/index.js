@@ -460,7 +460,7 @@ app.post("/getSchedules", async (req, res) => {
 
 app.post("/getMorePosts", async (req, res) => {
   const { postID, userID } = req.body;
-
+  console.log(postID, userID);
   const { data, error } = await supabase
     .from("posts")
     .select(

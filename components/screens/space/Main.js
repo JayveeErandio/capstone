@@ -80,11 +80,11 @@ export default function Main({ index, setPage }) {
         >
           {posts.map((current, index) => (
             <View
-              className="bg-white rounded-2xl p-5 border gap-2 mb-5 overflow-hidden"
+              className="rounded-2xl p-5 border border-black/0 gap-2 mb-5 overflow-hidden"
               style={{
-                borderColor:
+                backgroundColor:
                   current.student_id == user.id
-                    ? (chosenTheme ?? "#c59")
+                    ? (darkenColor(softenColor(chosenTheme, 0.7), 5) ?? "#c59")
                     : "white",
               }}
               key={index}
@@ -94,24 +94,27 @@ export default function Main({ index, setPage }) {
                   <Text
                     className="text-lg p-2 rounded-xl border"
                     style={{
-                      backgroundColor: moodToColor(current.mood) + "20",
-                      borderColor: moodToColor(current.mood),
+                      backgroundColor:
+                        current.student_id == user.id
+                          ? darkenColor(softenColor(chosenTheme, 0.3), 0)
+                          : moodToColor(current.mood) + "20",
+                      borderColor: darkenColor(moodToColor(current.mood), 20),
                     }}
                   >
                     {moodToEmoji(current.mood)}
                   </Text>
                   <View>
-                    <Text className="text-[#773] font-archivo-bold">
+                    <Text className="text-[#444] font-archivo-bold">
                       {current.student_id == user.id ? (
                         <>
                           <Text>{user.anonymous_name}</Text>
-                          <Text className="text-[#444]"> • You</Text>
+                          <Text className="text-[#777]"> • You</Text>
                         </>
                       ) : (
                         current.students.anonymous_name
                       )}
                     </Text>
-                    <Text className="text-sm text-[#777] font-archivo">
+                    <Text className="text-sm font-archivo text-[#888]">
                       {current.mood} • {formatTime(current.datetime)}
                     </Text>
                   </View>
@@ -148,9 +151,10 @@ export default function Main({ index, setPage }) {
                   </Text>
                 </Pressable>
               </View>
-              <Text className="leading-normal font-archivo">
+              <Text className="leading-normal font-archivo text-[#444]">
                 {current.content}
               </Text>
+
               {/* Reaction Buttons */}
               <View className="flex-row gap-2">
                 <Pressable
@@ -162,8 +166,8 @@ export default function Main({ index, setPage }) {
                   }}
                   className={
                     (current.myreact == "love"
-                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
-                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                      ? "bg-blue-500/20 active:bg-blue-500/30 border-blue-600/50"
+                      : "bg-black/5 active:bg-black/20 border-black/10") +
                     "  p-2 rounded-full px-3 border "
                   }
                 >
@@ -188,8 +192,8 @@ export default function Main({ index, setPage }) {
                   }}
                   className={
                     (current.myreact == "funny"
-                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
-                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                      ? "bg-blue-500/20 active:bg-blue-500/30 border-blue-600/50"
+                      : "bg-black/5 active:bg-black/20 border-black/10") +
                     "  p-2 rounded-full px-3 border border-[#aaa]"
                   }
                 >
@@ -214,8 +218,8 @@ export default function Main({ index, setPage }) {
                   }}
                   className={
                     (current.myreact == "sad"
-                      ? "bg-blue-100 active:bg-blue-200 border-blue-500"
-                      : "bg-gray-100 active:bg-gray-200 border-gray-300") +
+                      ? "bg-blue-500/20 active:bg-blue-500/30 border-blue-600/50"
+                      : "bg-black/5 active:bg-black/20 border-black/10") +
                     "  p-2 rounded-full px-3 border border-[#aaa]"
                   }
                 >
