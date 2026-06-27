@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import OpenAI from "openai";
 import crypto from "crypto";
 import { Resend } from "resend";
+import Profanity from "./profanity.js";
 
 dotenv.config();
 const app = express();
@@ -347,10 +348,16 @@ app.post("/ai/assessFree", async (req, res) => {
 
 app.post("/ai/verifypost", async (req, res) => {
   const { text } = req.body;
-  let feedback = await verifyPost(text);
-  if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
-  const result = JSON.parse(feedback);
-
+  let result;
+  if (Profanity(text).hasProfanity) {
+    // First undergo to dictionary list premade
+    result = { isAllowed: false, reason: "Contains profanity" };
+    console.log("Immediately detected in profanity list:", result);
+  } else {
+    let feedback = await verifyPost(text);
+    if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
+    result = JSON.parse(feedback);
+  }
   res.json(result);
 });
 
