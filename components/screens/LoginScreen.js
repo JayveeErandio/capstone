@@ -55,6 +55,29 @@ export default function LoginScreen() {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotButton, setForgotButton] = useState("Send Temporary Password");
 
+  // For text and style bugs during launch
+  const [bug1, setBug1] = useState("Welcome Back");
+  const [bug2, setBug2] = useState("Don't have an account? ");
+  const [bug3, setBug3] = useState("Sign up");
+  const [bug4, setBug4] = useState("Forgot Password?");
+  const bugging = function () {
+    setTimeout(() => {
+      setBug1("WeIcome Back");
+      setBug2("Don't have am account? ");
+      setBug3("Sigm up");
+      setBug4("Forgot Possword?");
+    }, 120);
+    setTimeout(() => {
+      setBug1("Welcome Back");
+      setBug2("Don't have an account? ");
+      setBug3("Sign up");
+      setBug4("Forgot Password?");
+    }, 180);
+  };
+  useEffect(() => {
+    bugging();
+  }, []);
+
   return loading ? (
     <LoadingScreen message="Logging you in" />
   ) : (
@@ -71,9 +94,7 @@ export default function LoginScreen() {
             style={{ width: 80, height: 80 }}
           />
 
-          <Text className="font-lora-bold text-3xl text-[#333]">
-            Welcome back
-          </Text>
+          <Text className="font-lora-bold text-3xl text-[#333]">{bug1}</Text>
           <Text className="opacity-50 text-sm font-archivo">
             Sign in to your MoodLink account
           </Text>
@@ -110,7 +131,9 @@ export default function LoginScreen() {
               if (loginField1 && loginField2) {
                 setLoading(true);
                 const data = await login(loginField1, loginField2);
+                bugging();
                 setLoading(false);
+
                 if (data.success) {
                   setLoginField1("");
                   setLoginField2("");
@@ -152,7 +175,7 @@ export default function LoginScreen() {
               className="font-archivo text-center text-sm"
               style={{ color: darkenColor(chosenTheme) }}
             >
-              Forgot Password?
+              {bug4}
             </Text>
           </Pressable>
         </View>
@@ -176,9 +199,7 @@ export default function LoginScreen() {
             </Text>
           </Pressable>
           <View className="flex-row mx-auto">
-            <Text className="self-start text-[#777] font-archivo">
-              Don't have an account?{" "}
-            </Text>
+            <Text className="self-start text-[#777] font-archivo">{bug2}</Text>
             <Text
               onPress={() => {
                 navigation.navigate("Signup");
@@ -186,7 +207,7 @@ export default function LoginScreen() {
               className="font-archivo-bold self-start"
               style={{ color: darkenColor(chosenTheme) }}
             >
-              Sign up
+              {bug3}
             </Text>
           </View>
           <View
