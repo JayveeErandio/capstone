@@ -40,7 +40,6 @@ export default function ProfileScreen() {
   useEffect(() => {
     if (levelField > 4) setLevelField(4);
   }, [levelField]);
-  const [sectionField, setSectionField] = useState(user.section);
   const [fieldCurrent, setFieldCurrent] = useState("");
   const [fieldNew, setFieldNew] = useState("");
   const [fieldConfirm, setFieldConfirm] = useState("");
@@ -109,7 +108,7 @@ export default function ProfileScreen() {
             {firstName} {lastName}
           </Text>
           <Text className="text-center text-sm text-[#777] -mt-2 font-archivo">
-            {user["student_number"]} · {user["section"]}
+            {user["student_number"]}
           </Text>
         </View>
 
@@ -170,38 +169,22 @@ export default function ProfileScreen() {
                   numeric
                 />
               </View>
-              <View>
-                <Text className="font-archivo-bold text-sm text-[#333]">
-                  SECTION
-                </Text>
-                <InputField
-                  onChangeText={setSectionField}
-                  value={sectionField}
-                  placeholder="e.g. DW31"
-                />
-              </View>
               <Button
                 onPress={async () => {
-                  if (
-                    user.anonymous_name != anonyField ||
-                    user.year_level != levelField ||
-                    user.section != sectionField
-                  ) {
-                    await changeUserColumn({
-                      anonymous_name: anonyField,
-                      year_level: levelField,
-                      section: sectionField,
-                    });
-                    setButton1("Saved Changes");
-                    setTimeout(() => {
-                      setButton1("Save");
-                    }, 1500);
-                  }
+                  setButton1("Saving");
+                  await changeUserColumn({
+                    anonymous_name: anonyField,
+                    year_level: levelField,
+                  });
+                  setButton1("Saved Changes");
+                  setTimeout(() => {
+                    setButton1("Save");
+                  }, 1500);
                 }}
                 disabled={
-                  user.anonymous_name == anonyField &&
-                  user.year_level == levelField &&
-                  user.section == sectionField
+                  (user.anonymous_name == anonyField &&
+                    user.year_level == levelField) ||
+                  button1 == "Saving"
                 }
                 value={button1}
               />
@@ -296,8 +279,10 @@ export default function ProfileScreen() {
                     }, 2000);
                     return;
                   }
+                  setButton2("Saving");
                   const sameOld = await changePassword(fieldCurrent, fieldNew);
                   if (!sameOld) {
+                    setButton2("Save");
                     setShowOld(true);
                     setTimeout(() => {
                       setShowOld(false);
@@ -313,6 +298,7 @@ export default function ProfileScreen() {
                         setButton2("Save");
                       }, 2000);
                     } else {
+                      setButton2("Save");
                       setErrorMessage(
                         "Old password cannot be same as new password.",
                       );
@@ -326,7 +312,8 @@ export default function ProfileScreen() {
                 disabled={
                   fieldCurrent == "" ||
                   fieldNew.length < 8 ||
-                  fieldConfirm.length < 8
+                  fieldConfirm.length < 8 ||
+                  button2 == "Saving"
                 }
                 value={button2}
               />
