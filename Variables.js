@@ -636,7 +636,10 @@ export const Provider = ({ children }) => {
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
 
-        const format = (d) => d.toISOString().split("T")[0];
+        const format = (d) =>
+          d.toLocaleDateString("en-CA", {
+            timeZone: "Asia/Manila",
+          });
 
         const todayStr = format(today);
         const yesterdayStr = format(yesterday);
