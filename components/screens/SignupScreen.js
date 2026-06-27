@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import InputField from "../InputField";
 import Button from "../Button";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -26,6 +27,7 @@ export default function SignupScreen() {
   useEffect(() => {
     if (yearLevel > 4) setYearLevel("4");
   }, [yearLevel]);
+  const [program, setProgram] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
@@ -34,7 +36,21 @@ export default function SignupScreen() {
   const [accepted, setAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [buttonContent, setButtonContent] = useState("Request to GCU ➞");
-
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: "BSA", value: "1" },
+    { label: "BSBA-FMBA", value: "2" },
+    { label: "BSBA-MMM", value: "3" },
+    { label: "BSBA-OSM", value: "4" },
+    { label: "BSCS-SE", value: "5" },
+    { label: "BSIT-AGD", value: "6" },
+    { label: "BSIT-Cyber", value: "7" },
+    { label: "BSIT-WMA", value: "8" },
+    { label: "BSP", value: "9" },
+    { label: "BSTM", value: "10" },
+  ]);
+  console.log(value);
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -84,6 +100,39 @@ export default function SignupScreen() {
               placeholder="e.g. 4"
               numeric
               value={yearLevel}
+            />
+          </View>
+          <View className="gap-1">
+            <Text className="font-archivo-bold text-[#333]">PROGRAM</Text>
+
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              placeholder="Select Year Level"
+              listMode="SCROLLVIEW"
+              style={{
+                borderColor: "#d1d5db",
+                borderRadius: 10,
+                backgroundColor: "#eee",
+              }}
+              textStyle={{
+                fontFamily: "Archivo",
+                fontSize: 14,
+              }}
+              labelStyle={{
+                fontFamily: "Archivo",
+              }}
+              placeholderStyle={{
+                fontFamily: "Archivo",
+                color: "#9ca3af",
+              }}
+              dropDownContainerStyle={{
+                borderColor: "#d1d5db",
+              }}
             />
           </View>
           <View className="gap-1">
@@ -268,6 +317,7 @@ export default function SignupScreen() {
                 last_name: lastName,
                 first_name: firstName,
                 year_level: yearLevel,
+                program: items.find((current) => current.value == value).label,
                 student_number: studentNumber,
                 contact_number: contactNumber,
                 anonymous_name: anonymous,
@@ -293,6 +343,7 @@ export default function SignupScreen() {
               lastName == "" ||
               firstName == "" ||
               yearLevel == "" ||
+              value == null ||
               anonymous == "" ||
               studentNumber == "" ||
               contactNumber == "" ||

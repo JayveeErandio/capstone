@@ -272,7 +272,7 @@ app.post("/login", async (req, res) => {
     .neq("status", "flagged")
     .order("id", { ascending: false })
     .limit(7);
-
+  12;
   const { data: myPosts } = await supabase
     .from("posts")
     .select(
@@ -335,6 +335,7 @@ app.post("/signup", async (req, res) => {
     const { data: datum, error: errum } = await supabase
       .from("students")
       .upsert(record);
+
     res.json({ success: true });
   } else if (data[0].status != "verified") {
     await supabase.from("students").upsert(record, {
@@ -460,7 +461,7 @@ app.post("/getSchedules", async (req, res) => {
 
 app.post("/getMorePosts", async (req, res) => {
   const { postID, userID } = req.body;
-  console.log(postID, userID);
+
   const { data, error } = await supabase
     .from("posts")
     .select(
