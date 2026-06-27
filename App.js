@@ -18,7 +18,6 @@ import ProfileScreen from "./components/screens/ProfileScreen";
 import ChatbotScreen from "./components/screens/ChatbotScreen";
 import LoadingScreen from "./components/screens/LoadingScreen";
 import { useFonts } from "expo-font";
-import * as Notification from "expo-notifications";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,19 +31,6 @@ function AppNavigator() {
     Archivo: require("./assets/fonts/Archivo-Regular.ttf"),
     ArchivoBold: require("./assets/fonts/Archivo-Bold.ttf"),
   });
-
-  // SETUP: NOTIFICATION
-  Notification.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-      shouldShowBanner: true,
-      shouldShowList: true,
-    }),
-  });
-  useEffect(() => {
-    Notification.requestPermissionsAsync();
-  }, []);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

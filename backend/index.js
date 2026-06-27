@@ -326,7 +326,9 @@ app.post("/ai/assess", async (req, res) => {
         : entries.door3 == "Light"
           ? "content"
           : "drained",
-    date: new Date().toISOString().split("T")[0],
+    date: new Date().toLocaleDateString("en-CA", {
+      timeZone: "Asia/Manila",
+    }),
     account_id: userID,
   };
 

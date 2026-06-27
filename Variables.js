@@ -77,7 +77,11 @@ export const Provider = ({ children }) => {
     setChats(data.chats);
 
     const recentStatus = data.statusDays.find(
-      (current) => current.date == new Date().toISOString().split("T")[0],
+      (current) =>
+        current.date ==
+        new Date().toLocaleDateString("en-CA", {
+          timeZone: "Asia/Manila",
+        }),
     );
 
     if (recentStatus) {
@@ -704,7 +708,9 @@ export const Provider = ({ children }) => {
 
       today.setDate(today.getDate() - diff);
 
-      return today.toISOString().split("T")[0];
+      return today.toLocaleDateString("en-CA", {
+        timeZone: "Asia/Manila",
+      });
     }
 
     let startingDate = getMostRecentDay(oldestDay);
