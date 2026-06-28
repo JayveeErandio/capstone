@@ -25,11 +25,12 @@ export default function NotificationScreen() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-
+    console.log();
     // Simulate fetching data
     await reloadNotification(
-      notifications.reduce((max, current) =>
-        current.id > max.id ? current : max,
+      notifications.reduce(
+        (max, current) => (current.id > max.id ? current : max),
+        { id: 0 },
       ).id,
     );
 

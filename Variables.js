@@ -414,6 +414,7 @@ export const Provider = ({ children }) => {
   };
 
   const reloadNotification = async (latest_id) => {
+    console.log(67);
     const newData = await supabase.reloadNotification(latest_id, user.id);
     setNotifications([...newData, ...notifications]);
     await storage.putNotifications([...newData, ...notifications]);
