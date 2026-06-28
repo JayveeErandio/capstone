@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    //"http://192.168.88.3:3000" + url,
-    "https://capstone-xuwy.onrender.com" + url,
+    "http://192.168.88.3:3000" + url,
+    //"https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
@@ -11,7 +11,6 @@ async function call(url, args) {
       body: JSON.stringify(args),
     },
   );
-
   return await response.json();
 }
 

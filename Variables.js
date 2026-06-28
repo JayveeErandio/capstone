@@ -343,7 +343,7 @@ export const Provider = ({ children }) => {
     }
     temp();
   };
-
+  12;
   const deletePost = async (data, isPosted) => {
     if (isPosted) {
       await supabase.deletePost(data.id);

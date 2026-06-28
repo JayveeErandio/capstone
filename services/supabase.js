@@ -231,6 +231,21 @@ export async function updateFlagged(post_id, user_id, reason) {
   await supabase
     .from("reported_post")
     .insert({ post_id: post_id, student_id: user_id, reason: reason });
+
+  //Counting where the post has been reported 3 times or more
+  const { data } = await supabase
+    .from("reported_post")
+    .select()
+    .eq("post_id", post_id);
+
+  if (data?.length >= 3) {
+    const { data: datum, error: errum } = await supabase
+      .from("posts")
+      .update({ isReported: true })
+      .eq("id", post_id);
+    console.log(datum, errum);
+  }
+  console.log(data, data?.length);
 }
 
 export async function getStudent(user_id) {
