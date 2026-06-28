@@ -407,7 +407,7 @@ function Result() {
 
           {/* Done or Submit */}
           <Button
-            value={"Done"}
+            value={"Save"}
             onPress={() => {
               if (onDemo) {
                 removeFree();

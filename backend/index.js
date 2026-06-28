@@ -322,11 +322,11 @@ app.post("/ai/assess", async (req, res) => {
     mood:
       entries.door1 == "High"
         ? entries.door3 == "Light"
-          ? "excited"
-          : "stressed"
+          ? "Excited"
+          : "Stressed"
         : entries.door3 == "Light"
-          ? "content"
-          : "drained",
+          ? "Content"
+          : "Drained",
     date: new Date().toLocaleDateString("en-CA", {
       timeZone: "Asia/Manila",
     }),
