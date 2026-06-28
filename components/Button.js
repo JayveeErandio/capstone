@@ -17,14 +17,27 @@ export default function Button(args) {
       onPress={() => {
         if (!args.disabled) args.onPress();
       }}
-      className="p-4 rounded-full"
+      className={args.className + " p-4 rounded-full"}
       style={{
-        backgroundColor: !args.disabled
-          ? darkenColor(finalTheme) + (click ? "ff" : "ee")
-          : darkenColor(finalTheme) + "88",
+        backgroundColor: !args.plain
+          ? !args.disabled
+            ? darkenColor(finalTheme) + (click ? "ff" : "ee")
+            : darkenColor(finalTheme) + "88"
+          : "transparent",
+        borderColor: !args.disabled
+          ? darkenColor(finalTheme) + (click ? "ff" : "bb")
+          : darkenColor(finalTheme) + "00",
+        borderWidth: 1.5,
       }}
     >
-      <Text className="text-white text-center font-archivo-bold text-lg">
+      <Text
+        className="text-center font-archivo-bold text-lg"
+        style={{
+          color: args.plain
+            ? darkenColor(finalTheme) + (click ? "ff" : "bb")
+            : "#fff",
+        }}
+      >
         {args.value}
       </Text>
     </Pressable>

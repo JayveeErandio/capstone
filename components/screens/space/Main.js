@@ -7,9 +7,11 @@ import {
   ActivityIndicator,
   StyleSheet,
   RefreshControl,
+  Modal,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { Variables } from "../../../Variables";
+import Button from "../../Button";
 
 export default function Main({ index, setPage }) {
   const {
@@ -41,6 +43,21 @@ export default function Main({ index, setPage }) {
 
     setRefreshing(false);
   };
+
+  const REPORT_REASONS = [
+    "Harassment or bullying",
+    "Hate speech",
+    "Self-harm or dangerous content",
+    "Sexual or inappropriate content",
+    "False or misleading information",
+    "Spam",
+    "Other",
+  ];
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [selectedReason, setSelectedReason] = useState("");
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [reportSubmitted, setReportSubmitted] = useState(false);
+  const [reportText, setReportText] = useState("Report");
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>
@@ -89,7 +106,6 @@ export default function Main({ index, setPage }) {
               }}
               key={index}
             >
-              {console.log(67, current.student_id)}
               <View className="flex-row justify-between">
                 <View className="flex-row items-center gap-2">
                   <Text
@@ -122,28 +138,10 @@ export default function Main({ index, setPage }) {
                 </View>
                 <Pressable
                   onPress={async () => {
-                    if (
-                      await new Promise((resolve) => {
-                        Alert.alert(
-                          "Do you want to report this post?",
-                          "Make sure it's reasonable or else GCU might give warning consideration to your action",
-                          [
-                            {
-                              text: "Yes",
-                              onPress: () => resolve(true), // User confirmed
-                              style: "cancel",
-                            },
-                            {
-                              text: "No",
-                              onPress: () => resolve(false), // User cancelled
-                            },
-                          ],
-                          { cancelable: false },
-                        );
-                      })
-                    ) {
-                      reportPost(current);
-                    }
+                    setSelectedPost(current);
+                    setSelectedReason("");
+                    setReportSubmitted(false);
+                    setReportModalVisible(true);
                   }}
                   className="self-start pb-4 pl-8"
                 >
@@ -272,6 +270,101 @@ export default function Main({ index, setPage }) {
           <View className="h-36"></View>
         </ScrollView>
       </View>
+      <Modal
+        transparent
+        animationType="fade"
+        visible={reportModalVisible}
+        onRequestClose={() => setReportModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,.45)",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 24,
+          }}
+        >
+          <View
+            className="bg-white rounded-3xl p-6 w-full"
+            style={{ maxWidth: 420 }}
+          >
+            <Text className="text-xl font-archivo-bold text-[#333]">
+              Report Post
+            </Text>
+
+            <Text className="mt-2 text-[#666] font-archivo leading-5">
+              Why are you reporting this post?
+            </Text>
+
+            <View className="mt-5 gap-3">
+              {REPORT_REASONS.map((reason) => (
+                <Pressable
+                  key={reason}
+                  onPress={() => setSelectedReason(reason)}
+                  className={
+                    "rounded-xl border p-2 " +
+                    (selectedReason === reason
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-300 bg-white")
+                  }
+                >
+                  <Text
+                    className={
+                      selectedReason === reason
+                        ? "text-red-600 font-archivo-bold"
+                        : "text-[#444] font-archivo"
+                    }
+                  >
+                    {reason}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <View
+              className="rounded-xl p-4 mt-5"
+              style={{ backgroundColor: "#FFF8E8" }}
+            >
+              <Text
+                className="text-xs leading-5 font-archivo"
+                style={{ color: "#9A6700" }}
+              >
+                Please report only when you genuinely believe this post violates
+                the community guidelines. Intentionally submitting false or
+                abusive reports may result in a warning or further review by the
+                Guidance and Counseling Unit (GCU).
+              </Text>
+            </View>
+
+            <View className="mt-6 flex-row gap-3">
+              <Button
+                onPress={() => {
+                  setReportModalVisible(false);
+                  setReportSubmitted(false);
+                  setReportText("Report");
+                }}
+                value="Cancel"
+                plain
+                className="flex-1"
+              />
+
+              <Button
+                disabled={!selectedReason || reportSubmitted}
+                onPress={async () => {
+                  await reportPost(selectedPost, selectedReason);
+                  setReportText("Reported");
+                  setReportSubmitted(true);
+                }}
+                value={reportText}
+                className="flex-1"
+              >
+                {reportSubmitted ? "✓ Reported" : "Confirm Report"}
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

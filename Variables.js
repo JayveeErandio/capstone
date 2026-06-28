@@ -359,8 +359,8 @@ export const Provider = ({ children }) => {
     }
   };
 
-  const reportPost = async (post) => {
-    await supabase.updateFlagged(post.id);
+  const reportPost = async (post, reason) => {
+    await supabase.updateFlagged(post.id, user.id, reason);
     const poser = await supabase.getStudent(post.student_id);
     const title =
       capitalizeWords(user.last_name) +

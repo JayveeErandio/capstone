@@ -227,11 +227,10 @@ export async function updateJournal(journal, user_id) {
   return { data, error };
 }
 
-export async function updateFlagged(post_id) {
+export async function updateFlagged(post_id, user_id, reason) {
   await supabase
-    .from("posts")
-    .update({ isReported: true, status: "flagged" })
-    .eq("id", post_id);
+    .from("reported_post")
+    .insert({ post_id: post_id, student_id: user_id, reason: reason });
 }
 
 export async function getStudent(user_id) {
