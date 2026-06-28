@@ -391,13 +391,14 @@ function Result() {
             <Text className="bg-[#ffd] border border-[#cca] p-2 px-4 rounded-full italic text-[#552]">
               {dailyStatus.followup}
             </Text>
+            {console.log(68, dailyStatus)}
 
             <TextInput
               onChangeText={(value) =>
                 setDailyStatus({ ...dailyStatus, journal: value })
               }
               multiline
-              className="bg-[#eee] rounded-xl p-4 h-32 text-[#555]"
+              className="bg-[#eee] rounded-xl p-4 h-32 text-[#555] font-archivo"
               textAlignVertical="top"
               placeholder="Write your thoughts here..."
               value={dailyStatus.journal}

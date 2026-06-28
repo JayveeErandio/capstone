@@ -38,12 +38,15 @@ export async function putPost(value) {
 export async function deletePendingPost(post_id) {
   const { error } = await supabase
     .from("pending_posts")
-    .delete()
+    .update({ isArchived: true })
     .eq("id", post_id);
 }
 
 export async function deletePost(post_id) {
-  const { error } = await supabase.from("posts").delete().eq("id", post_id);
+  const { error } = await supabase
+    .from("posts")
+    .update({ status: "archived" })
+    .eq("id", post_id);
 }
 
 export async function updateReact(post_id, student_id, reaction) {
