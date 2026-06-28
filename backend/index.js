@@ -568,23 +568,24 @@ async function autoDelNotif() {
     .lte("datetime", today.toISOString());
   console.log("Old notifications deleted");
 }
-
 autoDelNotif();
+async function autoDelSched() {
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("available_schedules")
+    .delete()
+    .lt("datetime", now);
+
+  if (error) {
+    console.error(error);
+  } else {
+    console.log("Deleted past records");
+  }
+}
+autoDelSched();
+
+const hoursRotation = 12;
 setInterval(async function () {
   autoDelNotif();
-}, 43200000);
-
-async function tae() {
-  //const { data } = await supabase.auth.signInWithPassword({
-  //  email: `jayveeerandio13@gmail.com`,
-  //   password: "gerygery",
-  // });
-  // console.log(data);
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser();
-  // console.log(user?.id);
-  // await supabase.auth.admin.deleteUser(user?.id);
-}
-
-//tae();
+}, 3600000 * hoursRotation);
