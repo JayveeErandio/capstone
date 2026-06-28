@@ -50,7 +50,7 @@ export default function SignupScreen() {
     { label: "BSP", value: "9" },
     { label: "BSTM", value: "10" },
   ]);
-  console.log(value);
+
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{ flexGrow: 1 }}

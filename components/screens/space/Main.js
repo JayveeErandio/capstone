@@ -143,7 +143,10 @@ export default function Main({ index, setPage }) {
                     setReportSubmitted(false);
                     setReportModalVisible(true);
                   }}
-                  className="self-start pb-4 pl-8"
+                  className={
+                    (current.student_id == user.id ? "hidden" : "") +
+                    " self-start pb-4 pl-8"
+                  }
                 >
                   <Text className="text-sm text-[#bbb] font-archivo">
                     Report
