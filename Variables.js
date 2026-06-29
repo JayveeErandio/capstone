@@ -92,7 +92,6 @@ export const Provider = ({ children }) => {
         ...JSON.parse(data.user.daily_result),
         journal: recentStatus.journal,
       });
-      console.log(recentStatus);
 
       setEntries({
         door1:

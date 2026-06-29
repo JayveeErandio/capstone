@@ -167,13 +167,15 @@ export default function SignupScreen() {
               onChangeText={setContactNumber}
               numeric
               placeholder="e.g. 09123456789"
+              maxLength={11}
             />
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">EMAIL ADDRESS</Text>
             <Text className="text-xs text-gray-400 font-archivo">
               (This email address will only be used for password recovery and
-              account-related notifications.)
+              account-related notifications. School email that ends with
+              @feudiliman.edu.ph might not be effective)
             </Text>
             <InputField
               onChangeText={setEmailAddress}

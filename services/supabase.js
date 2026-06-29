@@ -266,9 +266,7 @@ export async function updateFlagged(post_id, user_id, reason) {
       .from("posts")
       .update({ isReported: true })
       .eq("id", post_id);
-    console.log(datum, errum);
   }
-  console.log(data, data?.length);
 }
 
 export async function getStudent(user_id) {
