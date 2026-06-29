@@ -241,7 +241,12 @@ export async function updateJournal(journal, user_id) {
     .from("status_days")
     .update({ journal: journal })
     .eq("account_id", user_id)
-    .eq("date", new Date().toISOString().split("T")[0]);
+    .eq(
+      "date",
+      new Date().toLocaleDateString("en-CA", {
+        timeZone: "Asia/Manila",
+      }),
+    );
   return { data, error };
 }
 

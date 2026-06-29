@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Variables } from "../../Variables";
 import { useContext } from "react";
@@ -274,6 +274,11 @@ function Result() {
         ? "Content"
         : "Drained";
 
+  const [editable, setEditable] = useState(false);
+  useEffect(() => {
+    if (dailyStatus.journal == null) setEditable(true);
+  }, []);
+
   return (
     <KeyboardAwareScrollView
       className="flex-1 p-7 py-12"
@@ -393,11 +398,15 @@ function Result() {
             </Text>
 
             <TextInput
+              editable={editable}
               onChangeText={(value) =>
                 setDailyStatus({ ...dailyStatus, journal: value })
               }
               multiline
-              className="bg-[#eee] rounded-xl p-4 h-32 text-[#555] font-archivo"
+              className={
+                (editable ? "text-[#444]" : "text-[#aaa]") +
+                " bg-[#eee] rounded-xl p-4 h-32 font-archivo"
+              }
               textAlignVertical="top"
               placeholder="Write your thoughts here..."
               value={dailyStatus.journal}
@@ -407,8 +416,9 @@ function Result() {
 
           {/* Done or Submit */}
           <Button
-            value={"Save"}
+            value={editable ? "Save" : "Edit"}
             onPress={() => {
+              setEditable((prev) => !prev);
               if (onDemo) {
                 removeFree();
                 navigation.navigate("Login");
@@ -417,8 +427,10 @@ function Result() {
                   setOnDemo(false);
                 }, 700);
               } else {
-                updateJournal();
-                navigation.navigate("Main");
+                if (editable) {
+                  updateJournal();
+                  navigation.navigate("Main");
+                }
               }
             }}
           />
