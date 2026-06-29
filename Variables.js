@@ -21,6 +21,7 @@ export const Provider = ({ children }) => {
     door3: null,
     door4: null,
   });
+
   const [notifications, setNotifications] = useState([]);
   const [books, setBooks] = useState([]);
   const [currentBook, setCurrentBook] = useState({});
@@ -28,7 +29,7 @@ export const Provider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [canSend, setCanSend] = useState(true);
   const [chosenTheme, setChosenTheme] = useState();
-  const [availPost, setAvailPost] = useState(5);
+  const [availPost, setAvailPost] = useState(5000);
   const [availChat, setAvailChat] = useState(7);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
@@ -51,6 +52,8 @@ export const Provider = ({ children }) => {
   // yung user kakatype paulit ulit
   const [loginField1, setLoginField1] = useState("");
   const [loginField2, setLoginField2] = useState("");
+  //For Connection Issue to Backend
+  const [restartApp, setRestartApp] = useState(false);
 
   // Isesetup nya lang mga variables galing phone storage, kung meron lang or may nakalogin na user
   useEffect(() => {
@@ -1103,11 +1106,13 @@ export const Provider = ({ children }) => {
         forgotPassword,
         getUpdatedScheds,
         statusWeeks,
+        restartApp,
+        setRestartApp,
       }}
     >
       {children}
     </Variables.Provider>
   );
 };
-
+12;
 export const Variables = createContext();

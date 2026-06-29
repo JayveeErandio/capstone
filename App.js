@@ -18,6 +18,8 @@ import ProfileScreen from "./components/screens/ProfileScreen";
 import ChatbotScreen from "./components/screens/ChatbotScreen";
 import LoadingScreen from "./components/screens/LoadingScreen";
 import { useFonts } from "expo-font";
+import { Image, Text, View } from "react-native";
+import { connect } from "./services/backend";
 
 const Stack = createNativeStackNavigator();
 
@@ -59,13 +61,59 @@ function AppNavigator() {
   );
 }
 
+function Root() {
+  const { restartApp, setRestartApp } = useContext(Variables);
+  let restartDetect = false;
+
+  useEffect(() => {
+    setRestartApp(false);
+    const interval = setInterval(async () => {
+      if (restartDetect) {
+        setRestartApp(true);
+        console.log("BOI Di na nagana", Date.now());
+      }
+      restartDetect = true;
+      await connect();
+      restartDetect = false;
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      <AppNavigator />
+      <View
+        className={
+          (restartApp ? "" : "hidden") +
+          " absolute inset-0 z-50 bg-black/50 justify-center items-center"
+        }
+      >
+        <View className="bg-white w-3/4 rounded-xl p-5 items-center gap-2">
+          <Image
+            source={require("./assets/connection_issue.jpg")}
+            className="aspect-square h-20"
+          />
+          <Text className="font-archivo-bold text-[#555] text-xl text-center">
+            Something went wrong with the connection.
+          </Text>
+          <Text className="font-archivo text-[#555] text-center">
+            Please close the app completely, then reopen it to continue using
+            the app normally. Sorry for this incovenience.
+          </Text>
+        </View>
+      </View>
+    </>
+  );
+}
+
 export default function App() {
   return (
     <Provider>
       {/* Yung SafeAreaView, parang viewport lang sya na sasakupan ng mga UI screen */}
       <SafeAreaProvider>
         <NavigationContainer>
-          <AppNavigator />
+          <Root />
         </NavigationContainer>
       </SafeAreaProvider>
     </Provider>

@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    "http://192.168.88.3:3000" + url,
-    //"https://capstone-xuwy.onrender.com" + url,
+    //"http://192.168.0.105:3000" + url,
+    "https://capstone-xuwy.onrender.com" + url,
     //"https://moodlinkme.ddns.net/ext-api" + url,
     {
       method: "POST",
@@ -81,4 +81,8 @@ export async function forgotPassword(student_number, email) {
     student_number: student_number,
     email: email,
   });
+}
+
+export async function connect() {
+  return await call("/connect");
 }

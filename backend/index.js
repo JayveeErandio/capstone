@@ -146,6 +146,10 @@ NOTE: Return only the plain text in a format of JSON stringified object or expec
 }
 
 // URL APIs
+app.post("/connect", (req, res) => {
+  res.json({ status: "success" });
+});
+
 app.get("/", (req, res) => {
   res.json({ message: "" });
 });
@@ -171,7 +175,6 @@ app.post("/login", async (req, res) => {
     .from("status_days")
     .select("date, id, journal, mood")
     .eq("account_id", student.id);
-  console.log(statusDays);
 
   const { data: statusWeeks } = await supabase
     .from("status_weeks")
