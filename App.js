@@ -75,7 +75,7 @@ function Root() {
       restartDetect = true;
       await connect();
       restartDetect = false;
-    }, 3500);
+    }, 4500);
 
     return () => clearInterval(interval);
   }, []);

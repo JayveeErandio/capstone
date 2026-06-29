@@ -508,10 +508,11 @@ export const Provider = ({ children }) => {
       content: result.answer,
     });
     storage.putChats(oldChats);
+    console.log(result);
     if (result.isBanned)
       setTimeout(() => {
         setCanSend(true);
-      }, 1000 * 20);
+      }, 1000 * 3600);
     else setCanSend(true);
   };
 
