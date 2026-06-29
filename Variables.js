@@ -29,7 +29,7 @@ export const Provider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [canSend, setCanSend] = useState(true);
   const [chosenTheme, setChosenTheme] = useState();
-  const [availPost, setAvailPost] = useState(5000);
+  const [availPost, setAvailPost] = useState(50);
   const [availChat, setAvailChat] = useState(7);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
@@ -92,15 +92,16 @@ export const Provider = ({ children }) => {
         ...JSON.parse(data.user.daily_result),
         journal: recentStatus.journal,
       });
+      console.log(recentStatus);
 
       setEntries({
         door1:
-          recentStatus.mood == "excited" || recentStatus.mood == "stressed"
+          recentStatus.mood == "Excited" || recentStatus.mood == "Stressed"
             ? "High"
             : "Low",
         door2: null,
         door3:
-          recentStatus.mood == "excited" || recentStatus.mood == "content"
+          recentStatus.mood == "Excited" || recentStatus.mood == "Content"
             ? "Light"
             : "Heavy",
         door4: null,
@@ -162,6 +163,12 @@ export const Provider = ({ children }) => {
   };
 
   const login = async (studentID, password) => {
+    setEntries({
+      door1: null,
+      door2: null,
+      door3: null,
+      door4: null,
+    });
     const session = await supabase.login(studentID, password);
 
     if (!session) return { success: false };
@@ -315,6 +322,7 @@ export const Provider = ({ children }) => {
         });
       } else {
         // Delete ulit sa public
+        supabase.undoPost(onpostID);
         supabase.deletePost(onpostID);
         storage.putPosts(posts);
         storage.putMyPosts(myposts);
@@ -346,7 +354,7 @@ export const Provider = ({ children }) => {
     }
     temp();
   };
-  12;
+
   const deletePost = async (data, isPosted) => {
     if (isPosted) {
       await supabase.deletePost(data.id);
@@ -401,6 +409,24 @@ export const Provider = ({ children }) => {
     ];
     setPosts(newValue);
     storage.putPosts(newValue);
+
+    //At the same time the flagged will be gone now
+    const ids = posts.map((post) => post.id);
+    const smallestId = Math.min(...ids);
+    const biggestId = Math.max(...ids);
+    const flaggedPosts = await supabase.findFlaggeds(smallestId, biggestId);
+
+    const removedIds = new Set(
+      flaggedPosts
+        .filter(
+          (post) => post.status === "flagged" || post.status === "archived",
+        )
+        .map((post) => post.id),
+    );
+
+    const newPosts = posts.filter((post) => !removedIds.has(post.id));
+
+    setPosts(newPosts);
   };
 
   const readNotification = async (notif_id) => {

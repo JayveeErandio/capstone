@@ -121,6 +121,16 @@ export default function Create({ show, setPage }) {
           <Text className="text-md text-[#333] font-archivo">
             2 · PICK A DATE
           </Text>
+          <Text
+            className={
+              (availableSchedules.length == 0 ? "" : "hidden") +
+              " text-center font-archivo text-sm text-[#777]"
+            }
+          >
+            No available schedules for now. Try refresh if there is already
+            available ones.
+          </Text>
+
           <View className="flex-row flex-wrap gap-3">
             {availableSchedules.map((current, index) => (
               <Pressable

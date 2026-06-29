@@ -70,12 +70,12 @@ function Root() {
     const interval = setInterval(async () => {
       if (restartDetect) {
         setRestartApp(true);
-        console.log("BOI Di na nagana", Date.now());
+        console.log("Connection Issue", Date.now());
       }
       restartDetect = true;
       await connect();
       restartDetect = false;
-    }, 2500);
+    }, 3500);
 
     return () => clearInterval(interval);
   }, []);

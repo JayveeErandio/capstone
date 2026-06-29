@@ -25,7 +25,7 @@ export default function NotificationScreen() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    console.log();
+
     // Simulate fetching data
     await reloadNotification(
       notifications.reduce(

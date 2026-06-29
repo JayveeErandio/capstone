@@ -49,6 +49,10 @@ export async function deletePost(post_id) {
     .eq("id", post_id);
 }
 
+export async function undoPost(post_id) {
+  await supabase.from("posts").delete().eq("id", post_id);
+}
+
 export async function updateReact(post_id, student_id, reaction) {
   if (reaction == null) {
     await supabase
@@ -146,6 +150,8 @@ export async function getLatestPosts(latest_id, user_id) {
             `,
     )
     .gt("id", latest_id)
+    .neq("status", "archived")
+    .neq("status", "flagged")
     .order("id", { ascending: false });
 
   function groupReactions(posts, currentUserId) {
@@ -175,6 +181,15 @@ export async function getLatestPosts(latest_id, user_id) {
   }
 
   return groupReactions(data, user_id);
+}
+
+export async function findFlaggeds(smallestId, biggestId) {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, status")
+    .gte("id", smallestId)
+    .lte("id", biggestId);
+  return data.sort((a, b) => a.id - b.id);
 }
 
 export async function putAppointment(args) {
