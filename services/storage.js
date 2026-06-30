@@ -43,6 +43,10 @@ export async function putDailyStatus(data) {
   await AsyncStorage.setItem("dailyStatus", JSON.stringify(data));
 }
 
+export async function getDailyStatus() {
+  return JSON.parse(await AsyncStorage.getItem("dailyStatus"));
+}
+
 export async function getFirstDay() {
   return await AsyncStorage.getItem("firstDay");
 }

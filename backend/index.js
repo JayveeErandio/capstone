@@ -314,21 +314,18 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/ai/assess", async (req, res) => {
-  console.log(11);
   const { entries, relatedDates, userID } = req.body;
-  console.log(11);
+
   let feedback = await assess(entries, relatedDates);
-  console.log(11);
+
   if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
-  console.log(11);
+
   const result = JSON.parse(feedback);
-  console.log(11);
 
   await supabase
     .from("students")
     .update({ daily_result: result })
     .eq("id", userID);
-  console.log(11);
 
   const newdata = {
     mood:
@@ -344,29 +341,25 @@ app.post("/ai/assess", async (req, res) => {
     }),
     account_id: userID,
   };
-  console.log(11);
 
   const { data, error } = await supabase
     .from("status_days")
     .insert([newdata])
     .select();
-  console.log(11, data, error);
 
   res.json({ result: result, statusDay: data });
 });
 
 app.post("/ai/assessFree", async (req, res) => {
-  console.log(12);
   const { entries } = req.body;
-  console.log(12);
+
   let feedback = await assess(entries, []);
-  console.log(12);
+
   if (feedback[0] == "`") feedback = feedback.slice(8).slice(0, -4);
-  console.log(12);
+
   const result = JSON.parse(feedback);
-  console.log(12);
+
   res.json({ result: result });
-  console.log(12);
 });
 
 app.post("/ai/verifypost", async (req, res) => {

@@ -51,7 +51,7 @@ export default function SignupScreen() {
   const [items, setItems] = useState([
     { label: "BSA", value: "1" },
     { label: "BSBA-FMBA", value: "2" },
-    { label: "BSBA-MMM", value: "3" },
+    { label: "BSBA-MMMD", value: "3" },
     { label: "BSBA-OSM", value: "4" },
     { label: "BSCS-SE", value: "5" },
     { label: "BSIT-AGD", value: "6" },

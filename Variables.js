@@ -89,7 +89,8 @@ export const Provider = ({ children }) => {
 
     if (recentStatus) {
       setDailyStatus({
-        ...JSON.parse(data.user.daily_result),
+        ...(JSON.parse(data.user.daily_result) ??
+          (await storage.getDailyStatus())),
         journal: recentStatus.journal,
       });
 

@@ -48,7 +48,7 @@ export default function ChatbotScreen() {
   const [showChatting, setShowChatting] = useState(false);
   let timeoutID;
   useEffect(() => {
-    if (chats[chats.length - 1].is_student)
+    if (chats[chats.length - 1]?.is_student)
       timeoutID = setTimeout(() => {
         setShowChatting(true);
       }, 700);
