@@ -168,14 +168,11 @@ export default function Main({ show, setPage }) {
                     deleteAppointment();
                   }
                 }}
-                className="pl-6"
+                className={
+                  (currentBook.status == "Scheduled" ? "hidden" : "") + " pl-6"
+                }
               >
-                <Text
-                  className={
-                    (currentBook.status == "Scheduled" ? "hidden" : "") +
-                    " text-sm text-[#888] font-archivo"
-                  }
-                >
+                <Text className=" text-sm text-[#888] font-archivo">
                   Cancel
                 </Text>
               </Pressable>

@@ -55,7 +55,7 @@ export default function Pages({ children }) {
               <Text
                 className={
                   (unread == 0 ? "hidden" : "") +
-                  " absolute bg-[#e37] text-white text-sm p-1 rounded-full right-0 top-0 translate-x-1/2 -translate-y-1/2 w-7 text-center h-7 " +
+                  " absolute bg-[#e37] text-white font-archivo-bold text-sm p-1 rounded-full right-0 top-0 translate-x-1/2 -translate-y-1/2 w-7 text-center h-7 " +
                   (current.props.name != "alerts" ? "hidden" : "")
                 }
               >
