@@ -10,6 +10,9 @@ import {
 import { Variables } from "../../../Variables";
 import { useContext } from "react";
 import Button from "../../Button";
+import { BackHandler } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 export default function Create({ index, setPage }) {
   const {
@@ -24,6 +27,22 @@ export default function Create({ index, setPage }) {
   const [mood, setMood] = useState();
   const [text, setText] = useState("");
   const maxChar = 150;
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        setPage("Main"); // or whatever your main page identifier is
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress,
+      );
+
+      return () => subscription.remove();
+    }, []),
+  );
 
   return (
     <View className={"px-6 absolute w-full h-full flex-col z-" + index}>

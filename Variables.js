@@ -443,6 +443,7 @@ export const Provider = ({ children }) => {
 
   const reloadNotification = async (latest_id) => {
     const newData = await supabase.reloadNotification(latest_id, user.id);
+    newData.reverse();
     setNotifications([...newData, ...notifications]);
     await storage.putNotifications([...newData, ...notifications]);
   };
