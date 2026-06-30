@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useRef, useContext, useEffect } from "react";
 import { Variables } from "../../Variables";
+import TypingIndicator from "../TypingIndicator";
 
 export default function ChatbotScreen() {
   const {
@@ -43,6 +44,19 @@ export default function ChatbotScreen() {
 
     return () => clearInterval(timer);
   }, []);
+
+  const [showChatting, setShowChatting] = useState(false);
+  let timeoutID;
+  useEffect(() => {
+    if (chats[chats.length - 1].is_student)
+      timeoutID = setTimeout(() => {
+        setShowChatting(true);
+      }, 700);
+    else {
+      setShowChatting(false);
+      clearTimeout(timeoutID);
+    }
+  }, [chats]);
 
   return (
     <SafeAreaView>
@@ -162,6 +176,19 @@ export default function ChatbotScreen() {
 
               return current.is_student ? mine : ai;
             })}
+            <View
+              className={
+                (showChatting ? "" : "hidden") +
+                " flex-row items-end p-3 gap-2 "
+              }
+            >
+              <Text className="bg-[#b9b] p-2 rounded-full">🌸</Text>
+              <View className="flex-row flex-1">
+                <Text className="max-w-72 text-sm bg-white p-3 rounded-xl rounded-bl-none font-archivo">
+                  <TypingIndicator />
+                </Text>
+              </View>
+            </View>
           </ScrollView>
         </View>
 

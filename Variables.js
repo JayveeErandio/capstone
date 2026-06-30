@@ -485,9 +485,7 @@ export const Provider = ({ children }) => {
     const relatePrevDays = 5;
 
     setCanSend(false);
-    const oldChats = chats;
-    oldChats.push({ id: 0, is_student: true, content: message });
-    setChats(oldChats);
+    setChats([...chats, { id: 0, is_student: true, content: message }]);
     supabase.putChats({
       student_id: user.id,
       is_student: true,
@@ -501,15 +499,21 @@ export const Provider = ({ children }) => {
 
     const result = await backend.chat(message, relatedDates);
 
-    oldChats.push({ id: 0, is_student: false, content: result.answer });
-    setChats(oldChats);
+    setChats([
+      ...chats,
+      { id: 0, is_student: true, content: message },
+      { id: 0, is_student: false, content: result.answer },
+    ]);
     supabase.putChats({
       student_id: user.id,
       is_student: false,
       content: result.answer,
     });
-    storage.putChats(oldChats);
-    console.log(result);
+    storage.putChats([
+      ...chats,
+      { id: 0, is_student: true, content: message },
+      { id: 0, is_student: false, content: result.answer },
+    ]);
     if (result.isBanned)
       setTimeout(() => {
         setCanSend(true);
