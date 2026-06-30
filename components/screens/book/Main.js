@@ -148,7 +148,7 @@ export default function Main({ show, setPage }) {
                   if (
                     await new Promise((resolve) => {
                       Alert.alert(
-                        "Delete appointment",
+                        "Cancel appointment",
                         "Do you want to discontinue your appointment?",
                         [
                           {
@@ -170,7 +170,14 @@ export default function Main({ show, setPage }) {
                 }}
                 className="pl-6"
               >
-                <Text className="text-sm text-[#888] font-archivo">Delete</Text>
+                <Text
+                  className={
+                    (currentBook.status == "Scheduled" ? "hidden" : "") +
+                    " text-sm text-[#888] font-archivo"
+                  }
+                >
+                  Cancel
+                </Text>
               </Pressable>
             </View>
             <Text className="font-archivo-bold">
