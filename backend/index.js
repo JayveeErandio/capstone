@@ -429,10 +429,15 @@ app.post("/react", async (req, res) => {
 });
 
 app.post("/getSchedules", async (req, res) => {
-  const { data } = await supabase
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  const { data, error } = await supabase
     .from("available_schedules")
-    .select("datetime")
+    .select()
     .is("takenBy", null)
+    .gte("datetime", tomorrow.toISOString())
     .order("datetime", { ascending: true });
 
   res.json(

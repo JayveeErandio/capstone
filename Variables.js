@@ -158,6 +158,10 @@ export const Provider = ({ children }) => {
 
     computeStatus(data.statusDays);
     setUser(data.user);
+    console.log(notifications);
+    supabase.implementRealtime((ev) => {
+      console.log(67, ev);
+    }, user.id);
 
     setIsLoaded(true);
   };

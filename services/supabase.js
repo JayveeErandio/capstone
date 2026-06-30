@@ -5,6 +5,26 @@ const supabase = createClient(
 );
 import * as backend from "./backend";
 
+let channel;
+export async function implementRealtime(program, user_id) {
+  channel = supabase
+    .channel("supabase" + user_id)
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "notifications",
+      },
+      (payload) => {
+        program(payload);
+      },
+    )
+    .subscribe((status) => {
+      console.log("Realtime status:", status, "by user", user_id);
+    });
+}
+
 export async function removeRealtimeNotification() {
   supabase.removeChannel(channel);
 }
@@ -318,11 +338,17 @@ export async function getUpdatedBooks(user_id) {
 }
 
 export async function getUpdatedScheds() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
   const { data, error } = await supabase
     .from("available_schedules")
     .select()
     .is("takenBy", null)
+    .gte("datetime", tomorrow.toISOString())
     .order("datetime", { ascending: true });
+  console.log(data, error);
   return data;
 }
 
