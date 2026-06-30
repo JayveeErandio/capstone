@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import * as storage from "./services/storage";
 import * as supabase from "./services/supabase";
 import * as backend from "./services/backend";
+import { Vibration } from "react-native";
 
 export const Provider = ({ children }) => {
   // Mga variables na globally na gagamitin throughout ng app
@@ -158,10 +159,11 @@ export const Provider = ({ children }) => {
 
     computeStatus(data.statusDays);
     setUser(data.user);
-    console.log(notifications);
+
     supabase.implementRealtime((ev) => {
-      console.log(67, ev);
-    }, user.id);
+      setNotifications((prev) => [ev.new, ...prev]);
+      Vibration.vibrate(100);
+    }, data.user.id);
 
     setIsLoaded(true);
   };
