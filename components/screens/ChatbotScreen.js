@@ -91,7 +91,7 @@ export default function ChatbotScreen() {
 
         {/* Info Warning */}
         <View
-          className="flex-row p-4 gap-3 border border-[#995] border-[0.5px]"
+          className="flex-row p-4 gap-3 border-[#995] border-[0.5px]"
           style={{ backgroundColor: softenColor(chosenTheme) }}
         >
           <Text>ℹ️</Text>
@@ -105,7 +105,7 @@ export default function ChatbotScreen() {
         <View
           className={
             (time <= 0 ? "hidden" : "") +
-            " flex-row bg-[#ffd] p-4 gap-3 border border-[#995] border-[0.5px]"
+            " flex-row bg-[#ffd] p-4 gap-3 border-[#995] border-[0.5px]"
           }
         >
           <Text>⚠️</Text>
@@ -211,9 +211,7 @@ export default function ChatbotScreen() {
             }
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
-            <Text className="text-lg font-bold text-center text-[#777] text-white">
-              ➤
-            </Text>
+            <Text className="text-lg font-bold text-center text-white">➤</Text>
           </Pressable>
         </View>
       </KeyboardAwareScrollView>

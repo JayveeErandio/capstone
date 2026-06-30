@@ -32,6 +32,16 @@ export default function SignupScreen() {
   const [contactNumber, setContactNumber] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [anonymous, setAnonymous] = useState("newbie");
+  useEffect(() => {
+    const generateds = [
+      "newbie",
+      "moodlinkerist",
+      "imRandom",
+      "sixseven",
+      "juandelacruz67",
+    ];
+    setAnonymous(generateds[Math.floor(Math.random() * generateds.length)]);
+  }, []);
   const [invalid, setInvalid] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
