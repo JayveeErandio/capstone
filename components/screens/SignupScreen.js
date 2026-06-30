@@ -357,9 +357,9 @@ export default function SignupScreen() {
               yearLevel == "" ||
               value == null ||
               anonymous == "" ||
-              studentNumber == "" ||
-              contactNumber == "" ||
-              emailAddress == "" ||
+              studentNumber.length != 9 ||
+              contactNumber.length != 11 ||
+              emailAddress.trim().includes(" ") ||
               !accepted ||
               buttonContent == "Requesting"
             }
