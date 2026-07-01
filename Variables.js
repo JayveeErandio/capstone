@@ -296,7 +296,7 @@ export const Provider = ({ children }) => {
   };
 
   const putPost = async (mood, text) => {
-    const { data, error } = await supabase.putPost({
+    const { data, error } = await supabase.putPendingPost({
       mood: mood,
       content: text,
       student_id: user.id,
@@ -305,17 +305,24 @@ export const Provider = ({ children }) => {
     data.myreact = null;
     data.reactions = {};
     data.students = { anonymous_name: user.anonymous_name };
-    storage.putPosts([data, ...posts]);
-    storage.putMyPosts([data, ...myposts]);
-    setPosts([data, ...posts]);
-    setMyposts([data, ...myposts]);
-
+    storage.putPendingPost([data, ...pendingPosts]);
+    setPendingPosts([data, ...pendingPosts]);
     const onpostID = data.id;
 
     async function temp() {
       const result = await backend.verifyPost(text);
 
       if (result.isAllowed) {
+        // Put now to the public post
+        await supabase.passPost(onpostID);
+        storage.putPendingPost(pendingPosts);
+        data.datetime = new Date().toISOString();
+        storage.putPosts([data, ...posts]);
+        storage.putMyPosts([data, ...myposts]);
+        setPendingPosts(pendingPosts);
+        setPosts([data, ...posts]);
+        setMyposts([data, ...myposts]);
+
         // Notify lang or confirmation na pasado or malinis
         supabase.putNotification({
           title: "Post Approved",
@@ -327,23 +334,10 @@ export const Provider = ({ children }) => {
           type: "post_approved",
         });
       } else {
-        // Delete ulit sa public
-        supabase.undoPost(onpostID);
-        supabase.deletePost(onpostID);
-        storage.putPosts(posts);
-        storage.putMyPosts(myposts);
-        setPosts(posts);
-        setMyposts(myposts);
-
-        // Ilalagay or ililipat naman sa pending posts
-        const { data, error } = await supabase.putPendingPost({
-          student_id: user.id,
-          mood: mood,
-          content: text,
-          ai_say: result.reason,
-        });
-        storage.putPendingPost([data, ...pendingPosts]);
-        setPendingPosts([data, ...pendingPosts]);
+        storage.putPendingPost(pendingPosts);
+        setPendingPosts(pendingPosts);
+        // Put to flagged posts
+        await supabase.flagPost(onpostID);
 
         // Notify naman na hindi pasado o bawal
         supabase.putNotification({

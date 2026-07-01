@@ -55,6 +55,21 @@ export async function putPost(value) {
   return { data: data[0], error };
 }
 
+export async function passPost(post_id) {
+  const { data: old, error } = await supabase
+    .from("pending_posts")
+    .select()
+    .eq("id", post_id)
+    .single();
+  delete old.ai_say;
+  delete old.id;
+  delete old.isArchived;
+  await supabase.from("pending_posts").delete().eq("id", post_id);
+  old.status = "safe";
+
+  await supabase.from("posts").insert(old);
+}
+
 export async function deletePendingPost(post_id) {
   const { error } = await supabase
     .from("pending_posts")
@@ -69,8 +84,18 @@ export async function deletePost(post_id) {
     .eq("id", post_id);
 }
 
-export async function undoPost(post_id) {
-  await supabase.from("posts").delete().eq("id", post_id);
+export async function flagPost(post_id) {
+  const { data: old, error } = await supabase
+    .from("pending_posts")
+    .select()
+    .eq("id", post_id)
+    .single();
+  old.status = "flagged";
+  delete old.ai_say;
+  delete old.id;
+  delete old.isArchived;
+  await supabase.from("pending_posts").delete().eq("id", post_id);
+  await supabase.from("posts").insert(old);
 }
 
 export async function updateReact(post_id, student_id, reaction) {
@@ -349,7 +374,7 @@ export async function getUpdatedScheds() {
     .is("takenBy", null)
     .gte("datetime", tomorrow.toISOString())
     .order("datetime", { ascending: true });
-  console.log(data, error);
+
   return data;
 }
 

@@ -256,6 +256,7 @@ app.post("/login", async (req, res) => {
     )
     .eq("student_id", student.id)
     .neq("status", "archived")
+    .neq("status", "flagged")
     .order("id", { ascending: false });
 
   const { data: notifications } = await supabase
