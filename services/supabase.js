@@ -8,13 +8,25 @@ import * as backend from "./backend";
 let channel;
 export async function implementRealtime(program, user_id) {
   channel = supabase
-    .channel("raltaym" + user_id)
+    .channel("realtime" + user_id)
     .on(
       "postgres_changes",
       {
         event: "INSERT",
         schema: "public",
         table: "notifications",
+        filter: `student_id=eq.${user_id}`,
+      },
+      (payload) => {
+        program(payload);
+      },
+    )
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "appointments",
         filter: `student_id=eq.${user_id}`,
       },
       (payload) => {

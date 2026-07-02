@@ -30,7 +30,7 @@ export const Provider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [canSend, setCanSend] = useState(true);
   const [chosenTheme, setChosenTheme] = useState();
-  const [availPost, setAvailPost] = useState(50);
+  const [availPost, setAvailPost] = useState(5);
   const [availChat, setAvailChat] = useState(7);
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
@@ -161,8 +161,24 @@ export const Provider = ({ children }) => {
     setUser(data.user);
 
     supabase.implementRealtime((ev) => {
-      setNotifications((prev) => [ev.new, ...prev]);
-      Vibration.vibrate(100);
+      if (ev.table == "notifications") {
+        setNotifications((prev) => [ev.new, ...prev]);
+        Vibration.vibrate(100);
+      } else if (ev.table == "appointments") {
+        setCurrentBook((prev) => {
+          if (prev.id == ev.new.id) {
+            if (ev.new.status == "Pending" || ev.new.status == "Scheduled")
+              return { ...prev, status: ev.new.status };
+            else return {};
+          } else return prev;
+        });
+
+        setBooks((prev) => {
+          if (ev.new.status != "Pending" && ev.new.status != "Scheduled") {
+            return [ev.new, ...prev];
+          } else return prev;
+        });
+      }
     }, data.user.id);
 
     setIsLoaded(true);
