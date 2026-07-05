@@ -108,7 +108,8 @@ export default function ProfileScreen() {
             {firstName} {lastName}
           </Text>
           <Text className="text-center text-sm text-[#777] -mt-2 font-archivo">
-            {user["student_number"]}
+            {user["student_number"]} • Year {user["year_level"]} •{" "}
+            {user["program"]}
           </Text>
         </View>
 

@@ -111,6 +111,7 @@ export default function Create({ show, setPage }) {
             className="bg-white rounded-xl p-4 h-32 text-[#555] -mt-3 font-archivo"
             textAlignVertical="top"
             placeholder="Briefly describe what you'd like to talk about..."
+            placeholderTextColor="#ccc"
             value={text}
           ></TextInput>
           <Text className="text-right text-sm -mt-3 text-[#777]">

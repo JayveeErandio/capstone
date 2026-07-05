@@ -194,6 +194,8 @@ export default function Create({ index, setPage }) {
             onPress={async () => {
               if (!(mood && text) || availPost == 0) return;
               putPost(mood, text);
+              setMood();
+              setText("");
               setPage();
               setAvailPost(availPost - 1);
               await new Promise((resolve) => {
