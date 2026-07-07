@@ -178,6 +178,28 @@ export const Provider = ({ children }) => {
             return [ev.new, ...prev];
           } else return prev;
         });
+      } else if (ev.table == "posts") {
+        if (ev.eventType == "INSERT") {
+          if (ev.new.student_id != user.id && ev.new.status == "safe") {
+            setPosts((prev) => {
+              ev.new.myreact = null;
+              ev.new.reactions = {};
+              return [ev.new, ...prev];
+            });
+          }
+        } else if (ev.eventType == "UPDATE") {
+          setPosts((prev) => {
+            const newPosts = prev.filter((current) => {
+              if (current.id != ev.new.id) return true;
+              else {
+                if (ev.new.status == "flagged" || ev.new.status == "archived") {
+                  return false;
+                } else return true;
+              }
+            });
+            return newPosts;
+          });
+        }
       }
     }, data.user.id);
 
@@ -330,14 +352,18 @@ export const Provider = ({ children }) => {
 
       if (result.isAllowed) {
         // Put now to the public post
-        await supabase.passPost(onpostID);
+        const finalData = await supabase.passPost(onpostID);
+        finalData.myreact = null;
+        finalData.reactions = {};
+        finalData.students = { anonymous_name: user.anonymous_name };
+
         storage.putPendingPost(pendingPosts);
         data.datetime = new Date().toISOString();
-        storage.putPosts([data, ...posts]);
-        storage.putMyPosts([data, ...myposts]);
+        storage.putPosts([finalData, ...posts]);
+        storage.putMyPosts([finalData, ...myposts]);
         setPendingPosts(pendingPosts);
-        setPosts([data, ...posts]);
-        setMyposts([data, ...myposts]);
+        setPosts([finalData, ...posts]);
+        setMyposts([finalData, ...myposts]);
 
         // Notify lang or confirmation na pasado or malinis
         supabase.putNotification({
@@ -477,8 +503,9 @@ export const Provider = ({ children }) => {
     delete newForm.date;
     delete newForm.time;
 
-    setCurrentBook(newForm);
-    await supabase.putAppointment({ ...newForm, student_id: user.id });
+    setCurrentBook(
+      await supabase.putAppointment({ ...newForm, student_id: user.id }),
+    );
     await supabase.takeSchedule({ value: newForm.datetime, id: user.id });
     await supabase.putNotification({
       title: "Appointment Request",

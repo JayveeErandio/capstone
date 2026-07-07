@@ -100,7 +100,7 @@ export default function ProfileScreen() {
             className={"w-20 h-20 rounded-full justify-center mx-auto"}
             style={{ backgroundColor: darkenColor(chosenTheme) }}
           >
-            <Text className="text-center text-white text-4xl">
+            <Text className="text-center text-white text-3xl font-archivo-bold">
               {prof_initialname}
             </Text>
           </View>

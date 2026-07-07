@@ -68,7 +68,7 @@ export default function HomeScreen() {
               className={" w-14 h-14 rounded-full justify-center"}
               style={{ backgroundColor: darkenColor(chosenTheme) }}
             >
-              <Text className="text-center text-white text-2xl">
+              <Text className="text-center text-white text-2xl font-archivo-bold">
                 {prof_initialname}
               </Text>
             </Pressable>

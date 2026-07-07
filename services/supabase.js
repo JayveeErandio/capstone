@@ -33,6 +33,32 @@ export async function implementRealtime(program, user_id) {
         program(payload);
       },
     )
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "posts",
+        filter: `student_id=neq.${user_id}`,
+      },
+      async (payload) => {
+        if (payload.eventType == "INSERT") {
+          const { data } = await supabase
+            .from("posts")
+            .select(
+              `
+        students (
+                    anonymous_name
+            )
+      `,
+            )
+            .eq("id", payload.new.id)
+            .single();
+          payload.new.students = data.students;
+        }
+        program(payload);
+      },
+    )
     .subscribe((status) => {
       console.log("Realtime status:", status, "by user", user_id);
     });
@@ -79,7 +105,7 @@ export async function passPost(post_id) {
   await supabase.from("pending_posts").delete().eq("id", post_id);
   old.status = "safe";
 
-  await supabase.from("posts").insert(old);
+  return (await supabase.from("posts").insert(old).select().single()).data;
 }
 
 export async function deletePendingPost(post_id) {
@@ -250,7 +276,8 @@ export async function findFlaggeds(smallestId, biggestId) {
 }
 
 export async function putAppointment(args) {
-  await supabase.from("appointments").insert([args]);
+  return (await supabase.from("appointments").insert([args]).select().single())
+    .data;
 }
 
 export async function takeSchedule(args) {
