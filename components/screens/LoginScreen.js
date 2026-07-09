@@ -167,7 +167,7 @@ export default function LoginScreen() {
               setForgotModalVisible(true);
             }}
             className={
-              (showForgot ? "" : "opacity-0") +
+              (showForgot ? "" : "hidden") +
               " self-start p-3 py-1 mx-auto mt-3 "
             }
           >
@@ -198,18 +198,6 @@ export default function LoginScreen() {
               🚀 Skip — Try a Demo
             </Text>
           </Pressable>
-          <View className="flex-row mx-auto">
-            <Text className="self-start text-[#777] font-archivo">{bug2}</Text>
-            <Text
-              onPress={() => {
-                navigation.navigate("Signup");
-              }}
-              className="font-archivo-bold self-start"
-              style={{ color: darkenColor(chosenTheme) }}
-            >
-              {bug3}
-            </Text>
-          </View>
           <View
             className="flex-row border rounded-lg gap-3 p-4 items-center "
             style={{

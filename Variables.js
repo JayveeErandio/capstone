@@ -211,7 +211,7 @@ export const Provider = ({ children }) => {
       door1: null,
       door2: null,
       door3: null,
-      door4: null,
+      door4: [],
     });
     const session = await supabase.login(studentID, password);
 
@@ -248,7 +248,7 @@ export const Provider = ({ children }) => {
       door1: null,
       door2: null,
       door3: null,
-      door4: null,
+      door4: [],
     });
     await supabase.logout();
     await storage.deleteAll();
@@ -265,7 +265,7 @@ export const Provider = ({ children }) => {
       door1: null,
       door2: null,
       door3: null,
-      door4: null,
+      door4: [],
     });
   };
 

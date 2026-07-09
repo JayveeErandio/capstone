@@ -192,7 +192,7 @@ export default function Create({ index, setPage }) {
           <Button
             value={"Post to MoodSpace 🌸"}
             onPress={async () => {
-              if (!(mood && text) || availPost == 0) return;
+              if (!(mood && text.trim()) || availPost == 0) return;
               putPost(mood, text);
               setMood();
               setText("");
@@ -212,7 +212,7 @@ export default function Create({ index, setPage }) {
                 );
               });
             }}
-            disabled={!(mood && text) || availPost == 0}
+            disabled={!(mood && text.trim()) || availPost == 0}
           />
         </View>
       </ScrollView>
