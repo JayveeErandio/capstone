@@ -14,9 +14,6 @@ export default function Weekly() {
     chosenTheme,
     statusWeeks,
   } = useContext(Variables);
-  //console.log(statusWeeks.find((current) => {
-  //  if(current.date_start)
-  //}));
 
   let haveMood = true;
 
@@ -210,7 +207,7 @@ export default function Weekly() {
       </View>
 
       {/* Weekly Insight */}
-      <View className="bg-white p-4 rounded-xl gap-2">
+      <View className="bg-white p-4 rounded-xl gap-2 hidden">
         <Text
           className="font-archivo-bold text-sm"
           style={{ color: darkenColor(chosenTheme) }}

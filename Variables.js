@@ -20,7 +20,7 @@ export const Provider = ({ children }) => {
     door1: null,
     door2: null,
     door3: null,
-    door4: null,
+    door4: [],
   });
 
   const [notifications, setNotifications] = useState([]);
@@ -159,7 +159,7 @@ export const Provider = ({ children }) => {
 
     computeStatus(data.statusDays);
     setUser(data.user);
-
+    /*
     supabase.implementRealtime((ev) => {
       if (ev.table == "notifications") {
         setNotifications((prev) => [ev.new, ...prev]);
@@ -202,7 +202,7 @@ export const Provider = ({ children }) => {
         }
       }
     }, data.user.id);
-
+*/
     setIsLoaded(true);
   };
 

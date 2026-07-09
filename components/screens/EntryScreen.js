@@ -110,7 +110,11 @@ function Door({ order, label, question, flex, children }) {
       <View className="py-3">
         <Pressable
           onPress={async () => {
-            if (entries[doorItem] != null)
+            if (
+              order < 4
+                ? entries[doorItem] != null
+                : entries[doorItem].length > 0
+            )
               if (order < 4) navigation.navigate("Door" + (order + 1));
               else {
                 setIsAnalyzing(true);
@@ -120,8 +124,13 @@ function Door({ order, label, question, flex, children }) {
               }
           }}
           className={
-            (entries["door" + order] ? "" : "opacity-50") +
-            " bottom-0 rounded-full p-4"
+            (order == 4
+              ? entries["door4"].length != 0
+                ? ""
+                : "opacity-50"
+              : entries["door" + order]
+                ? ""
+                : "opacity-50") + " bottom-0 rounded-full p-4"
           }
           style={{ backgroundColor: darkenColor(chosenTheme) }}
         >
@@ -140,13 +149,28 @@ function Option({ title, description, icon }) {
 
   return (
     <Pressable
-      onPress={() => setEntries({ ...entries, [doorItem]: title })}
+      onPress={() =>
+        setEntries({
+          ...entries,
+          [doorItem]:
+            doorItem == "door4"
+              ? entries[doorItem].includes(title)
+                ? entries[doorItem].filter((current) => current != title)
+                : entries[doorItem].concat(title)
+              : title,
+        })
+      }
       className="p-2 flex-1"
     >
       <View
         className={
-          (entries[doorItem] == title ? "border" : "") +
-          " bg-white p-5 rounded-xl gap-4"
+          (doorItem == "door4"
+            ? entries[doorItem].includes(title)
+              ? "border"
+              : ""
+            : entries[doorItem] == title
+              ? "border"
+              : "") + " bg-white p-5 rounded-xl gap-4"
         }
         style={styles.shadow}
       >
