@@ -19,8 +19,14 @@ import DropDownPicker from "react-native-dropdown-picker";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
-  const { setPage, signup, softenColor, chosenTheme, darkenColor } =
-    useContext(Variables);
+  const {
+    setPage,
+    signup,
+    softenColor,
+    chosenTheme,
+    darkenColor,
+    studNumAccCreate,
+  } = useContext(Variables);
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [yearLevel, setYearLevel] = useState("");
@@ -42,13 +48,30 @@ export default function SignupScreen() {
     ];
     setAnonymous(generateds[Math.floor(Math.random() * generateds.length)]);
   }, []);
-  const [invalid, setInvalid] = useState(false);
+  const [invalid, setInvalid] = useState(null);
+  useEffect(() => {
+    if (!invalid) return;
+
+    const timer = setTimeout(() => {
+      setInvalid(null);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [invalid]);
   const [accepted, setAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-  const [buttonContent, setButtonContent] = useState("Request to GCU ➞");
+  const [buttonContent, setButtonContent] = useState("Create Account ➞");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
+    { label: "1st Year", value: "1" },
+    { label: "2nd Year", value: "2" },
+    { label: "3rd Year", value: "3" },
+    { label: "4th Year", value: "4" },
+  ]);
+  const [openProg, setOpenProg] = useState(false);
+  const [valueProg, setValueProg] = useState(null);
+  const [itemsProg, setItemsProg] = useState([
     { label: "BSA", value: "1" },
     { label: "BSBA-FMBA", value: "2" },
     { label: "BSBA-MMMD", value: "3" },
@@ -60,6 +83,13 @@ export default function SignupScreen() {
     { label: "BSP", value: "9" },
     { label: "BSTM", value: "10" },
   ]);
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+
+  const isValidName = (text) =>
+    /^\p{L}+(?:[ '.-]\p{L}+)*\.?$/u.test(text.trim());
+  const isValidEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   return (
     <KeyboardAwareScrollView
@@ -83,37 +113,37 @@ export default function SignupScreen() {
             Account Creation
           </Text>
           <Text className="opacity-50 text-sm text-center mx-5 font-archivo">
-            Hi ka-tamaraw! It seems you're new to our app. We are pleased to
-            request you to setup your account first before you could connect to
-            all features and to your fellows here in this app.
+            Hi, Ka-Tamaraw! It looks like you're new to our app. We're excited
+            to have you here! Before you can connect with fellow Tamaraws and
+            access all of the app's features, please take a moment to set up
+            your account.
+          </Text>
+          <Text className="opacity-50 text-sm text-center mx-5 font-archivo">
+            Your Student Number: {studNumAccCreate}
           </Text>
         </View>
 
         {/* ==== Forms ==== */}
-        <View className="p-7 flex gap-5">
-          <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">LAST NAME</Text>
+        <View className="p-7 flex gap-6">
+          <View>
+            <Text className="font-archivo-bold text-[#333]">
+              LAST NAME <Required />
+            </Text>
             <InputField
               placeholder="e.g. Dela Cruz"
               onChangeText={setLastName}
             />
           </View>
-          <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">FIRST NAME</Text>
+          <View>
+            <Text className="font-archivo-bold text-[#333]">
+              FIRST NAME <Required />
+            </Text>
             <InputField placeholder="e.g. Juan" onChangeText={setFirstName} />
           </View>
-          <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">YEAR LEVEL</Text>
-            <InputField
-              onChangeText={setYearLevel}
-              maxLength={1}
-              placeholder="e.g. 4"
-              numeric
-              value={yearLevel}
-            />
-          </View>
-          <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">PROGRAM</Text>
+          <View>
+            <Text className="font-archivo-bold text-[#333]">
+              YEAR LEVEL <Required />
+            </Text>
 
             <DropDownPicker
               open={open}
@@ -143,54 +173,109 @@ export default function SignupScreen() {
               dropDownContainerStyle={{
                 borderColor: "#d1d5db",
               }}
+              zIndex={2000}
+              zIndexInverse={1000}
             />
           </View>
-          <View className="gap-1">
+          <View>
             <Text className="font-archivo-bold text-[#333]">
-              ANONYMOUS NAME
+              PROGRAM <Required />
             </Text>
-            <Text className="text-xs text-gray-400 font-archivo">
-              (Your public screen name throughout the app.)
+            <DropDownPicker
+              open={openProg}
+              value={valueProg}
+              items={itemsProg}
+              setOpen={setOpenProg}
+              setValue={setValueProg}
+              setItems={setItemsProg}
+              placeholder="Select Program"
+              listMode="SCROLLVIEW"
+              style={{
+                borderColor: "#d1d5db",
+                borderRadius: 10,
+                backgroundColor: "#eee",
+              }}
+              textStyle={{
+                fontFamily: "Archivo",
+                fontSize: 14,
+              }}
+              labelStyle={{
+                fontFamily: "Archivo",
+              }}
+              placeholderStyle={{
+                fontFamily: "Archivo",
+                color: "#9ca3af",
+              }}
+              dropDownContainerStyle={{
+                borderColor: "#d1d5db",
+              }}
+              zIndex={1000}
+              zIndexInverse={2000}
+            />
+          </View>
+          <View>
+            <Text className="font-archivo-bold text-[#333]">
+              ANONYMOUS NAME <Required />
             </Text>
             <InputField
               onChangeText={setAnonymous}
               value={anonymous}
               placeholder="e.g. moodlinkerist"
             />
-          </View>
-          <View className="gap-1">
-            <Text className="font-archivo-bold text-[#333]">
-              STUDENT NUMBER
+            <Text className="text-xs text-gray-400 font-archivo">
+              (Your public screen name throughout the app.)
             </Text>
-            <InputField
-              onChangeText={setStudentNumber}
-              numeric
-              maxLength={9}
-              placeholder="e.g. 202310097"
-            />
           </View>
-          <View className="gap-1">
+          <View>
             <Text className="font-archivo-bold text-[#333]">
               CONTACT NUMBER
             </Text>
             <InputField
-              onChangeText={setContactNumber}
+              onChangeText={(ev) => {
+                let value = ev.trim();
+                if (value == "9") value = "09";
+                if (
+                  value[value.length - 1] == " " ||
+                  value[value.length - 1] == "," ||
+                  value[value.length - 1] == "." ||
+                  value[value.length - 1] == "-"
+                ) {
+                  value = value.slice(0, -1);
+                }
+                setContactNumber(value);
+              }}
+              value={contactNumber}
               numeric
               placeholder="e.g. 09123456789"
               maxLength={11}
             />
           </View>
-          <View className="gap-1">
+          <View>
             <Text className="font-archivo-bold text-[#333]">EMAIL ADDRESS</Text>
+            <InputField
+              onChangeText={setEmailAddress}
+              placeholder="e.g. juandelacruz@gmail.com"
+              autoCapitalize="none"
+            />
             <Text className="text-xs text-gray-400 font-archivo">
               (This email address will only be used for password recovery and
               account-related notifications. School email that ends with
               @feudiliman.edu.ph might not be effective)
             </Text>
-            <InputField
-              onChangeText={setEmailAddress}
-              placeholder="e.g. juandelacruz@gmail.com"
-            />
+          </View>
+          <View className="bg-gray-300 w-full h-0.5 my-1"></View>
+          <View>
+            <Text className="font-archivo-bold text-[#333]">NEW PASSWORD</Text>
+            <InputField password maxLength={11} onChangeText={setNewPass} />
+            <Text className="text-xs text-gray-400 font-archivo">
+              (Optional. You can change your password later)
+            </Text>
+          </View>
+          <View className="gap-1">
+            <Text className="font-archivo-bold text-[#333]">
+              CONFIRM PASSWORD
+            </Text>
+            <InputField password maxLength={11} onChangeText={setConfirmPass} />
           </View>
           {/* ==== Terms Modal ==== */}
           <Modal
@@ -338,15 +423,55 @@ export default function SignupScreen() {
           <Text
             className={
               "text-center -my-2 text-red-700 text-sm opacity-" +
-              (invalid ? "100" : "0")
+              (!!invalid ? "100" : "0")
             }
           >
-            An account associated with this student number already exists.
+            {invalid}
           </Text>
           <Button
             value={buttonContent}
             onPress={async () => {
-              setButtonContent("Requesting");
+              if (lastName.trim() == "") {
+                setInvalid("Please put your last name");
+                return;
+              } else if (!isValidName(lastName)) {
+                setInvalid("Last name should contain letters only");
+                return;
+              } else if (firstName.trim() == "") {
+                setInvalid("Please put your first name");
+                return;
+              } else if (!isValidName(firstName)) {
+                setInvalid("First name should contain letters only");
+                return;
+              } else if (value == null) {
+                setInvalid("Please select a year level");
+                return;
+              } else if (valueProg == null) {
+                setInvalid("Please select a program");
+                return;
+              } else if (anonymous.trim() == "") {
+                setInvalid("Anonymous name cannot be blank");
+                return;
+              } else if (newPass.trim() != "" || confirmPass.trim() != "") {
+                if (newPass.trim() != confirmPass.trim()) {
+                  setInvalid("New and confirm password do not match");
+                  return;
+                } else if (newPass.trim().length < 6) {
+                  setInvalid("Password must be atleast 6 characters");
+                  return;
+                }
+              } else if (
+                !isValidEmail(emailAddress) &&
+                emailAddress.trim() != ""
+              ) {
+                setInvalid("Email address set is invalid");
+                return;
+              } else if (!accepted) {
+                setInvalid("Please agree first to the policy provided");
+                return;
+              }
+
+              setButtonContent("Creating");
               const result = await signup({
                 last_name: lastName,
                 first_name: firstName,
@@ -357,7 +482,7 @@ export default function SignupScreen() {
                 anonymous_name: anonymous,
                 personal_email: emailAddress,
               });
-              setButtonContent("Request to GCU ➞");
+              setButtonContent("Create Account ➞");
 
               if (result.success) {
                 navigation.goBack();
@@ -366,24 +491,17 @@ export default function SignupScreen() {
                   "Your password will be provided via your school emails when the GCU has already approved your request.",
                   [{ text: "OK" }],
                 );
-              } else {
-                setInvalid(true);
-                setTimeout(function () {
-                  setInvalid(false);
-                }, 2500);
               }
             }}
             disabled={
-              lastName == "" ||
+              /*lastName == "" ||
               firstName == "" ||
               yearLevel == "" ||
               value == null ||
               anonymous == "" ||
-              studentNumber.length != 9 ||
               contactNumber.length != 11 ||
-              emailAddress.trim().includes(" ") ||
-              !accepted ||
-              buttonContent == "Requesting"
+              emailAddress.trim().includes(" ") || */
+              buttonContent == "Creating"
             }
           />
           <Pressable
@@ -399,3 +517,7 @@ export default function SignupScreen() {
     </KeyboardAwareScrollView>
   );
 }
+
+const Required = function () {
+  return <Text className="text-red-500 ">*</Text>;
+};

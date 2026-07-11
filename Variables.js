@@ -32,6 +32,7 @@ export const Provider = ({ children }) => {
   const [chosenTheme, setChosenTheme] = useState();
   const [availPost, setAvailPost] = useState(5);
   const [availChat, setAvailChat] = useState(7);
+  const [studNumAccCreate, setStudNumAccCreate] = useState("");
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -1186,11 +1187,13 @@ export const Provider = ({ children }) => {
         statusWeeks,
         restartApp,
         setRestartApp,
+        setStudNumAccCreate,
+        studNumAccCreate,
       }}
     >
       {children}
     </Variables.Provider>
   );
 };
-12;
+
 export const Variables = createContext();

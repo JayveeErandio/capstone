@@ -9,6 +9,7 @@ export default function InputField({
   maxLength,
   onChangeText,
   value,
+  autoCapitalize,
 }) {
   const [content, setContent] = useState("");
   const [sync, setSync] = useState(false);
@@ -59,6 +60,7 @@ export default function InputField({
       placeholder={placeholder}
       placeholderTextColor="#aaa"
       value={value}
+      autoCapitalize={autoCapitalize == null ? true : autoCapitalize}
     />
   );
 }

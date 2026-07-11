@@ -31,6 +31,7 @@ export default function LoginScreen() {
     setLoginField2,
     softenColor,
     forgotPassword,
+    setStudNumAccCreate,
   } = useContext(Variables);
   const [valid, setValid] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -148,6 +149,7 @@ export default function LoginScreen() {
                   );
                   return;
                 } else if (data.tokenized) {
+                  setStudNumAccCreate(loginField1);
                   navigation.navigate("Signup");
                 }
 
