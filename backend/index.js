@@ -23,6 +23,39 @@ const notify = async (receiverToken, title, body) => {
   });
 };
 
+const hash = function (studentNumber) {
+  const secretKey = "ediwaw";
+
+  const lowercase = "abcdefghijklmnopqrstuvwxyz";
+  const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const specials = "!#$%^&@*?_+=;";
+
+  // Get raw HMAC bytes
+  const hash = crypto
+    .createHmac("sha256", process.env.HASH_KEY)
+    .update(studentNumber.toString())
+    .digest();
+
+  // Build the token
+  let token = "";
+
+  // First 4 lowercase
+  for (let i = 0; i < 3; i++) {
+    token += lowercase[hash[i] % lowercase.length];
+  }
+
+  // Next 4 uppercase
+  for (let i = 3; i < 6; i++) {
+    token += uppercase[hash[i] % uppercase.length];
+  }
+
+  // Last 4 special characters
+  for (let i = 6; i < 9; i++) {
+    token += specials[hash[i] % specials.length];
+  }
+  return token;
+};
+
 // SUPABASE
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(
@@ -288,6 +321,11 @@ app.post("/login", async (req, res) => {
     chats: chats,
     success: true,
   });
+});
+
+app.post("/tokenize", async (req, res) => {
+  const args = req.body;
+  res.json({ valid: hash(args.studentNumber) == args.tokenPassword });
 });
 
 app.post("/signup", async (req, res) => {
@@ -588,6 +626,7 @@ async function autoDelNotif() {
   console.log("Old notifications deleted");
 }
 autoDelNotif();
+// Deletion of Schedule Slots when already past
 async function autoDelSched() {
   const now = new Date().toISOString();
 
@@ -607,4 +646,5 @@ autoDelSched();
 const hoursRotation = 12;
 setInterval(async function () {
   autoDelNotif();
+  autoDelSched();
 }, 3600000 * hoursRotation);

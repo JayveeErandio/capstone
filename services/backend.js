@@ -1,7 +1,7 @@
 async function call(url, args) {
   const response = await fetch(
-    //"http://192.168.88.3:3000" + url,
-    "https://capstone-xuwy.onrender.com" + url,
+    "http://192.168.0.100:3000" + url,
+    //"https://capstone-xuwy.onrender.com" + url,
     {
       method: "POST",
       headers: {
@@ -79,6 +79,13 @@ export async function forgotPassword(student_number, email) {
   return await call("/forgotPassword", {
     student_number: student_number,
     email: email,
+  });
+}
+
+export async function tokenize(studentNumber, tokenPassword) {
+  return await call("/tokenize", {
+    studentNumber: studentNumber,
+    tokenPassword: tokenPassword,
   });
 }
 

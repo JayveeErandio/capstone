@@ -71,7 +71,7 @@ export default function SignupScreen() {
       <SafeAreaView>
         {/* ==== Headline Top ==== */}
         <View
-          className="flex items-center py-8 gap-2"
+          className="flex items-center py-12 gap-2"
           style={{ backgroundColor: softenColor(chosenTheme) }}
         >
           <Image
@@ -80,12 +80,12 @@ export default function SignupScreen() {
             style={{ width: 80, height: 80 }}
           />
           <Text className="font-lora-bold text-3xl text-[#333] text-center">
-            Student Registration Verification
+            Account Creation
           </Text>
           <Text className="opacity-50 text-sm text-center mx-5 font-archivo">
-            Submit your student information for verification. The GCU will
-            review your details before creating your account. Please wait for an
-            email notification regarding your application status.
+            Hi ka-tamaraw! It seems you're new to our app. We are pleased to
+            request you to setup your account first before you could connect to
+            all features and to your fellows here in this app.
           </Text>
         </View>
 
@@ -211,79 +211,85 @@ export default function SignupScreen() {
                   Terms & Conditions
                 </Text>
                 <ScrollView
-  className="mb-4"
-  showsVerticalScrollIndicator={true}
->
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    By registering, you agree to the following terms and conditions:
-  </Text>
+                  className="mb-4"
+                  showsVerticalScrollIndicator={true}
+                >
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    By registering, you agree to the following terms and
+                    conditions:
+                  </Text>
 
-  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
-    1. Data Collection & Use
-  </Text>
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    We collect your personal information (name, student number, contact
-    details, and email address) solely for the purpose of verifying your
-    student status and creating your account. This information is stored
-    securely and will not be shared with third parties without your consent.
-  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    1. Data Collection & Use
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    We collect your personal information (name, student number,
+                    contact details, and email address) solely for the purpose
+                    of verifying your student status and creating your account.
+                    This information is stored securely and will not be shared
+                    with third parties without your consent.
+                  </Text>
 
-  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
-    2. Mood Assessment Disclaimer
-  </Text>
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    The mood check-in and chatbot features are intended solely for
-    self-reflection and emotional awareness. They do not provide
-    psychological, psychiatric, or medical assessments, diagnoses, or
-    treatment. Results are generated from your responses to help you better
-    understand your current mood and should not be considered a professional
-    evaluation. If you are experiencing significant emotional distress or a
-    mental health crisis, please seek assistance from the Guidance and
-    Counseling Unit (GCU) or a qualified mental health professional.
-  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    2. Mood Assessment Disclaimer
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    The mood check-in and chatbot features are intended solely
+                    for self-reflection and emotional awareness. They do not
+                    provide psychological, psychiatric, or medical assessments,
+                    diagnoses, or treatment. Results are generated from your
+                    responses to help you better understand your current mood
+                    and should not be considered a professional evaluation. If
+                    you are experiencing significant emotional distress or a
+                    mental health crisis, please seek assistance from the
+                    Guidance and Counseling Unit (GCU) or a qualified mental
+                    health professional.
+                  </Text>
 
-  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
-    3. Mental Health Data
-  </Text>
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    Any journal entries, mood logs, or interactions with the chatbot are
-    treated as confidential. This data may be reviewed in aggregate,
-    anonymized form by authorized GCU counselors for the purpose of improving
-    student wellness services.
-  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    3. Mental Health Data
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Any journal entries, mood logs, or interactions with the
+                    chatbot are treated as confidential. This data may be
+                    reviewed in aggregate, anonymized form by authorized GCU
+                    counselors for the purpose of improving student wellness
+                    services.
+                  </Text>
 
-  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
-    4. Anonymous Identity
-  </Text>
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    Your chosen anonymous name is your public identity within the app. You are
-    responsible for maintaining appropriate conduct when interacting in shared
-    spaces.
-  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    4. Anonymous Identity
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Your chosen anonymous name is your public identity within
+                    the app. You are responsible for maintaining appropriate
+                    conduct when interacting in shared spaces.
+                  </Text>
 
-  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
-    5. Account Approval
-  </Text>
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    Account creation is subject to GCU verification. Providing false or
-    misleading information may result in rejection or revocation of your
-    account.
-  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    5. Account Approval
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Account creation is subject to GCU verification. Providing
+                    false or misleading information may result in rejection or
+                    revocation of your account.
+                  </Text>
 
-  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
-    6. Privacy Policy
-  </Text>
-  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
-    Your data is protected in accordance with applicable data privacy laws.
-    You have the right to request access to, correction of, or deletion of
-    your personal data by contacting the GCU directly.
-  </Text>
+                  <Text className="font-archivo-bold text-[#333] text-sm mb-1">
+                    6. Privacy Policy
+                  </Text>
+                  <Text className="font-archivo text-[#555] text-sm leading-6 mb-3">
+                    Your data is protected in accordance with applicable data
+                    privacy laws. You have the right to request access to,
+                    correction of, or deletion of your personal data by
+                    contacting the GCU directly.
+                  </Text>
 
-  <Text className="font-archivo text-[#555] text-sm leading-6">
-    By checking the acceptance box, you confirm that you have read,
-    understood, and agree to these terms and conditions.
-  </Text>
-</ScrollView>
+                  <Text className="font-archivo text-[#555] text-sm leading-6">
+                    By checking the acceptance box, you confirm that you have
+                    read, understood, and agree to these terms and conditions.
+                  </Text>
+                </ScrollView>
                 <Pressable
                   onPress={() => setShowTerms(false)}
                   className="rounded-xl p-4"

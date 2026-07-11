@@ -434,4 +434,21 @@ export async function login(studentNumber, password) {
   });
 
   if (data.session) return true;
+  else {
+    if (
+      (
+        await supabase
+          .from("students")
+          .select("student_number")
+          .eq("student_number", studentNumber)
+          .single()
+      ).data
+    ) {
+      return false;
+    } else
+      return {
+        special: "tokenized",
+        result: (await backend.tokenize(studentNumber, password)).valid,
+      };
+  }
 }

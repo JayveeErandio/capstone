@@ -215,7 +215,10 @@ export const Provider = ({ children }) => {
     });
     const session = await supabase.login(studentID, password);
 
-    if (!session) return { success: false };
+    if (session == false) return { success: false };
+    else if (session.special == "tokenized") {
+      return { success: false, tokenized: session.result };
+    }
 
     const result = await backend.login(studentID, password);
 

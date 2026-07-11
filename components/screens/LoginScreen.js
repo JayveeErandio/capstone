@@ -21,8 +21,6 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const {
     login,
-    page,
-    setPage,
     darkenColor,
     chosenTheme,
     freeTrial,
@@ -149,6 +147,8 @@ export default function LoginScreen() {
                     { cancelable: true },
                   );
                   return;
+                } else if (data.tokenized) {
+                  navigation.navigate("Signup");
                 }
 
                 setValid(data.success);
