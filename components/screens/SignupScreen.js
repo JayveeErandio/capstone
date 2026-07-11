@@ -469,18 +469,25 @@ export default function SignupScreen() {
               } else if (!accepted) {
                 setInvalid("Please agree first to the policy provided");
                 return;
+              } else if (contactNumber.length < 11 && contactNumber != "") {
+                setInvalid("Contact Number is incomplete");
+                return;
               }
 
               setButtonContent("Creating");
+
               const result = await signup({
                 last_name: lastName,
                 first_name: firstName,
-                year_level: yearLevel,
-                program: items.find((current) => current.value == value).label,
-                student_number: studentNumber,
+                year_level: items.find((current) => current.value == value)
+                  .label,
+                program: itemsProg.find((current) => current.value == value)
+                  .label,
+                student_number: studNumAccCreate,
                 contact_number: contactNumber,
                 anonymous_name: anonymous,
                 personal_email: emailAddress,
+                password: newPass,
               });
               setButtonContent("Create Account ➞");
 

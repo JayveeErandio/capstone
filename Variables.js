@@ -284,6 +284,7 @@ export const Provider = ({ children }) => {
   };
 
   const signup = async (record) => {
+    console.log(12);
     return await backend.putStudent(record);
   };
 

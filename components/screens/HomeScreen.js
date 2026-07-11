@@ -3,17 +3,6 @@ import { View, ScrollView, Text, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Variables } from "../../Variables";
 import { useNavigation } from "@react-navigation/native";
-import * as Notification from "expo-notifications";
-
-async function sendTestNotification() {
-  await Notification.scheduleNotificationAsync({
-    content: {
-      title: "Test",
-      body: "Hello",
-    },
-    trigger: null,
-  });
-}
 
 export default function HomeScreen() {
   const navigation = useNavigation();
