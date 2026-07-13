@@ -139,18 +139,54 @@ export default function ChatbotScreen() {
               scrollViewRef.current.scrollToEnd({ animated: true })
             }
           >
-            <Text
-              className={
-                (chats.length > 0 ? "hidden" : "") +
-                " text-center mt-12 text-gray-400"
-              }
-            >
-              Got something in mind? Let’s chat 💭
-            </Text>
+            <View className={chats.length > 0 ? "hidden" : ""}>
+              <View className="flex-row items-end p-3 gap-2">
+                <Text className="bg-[#b9b] p-2 rounded-full">🌸</Text>
+                <View className="flex-row flex-1">
+                  <Text className="max-w-72 text-sm bg-white p-3 rounded-xl rounded-bl-none font-archivo">
+                    Hello! I'm MoodLink AI. I'm here to listen, support you, and
+                    help you navigate your thoughts and emotions in a safe and
+                    respectful way. Try one of the options below, or feel free
+                    to chat about whatever you'd like.
+                  </Text>
+                </View>
+              </View>
+              {[
+                "Cheer me up",
+                "I'm feeling stressed",
+                "Any relationship advice?",
+              ].map((current) => (
+                <View key={current} className="flex-row items-end p-1 gap-2">
+                  <View className="flex-row justify-center w-full">
+                    <Pressable
+                      onPress={() => {
+                        setAvailChat((prev) => prev - 1);
+                        send(current);
+                        setMessage("");
+                      }}
+                      className="rounded-xl bg-[#ffe] px-7 py-3 active:bg-[#fed]"
+                    >
+                      <Text className="max-w-72 text-sm text-[#555] font-archivo">
+                        {current}
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ))}
+            </View>
+
             {chats.map((current, index) => {
               const ai = (
                 <View key={index} className="flex-row items-end p-3 gap-2">
-                  <Text className="bg-[#b9b] p-2 rounded-full">🌸</Text>
+                  <Image
+                    className="rounded-full"
+                    source={require("../../assets/logo_transparent.png")}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: softenColor(chosenTheme),
+                    }}
+                  />
                   <View className="flex-row flex-1">
                     <Text className="max-w-72 text-sm bg-white p-3 rounded-xl rounded-bl-none font-archivo">
                       {current.content}
