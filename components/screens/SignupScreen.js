@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import InputField from "../InputField";
 import Button from "../Button";
 import DropDownPicker from "react-native-dropdown-picker";
+import LoadingScreen from "./LoadingScreen";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -87,13 +88,16 @@ export default function SignupScreen() {
   ]);
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const isValidName = (text) =>
     /^\p{L}+(?:[ '.-]\p{L}+)*\.?$/u.test(text.trim());
   const isValidEmail = (email) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
-  return (
+  return loading ? (
+    <LoadingScreen message="Logging you in" />
+  ) : (
     <KeyboardAwareScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       enableOnAndroid={true}
@@ -493,7 +497,9 @@ export default function SignupScreen() {
                 personal_email: emailAddress,
                 password: newPass == "" ? null : newPass,
               });
+              setLoading(true);
               await login(studNumAccCreate, tokenAccCreate);
+              setLoading(false);
               setButtonContent("Create Account ➞");
             }}
             disabled={buttonContent == "Creating"}
