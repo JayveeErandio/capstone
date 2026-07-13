@@ -187,7 +187,6 @@ export default function LoginScreen() {
                 setValid("Invalid student number or password.");
               }}
               value={"Log In ➞"}
-              //disabled={loginField1.length != 9 || loginField2.length < 6}
             />
             <Pressable
               onPress={async () => {
