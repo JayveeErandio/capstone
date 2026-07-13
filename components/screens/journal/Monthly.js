@@ -261,7 +261,7 @@ export default function Monthly() {
         </View>
         <View className="flex-row gap-2 mt-3">
           {["Excited", "Content", "Drained", "Stressed"].map((current) => (
-            <View className="flex-row items-center gap-1">
+            <View className="flex-row items-center gap-1" key={current}>
               <View
                 style={{
                   backgroundColor: moodToColor(current),
@@ -303,7 +303,7 @@ export default function Monthly() {
           }));
           return moods;
         })().map((current) => (
-          <View className="gap-1">
+          <View className="gap-1" key={current}>
             <View className="flex-row justify-between">
               <Text className="text-gray-500 text-xs font-archivo">
                 {moodToEmoji(current.mood)} {capitalizeWords(current.mood)}

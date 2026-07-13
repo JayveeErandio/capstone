@@ -189,7 +189,7 @@ export default function Weekly() {
         </View>
         <View className="flex-row gap-2 mt-3">
           {["Excited", "Content", "Drained", "Stressed"].map((current) => (
-            <View className="flex-row items-center gap-1">
+            <View className="flex-row items-center gap-1" key={current}>
               <View
                 style={{
                   backgroundColor: moodToColor(current),
