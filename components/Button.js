@@ -21,7 +21,7 @@ export default function Button(args) {
       style={{
         backgroundColor: !args.plain
           ? !args.disabled
-            ? darkenColor(finalTheme) + (click ? "ff" : "ee")
+            ? darkenColor(finalTheme) + (click ? "ff" : "dd")
             : darkenColor(finalTheme) + "88"
           : "transparent",
         borderColor: !args.disabled

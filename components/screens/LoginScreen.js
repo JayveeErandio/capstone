@@ -41,12 +41,14 @@ export default function LoginScreen() {
   const [showPass, setShowPass] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
   useEffect(() => {
-    if (valid == false) {
-      setTimeout(() => {
-        setValid(null);
-      }, 1200);
-      setShowForgot(true);
-    }
+    if (!valid) return;
+
+    const timer = setTimeout(() => {
+      setValid(null);
+    }, 2500);
+    if (valid == "Invalid student number or password.") setShowForgot(true);
+
+    return () => clearTimeout(timer);
   }, [valid]);
 
   const [forgotModalVisible, setForgotModalVisible] = useState(false);
@@ -122,48 +124,70 @@ export default function LoginScreen() {
 
             <Text
               className={
-                (valid == false ? "" : "opacity-0") +
+                (valid == null ? "opacity-0" : "") +
                 " text-center text-[#f00] m-2 font-archivo text-sm"
               }
+              style={{ lineHeight: 16, height: 32 }}
             >
-              Invalid student number or password
+              {valid ?? ""}
             </Text>
             <Button
               onPress={async () => {
-                if (loginField1 && loginField2) {
-                  setLoading(true);
-                  const data = await login(loginField1, loginField2);
-                  setTimeout(function () {
-                    bugging();
-                    setLoading(false);
-                  }, 300);
-
-                  if (data.success) {
-                    setLoginField1("");
-                    setLoginField2("");
-                  } else if (data.reason == "deactivated") {
-                    Alert.alert(
-                      "Account banned",
-                      "Your account has been deactivated by the administrators due to possible unwanted or inappropriate activities. You can contact them through any available channel regarding this concern.",
-                      [
-                        {
-                          text: "OK",
-                        },
-                      ],
-                      { cancelable: true },
-                    );
-                    return;
-                  } else if (data.tokenized) {
-                    setStudNumAccCreate(loginField1);
-                    setTokenAccCreate(loginField2);
-                    navigation.navigate("Signup");
-                  }
-
-                  setValid(data.success);
+                if (loginField1 == "" && loginField2 == "") {
+                  setValid("Please enter your student number and password.");
+                  return;
+                } else if (loginField1 == "" && loginField2 != "") {
+                  setValid("Please enter your student number");
+                  return;
+                } else if (loginField1.length < 9) {
+                  setValid("Student number must be exactly 9 digits.");
+                  return;
+                } else if (
+                  parseInt(new Date().getFullYear()) <
+                    parseInt(loginField1.slice(0, 4)) ||
+                  parseInt(loginField1.slice(0, 4)) < 1970
+                ) {
+                  setValid(
+                    "Invalid student number. It must begin with a valid admission year.",
+                  );
+                  return;
+                } else if (loginField2 == "") {
+                  setValid("Please enter your password.");
+                  return;
                 }
+
+                setLoading(true);
+                const data = await login(loginField1, loginField2);
+                setTimeout(function () {
+                  bugging();
+                  setLoading(false);
+                }, 300);
+
+                if (data.success) {
+                  setLoginField1("");
+                  setLoginField2("");
+                } else if (data.reason == "deactivated") {
+                  Alert.alert(
+                    "Account banned",
+                    "Your account has been deactivated by the administrators due to possible unwanted or inappropriate activities. You can contact them through any available channel regarding this concern.",
+                    [
+                      {
+                        text: "OK",
+                      },
+                    ],
+                    { cancelable: true },
+                  );
+                  return;
+                } else if (data.tokenized) {
+                  setStudNumAccCreate(loginField1);
+                  setTokenAccCreate(loginField2);
+                  navigation.navigate("Signup");
+                }
+
+                setValid("Invalid student number or password.");
               }}
               value={"Log In ➞"}
-              disabled={loginField1.length != 9 || loginField2.length < 6}
+              //disabled={loginField1.length != 9 || loginField2.length < 6}
             />
             <Pressable
               onPress={async () => {
