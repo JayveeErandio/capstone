@@ -26,6 +26,8 @@ export default function SignupScreen() {
     chosenTheme,
     darkenColor,
     studNumAccCreate,
+    tokenAccCreate,
+    login,
   } = useContext(Variables);
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -268,7 +270,8 @@ export default function SignupScreen() {
             <Text className="font-archivo-bold text-[#333]">NEW PASSWORD</Text>
             <InputField password maxLength={11} onChangeText={setNewPass} />
             <Text className="text-xs text-gray-400 font-archivo">
-              (Optional. You can change your password later)
+              (Optional. You can change your password later. If not set, the
+              initial token will be served as the password.)
             </Text>
           </View>
           <View className="gap-1">
@@ -452,14 +455,15 @@ export default function SignupScreen() {
               } else if (anonymous.trim() == "") {
                 setInvalid("Anonymous name cannot be blank");
                 return;
-              } else if (newPass.trim() != "" || confirmPass.trim() != "") {
-                if (newPass.trim() != confirmPass.trim()) {
-                  setInvalid("New and confirm password do not match");
-                  return;
-                } else if (newPass.trim().length < 6) {
-                  setInvalid("Password must be atleast 6 characters");
-                  return;
-                }
+              } else if (newPass.trim() != confirmPass.trim()) {
+                setInvalid("New and confirm password do not match");
+                return;
+              } else if (
+                newPass.trim().length < 6 &&
+                newPass.trim().length > 0
+              ) {
+                setInvalid("Password must be atleast 6 characters");
+                return;
               } else if (
                 !isValidEmail(emailAddress) &&
                 emailAddress.trim() != ""
@@ -480,36 +484,19 @@ export default function SignupScreen() {
                 last_name: lastName,
                 first_name: firstName,
                 year_level: items.find((current) => current.value == value)
-                  .label,
+                  .value,
                 program: itemsProg.find((current) => current.value == value)
                   .label,
                 student_number: studNumAccCreate,
                 contact_number: contactNumber,
                 anonymous_name: anonymous,
                 personal_email: emailAddress,
-                password: newPass,
+                password: newPass == "" ? null : newPass,
               });
+              await login(studNumAccCreate, tokenAccCreate);
               setButtonContent("Create Account ➞");
-
-              if (result.success) {
-                navigation.goBack();
-                Alert.alert(
-                  "Notifying GCU",
-                  "Your password will be provided via your school emails when the GCU has already approved your request.",
-                  [{ text: "OK" }],
-                );
-              }
             }}
-            disabled={
-              /*lastName == "" ||
-              firstName == "" ||
-              yearLevel == "" ||
-              value == null ||
-              anonymous == "" ||
-              contactNumber.length != 11 ||
-              emailAddress.trim().includes(" ") || */
-              buttonContent == "Creating"
-            }
+            disabled={buttonContent == "Creating"}
           />
           <Pressable
             onPress={() => navigation.goBack()}

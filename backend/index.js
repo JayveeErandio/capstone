@@ -31,7 +31,7 @@ const hash = function (studentNumber) {
   const specials = "!#$%^&@*?_+=;";
 
   // Get raw HMAC bytes
-  const hash = crypto
+  const hashChars = crypto
     .createHmac("sha256", process.env.HASH_KEY)
     .update(studentNumber.toString())
     .digest();
@@ -41,20 +41,24 @@ const hash = function (studentNumber) {
 
   // First 4 lowercase
   for (let i = 0; i < 3; i++) {
-    token += lowercase[hash[i] % lowercase.length];
+    token += lowercase[hashChars[i] % lowercase.length];
   }
 
   // Next 4 uppercase
   for (let i = 3; i < 6; i++) {
-    token += uppercase[hash[i] % uppercase.length];
+    token += uppercase[hashChars[i] % uppercase.length];
   }
 
   // Last 4 special characters
   for (let i = 6; i < 9; i++) {
-    token += specials[hash[i] % specials.length];
+    token += specials[hashChars[i] % specials.length];
   }
   return token;
 };
+
+app.get("/hash/:studentNumber", (req, res) => {
+  res.json({ value: hash(req.params.studentNumber) });
+});
 
 // SUPABASE
 import { createClient } from "@supabase/supabase-js";
@@ -331,26 +335,22 @@ app.post("/tokenize", async (req, res) => {
 app.post("/signup", async (req, res) => {
   let { record } = req.body;
   record = JSON.parse(record);
-  console.log(record);
   console.log("Creating Account by", record.student_number);
 
-  const { data, error } = await supabase
-    .from("students")
-    .select("*")
-    .eq("student_number", record.student_number);
+  // To Auth Users Schema
+  const { data, error } = await supabase.auth.admin.createUser({
+    email: record.student_number + "@moodlink.com",
+    password: record.password ?? hash(record.student_number),
+    email_confirm: true,
+  });
 
-  if (data.length == 0) {
-    //const { data: datum, error: errum } = await supabase
-    //  .from("students")
-    //  .upsert(record);
+  //To Public Students Table
+  delete record.password;
+  let formatable = { ...record, status: "verified", uuid: data.user.id };
+  await supabase.from("students").insert(formatable);
 
-    res.json({ success: true });
-  } else if (data[0].status != "verified") {
-    //await supabase.from("students").upsert(record, {
-    //  onConflict: "student_number",
-    //});
-    res.json({ success: true });
-  } else res.json({ success: false });
+  res.json({ success: true });
+  return;
 });
 
 app.post("/ai/assess", async (req, res) => {

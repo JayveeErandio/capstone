@@ -33,6 +33,7 @@ export const Provider = ({ children }) => {
   const [availPost, setAvailPost] = useState(5);
   const [availChat, setAvailChat] = useState(7);
   const [studNumAccCreate, setStudNumAccCreate] = useState("");
+  const [tokenAccCreate, setTokenAccCreate] = useState("");
   // Yung mga variables na nasa baba na is mga temporary variable for journal at home page.
   // Malaki kasi data nila kung puro retrieve, baka magcause ng low performance
   // So iistore na natin sya statically
@@ -284,7 +285,6 @@ export const Provider = ({ children }) => {
   };
 
   const signup = async (record) => {
-    console.log(12);
     return await backend.putStudent(record);
   };
 
@@ -1190,6 +1190,8 @@ export const Provider = ({ children }) => {
         setRestartApp,
         setStudNumAccCreate,
         studNumAccCreate,
+        setTokenAccCreate,
+        tokenAccCreate,
       }}
     >
       {children}
