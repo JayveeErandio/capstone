@@ -169,6 +169,7 @@ export default function LoginScreen() {
                 if (data.success) {
                   setLoginField1("");
                   setLoginField2("");
+                  setShowForgot(false);
                 } else if (data.reason == "deactivated") {
                   Alert.alert(
                     "Account banned",
@@ -182,6 +183,9 @@ export default function LoginScreen() {
                   );
                   return;
                 } else if (data.tokenized) {
+                  setLoginField1("");
+                  setLoginField2("");
+                  setShowForgot(false);
                   setStudNumAccCreate(loginField1);
                   setTokenAccCreate(loginField2);
                   navigation.navigate("Signup");
