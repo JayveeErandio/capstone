@@ -120,17 +120,20 @@ export default function LoginScreen() {
               placeholder="Enter your password"
               onChangeText={setLoginField2}
               value={loginField2}
+              maxLength={35}
             />
-
-            <Text
-              className={
-                (valid == null ? "opacity-0" : "") +
-                " text-center text-[#f00] m-2 font-archivo text-sm"
-              }
-              style={{ lineHeight: 16, height: 32 }}
+            <View
+              className="m-2 justify-center items-center"
+              style={{ height: 32 }}
             >
-              {valid ?? ""}
-            </Text>
+              <Text
+                className="text-center text-[#f00] font-archivo text-sm"
+                style={{ lineHeight: 16 }}
+              >
+                {valid ?? ""}
+              </Text>
+            </View>
+
             <Button
               onPress={async () => {
                 if (loginField1 == "" && loginField2 == "") {
@@ -238,11 +241,11 @@ export default function LoginScreen() {
             >
               <Text className="text-xl">🏫</Text>
               <Text className="flex-1 text-[#555] text-sm font-archivo">
-                MoodLink is an official FEU Diliman GCU app. Use your{" "}
                 <Text className="font-archivo-bold">
-                  FEU student credentials
+                  First time using MoodLink?
                 </Text>{" "}
-                to Log in.
+                Use your FEU Student Number to sign in. For your first login,
+                use the token sent to your FEU email as your initial password.
               </Text>
             </View>
           </View>

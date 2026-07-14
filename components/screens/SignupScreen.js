@@ -47,7 +47,8 @@ export default function SignupScreen() {
       "moodlinkerist",
       "imRandom",
       "sixseven",
-      "juandelacruz67",
+      "MDLNK",
+      "imnotnoob",
     ];
     setAnonymous(generateds[Math.floor(Math.random() * generateds.length)]);
   }, []);
@@ -234,6 +235,20 @@ export default function SignupScreen() {
           </View>
           <View>
             <Text className="font-archivo-bold text-[#333]">
+              EMAIL ADDRESS <Required />
+            </Text>
+            <InputField
+              onChangeText={setEmailAddress}
+              placeholder="e.g. juandelacruz@gmail.com"
+              autoCapitalize="none"
+            />
+            <Text className="text-xs text-gray-400 font-archivo">
+              Enter an email address that you regularly use. This email will be
+              used to recover your account if you forget your password.
+            </Text>
+          </View>
+          <View>
+            <Text className="font-archivo-bold text-[#333]">
               CONTACT NUMBER
             </Text>
             <InputField
@@ -256,31 +271,21 @@ export default function SignupScreen() {
               maxLength={11}
             />
           </View>
-          <View>
-            <Text className="font-archivo-bold text-[#333]">EMAIL ADDRESS</Text>
-            <InputField
-              onChangeText={setEmailAddress}
-              placeholder="e.g. juandelacruz@gmail.com"
-              autoCapitalize="none"
-            />
-            <Text className="text-xs text-gray-400 font-archivo">
-              (This email address will only be used for password recovery and
-              account-related notifications. School email that ends with
-              @feudiliman.edu.ph might not be effective)
-            </Text>
-          </View>
+
           <View className="bg-gray-300 w-full h-0.5 my-1"></View>
           <View>
-            <Text className="font-archivo-bold text-[#333]">NEW PASSWORD</Text>
+            <Text className="font-archivo-bold text-[#333]">
+              NEW PASSWORD <Required />
+            </Text>
             <InputField password maxLength={11} onChangeText={setNewPass} />
             <Text className="text-xs text-gray-400 font-archivo">
-              (Optional. You can change your password later. If not set, the
-              initial token will be served as the password.)
+              Your email token is only used for your first login. To keep your
+              account secure, you must create a new password before continuing.
             </Text>
           </View>
           <View className="gap-1">
             <Text className="font-archivo-bold text-[#333]">
-              CONFIRM PASSWORD
+              CONFIRM PASSWORD <Required />
             </Text>
             <InputField password maxLength={11} onChangeText={setConfirmPass} />
           </View>
@@ -429,7 +434,7 @@ export default function SignupScreen() {
 
           <Text
             className={
-              "text-center -my-2 text-red-700 text-sm opacity-" +
+              "text-center -my-2 font-archivo text-red-700 text-sm opacity-" +
               (!!invalid ? "100" : "0")
             }
           >
@@ -459,6 +464,21 @@ export default function SignupScreen() {
               } else if (anonymous.trim() == "") {
                 setInvalid("Anonymous name cannot be blank");
                 return;
+              } else if (emailAddress.trim() == "") {
+                setInvalid("Email address is required");
+                return;
+              } else if (
+                !isValidEmail(emailAddress) &&
+                emailAddress.trim() != ""
+              ) {
+                setInvalid("Email address set is invalid");
+                return;
+              } else if (contactNumber.length < 11 && contactNumber != "") {
+                setInvalid("Contact Number is incomplete");
+                return;
+              } else if (newPass.trim() == "") {
+                setInvalid("Setting password up is required");
+                return;
               } else if (newPass.trim() != confirmPass.trim()) {
                 setInvalid("New and confirm password do not match");
                 return;
@@ -468,17 +488,8 @@ export default function SignupScreen() {
               ) {
                 setInvalid("Password must be atleast 6 characters");
                 return;
-              } else if (
-                !isValidEmail(emailAddress) &&
-                emailAddress.trim() != ""
-              ) {
-                setInvalid("Email address set is invalid");
-                return;
               } else if (!accepted) {
                 setInvalid("Please agree first to the policy provided");
-                return;
-              } else if (contactNumber.length < 11 && contactNumber != "") {
-                setInvalid("Contact Number is incomplete");
                 return;
               }
 
@@ -495,11 +506,14 @@ export default function SignupScreen() {
                 contact_number: contactNumber,
                 anonymous_name: anonymous,
                 personal_email: emailAddress,
-                password: newPass == "" ? null : newPass,
+                password: newPass.trim() == "" ? null : newPass.trim(),
               });
-              setLoading(true);
-              await login(studNumAccCreate, tokenAccCreate);
-              setLoading(false);
+              navigation.goBack();
+              Alert.alert(
+                "You're All Set!",
+                "You'll be redirected to the login page to log in with your FEU Student Number and new password.",
+                [{ text: "OK" }],
+              );
               setButtonContent("Create Account ➞");
             }}
             disabled={buttonContent == "Creating"}

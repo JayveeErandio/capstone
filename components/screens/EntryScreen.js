@@ -458,6 +458,7 @@ function Result() {
               }
             }}
           />
+          <Text>Disclaimeer: sdsdds dfdf</Text>
           <View className="py-12"></View>
         </View>
       </SafeAreaView>
