@@ -459,7 +459,7 @@ function Result() {
             }}
           />
           <Text className="text-xs text-[#777] text-center">
-            Disclaimeer: This assessment provides general insights based on your
+            Disclaimer: This assessment provides general insights based on your
             responses and should not be considered a medical or psychological
             diagnosis. For professional advice or assistance, please consult the
             FEU Diliman GCU or a licensed mental health professional.

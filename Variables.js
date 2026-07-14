@@ -279,8 +279,8 @@ export const Provider = ({ children }) => {
     setUser({
       ...user,
       anonymous_name: record.anonymous_name,
-      section: record.section,
-      year_level: record.year_level,
+      personal_email: record.personal_email,
+      contact_number: record.contact_number,
     });
   };
 

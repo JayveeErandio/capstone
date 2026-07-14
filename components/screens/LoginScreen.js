@@ -193,7 +193,7 @@ export default function LoginScreen() {
 
                 setValid("Invalid student number or password.");
               }}
-              value={"Log In ➞"}
+              value={"Verify Student Access ➞"}
             />
             <Pressable
               onPress={async () => {
