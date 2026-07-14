@@ -161,7 +161,7 @@ export const Provider = ({ children }) => {
 
     computeStatus(data.statusDays);
     setUser(data.user);
-    /*
+
     supabase.implementRealtime((ev) => {
       if (ev.table == "notifications") {
         setNotifications((prev) => [ev.new, ...prev]);
@@ -204,7 +204,7 @@ export const Provider = ({ children }) => {
         }
       }
     }, data.user.id);
-*/
+
     setIsLoaded(true);
   };
 

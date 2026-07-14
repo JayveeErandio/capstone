@@ -458,7 +458,12 @@ function Result() {
               }
             }}
           />
-          <Text>Disclaimeer: sdsdds dfdf</Text>
+          <Text className="text-xs text-[#777] text-center">
+            Disclaimeer: This assessment provides general insights based on your
+            responses and should not be considered a medical or psychological
+            diagnosis. For professional advice or assistance, please consult the
+            FEU Diliman GCU or a licensed mental health professional.
+          </Text>
           <View className="py-12"></View>
         </View>
       </SafeAreaView>
